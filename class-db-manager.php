@@ -42,7 +42,7 @@ class Patient_Db_Manager {
 		return $this;
 	}
 
-	public function loadAllData() {
+	public function loadPatientAllData() {
 		$redis = new Predis\Client();
 		$patient_data = $redis->get('patient:id:'.$this->current_patient);
 
@@ -52,7 +52,7 @@ class Patient_Db_Manager {
 		} else {
 
 			foreach (self::$datas as $data) {
-				$this->loadPatientData($data['handler']);			
+				$this->loadPatientSingleData($data['handler']);			
 			}
 			$this->patient_data = (object) $this->patient_data;
 			$datas_json = json_encode($this->patient_data);
@@ -61,7 +61,7 @@ class Patient_Db_Manager {
 		}
 	}
 
-	public function loadPatientData($data_name) {
+	public function loadPatientSingleData($data_name) {
 
 		$config = self::$datas[$data_name];
 		$method_name = '_load'.ucfirst($config['handler']);
