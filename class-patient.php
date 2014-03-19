@@ -66,9 +66,25 @@ class Patient_Plugin {
 	    }
 	    // var_dump($return_template);exit;
 	    if($page_slug == $templatefilename) {
+	    	add_action( 'wp_enqueue_scripts', array( 'Patient_Plugin', 'addStylesAndScripts'));
 	    	self::doRedirect($return_template);	
-	    }    
+	    }
 
+	}
+
+	public function addStylesAndScripts() {
+		$css_url = plugins_url().'/patient/css';
+		$js_url = plugins_url().'/patient/js';
+
+		wp_enqueue_style( 'custom-style', $css_url.'/style.css' );
+		wp_enqueue_style( 'jquery-ui-custom', $css_url.'/jquery-ui-1.10.4.custom.css' );
+		wp_enqueue_style( 'jquery-jscrollpane', $css_url.'/jquery.jscrollpane.css' );
+		wp_enqueue_style( 'jquery-selectBox', $css_url.'/jquery.selectBox.css' );
+
+		wp_enqueue_script( 'jquery-ui-custom-min', $js_url.'/jquery-ui-1.10.4.custom.min.js', array('jquery'));
+		wp_enqueue_script( 'jquery-jscrollpane-min', $js_url.'/jquery.jscrollpane.min.js', array('jquery'));
+		wp_enqueue_script( 'jquery-mousewheel', $js_url.'/jquery.mousewheel.js', array('jquery'));		
+		wp_enqueue_script( 'jquery-selectBox', $js_url.'/jquery.selectBox.js', array('jquery'));
 	}
 
 	private static function doRedirect($url) {
