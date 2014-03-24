@@ -2,80 +2,84 @@
 require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ). '/wp-load.php' );
 require_once('class-db-manager.php');
 
-// function text_ajax_process_request() {
-// 	// first check if data is being sent and that it is the data we want
-//   	if ( isset( $_POST["post_var"] ) ) {
-// 		// now set our response var equal to that of the POST var (this will need to be sanitized based on what you're doing with with it)
-// 		$response = $_POST["post_var"];
-// 		// send the response back to the front end
-// 		echo $response;
-// 		die();
-// 	}
-// }
-// add_action('wp_ajax_test_response', 'text_ajax_process_request');
-
-// do_action( 'wp_ajax_test_response' );
 $ajax = new Patient_Ajax_Handler();
 $ajax->init($_POST);
 
 class Patient_Ajax_Handler{
 	
-	private $table;
+	private static $table;
 	private static $patient_data;
+	private static $action_type;	
+	private static $patient;
+
+	private static $type_to_table = array(
+		'symptom' => 'patient_user_symptoms',
+		'assay' => 'patient_assay_result',
+		'diagnos' => 'patient_diagnosis',
+		'therapy' => 'patient_therapy_result',
+		'lifestyle' => 'patient_lifestyle_result',
+	);
 
 	public function init($data) {
 
-		$action = $data['action'];
+		$action_name = $data['action'];
+		$action_type = $data['type'];
 		self::$patient_data = $data['data'];
-		add_action('wp_ajax_'.$action, array( 'Patient_Ajax_Handler', 'get'.ucfirst($action) ) );
-		do_action('wp_ajax_'.$action);
+		self::$table = self::$type_to_table[$action_name];
+
+		add_action('wp_ajax_'.$action_name, array( 'Patient_Ajax_Handler', '_'.$action_type.ucfirst($action_name) ) );
+		do_action('wp_ajax_'.$action_name);
 	}
 
-	public function getPatientData($data_type) {
+	public static function _getSymptom() {
+		global $wpdb;
+		$symptom_sql = 'SELECT * FROM '.self::$table.' WHERE user_symptom_id = '.self::$patient_data['id'];
+		$symptom = $wpdb->get_results($symptom_sql);
+		var_dump($symptom);
+	}
+
+	public static function _getAssay() {
+		global $wpdb;
+		$assay_sql = 'SELECT * FROM '.self::$table.' WHERE assay_result_id = '.self::$patient_data['id'];
+		$assay = $wpdb->get_results($assay_sql);
+		var_dump($assay);
+	}
+
+	public static function _getDiagnos() {
+		global $wpdb;
+		$diagnos_sql = 'SELECT * FROM '.self::$table.' WHERE diagnosis_id = '.self::$patient_data['id'];
+		$diagnos = $wpdb->get_results($diagnos_sql);		
+	}
+
+	public static function _getTherapy() {
+		global $wpdb;
+		$therapy_sql = 'SELECT * FROM '.self::$table.' WHERE therapy_result_id = '.self::$patient_data['id'];
+		$therapy = $wpdb->get_results($therapy_sql);	
+	}
+
+	public static function _getLifestyle() {
+		global $wpdb;
+		$lifestyle_sql = 'SELECT * FROM '.self::$table.' WHERE lifestyle_result_id = '.self::$patient_data['id'];
+		$lifestyle = $wpdb->get_results($lifestyle_sql);	
+	}
+
+	public static function _setSymptom() {
 
 	}
 
-	public function setPatientData() {
-
-	}
-
-	public static function getSymptom() {
-		var_dump(self::$patient_data);
-	}
-
-	private function getAssay() {
+	public static function _setAssay() {
 		
 	}
 
-	private function getDiagnos() {
+	public static function _setDiagnos() {
 		
 	}
 
-	private function getTherapie() {
-
-	}
-
-	private function getLifestyle() {
-
-	}
-
-	private function setSymptom() {
-
-	}
-
-	private function setAssay() {
+	public static function _setTherapy() {
 		
 	}
 
-	private function setDiagnos() {
-		
-	}
-
-	private function setTherapie() {
-		
-	}
-
-	private function setLifestyle() {
+	public static function _setLifestyle() {
 		
 	}
 }
