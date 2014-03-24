@@ -111,7 +111,7 @@ body .main-container .top_table_block table tr.dates input[type='checkbox'] {
   margin-right: 20px;
 }
 body .main-container .top_table_block table tr.rec_status {
-  color: #8f8f8f;
+  color: #8f8f8f !important;
 }
 body .main-container .top_table_block table tr.rec_status td:first-child {
   color: #333333;
