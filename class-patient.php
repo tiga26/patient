@@ -85,6 +85,10 @@ class Patient_Plugin {
 		wp_enqueue_script( 'jquery-jscrollpane-min', $js_url.'/jquery.jscrollpane.min.js', array('jquery'));
 		wp_enqueue_script( 'jquery-mousewheel', $js_url.'/jquery.mousewheel.js', array('jquery'));		
 		wp_enqueue_script( 'jquery-selectBox', $js_url.'/jquery.selectBox.js', array('jquery'));
+
+		// wp_localize_script( 'ajax-test', 'the_ajax_script', array( 'ajaxurl' => plugin_dir_url( __FILE__ ).'class-ajax-handler.php' ) );	
+
+		add_action('wp_print_scripts', array('Patient_Plugin','test_ajax_load_scripts'));
 	}
 
 	private static function doRedirect($url) {
@@ -198,6 +202,13 @@ class Patient_Plugin {
 		update_post_meta( $page_id, '_wp_page_template', $page_template);
 	}
 
+	public static function test_ajax_load_scripts() {
+		// load our jquery file that sends the $.post request
+		wp_enqueue_script( "ajax-test", plugin_dir_url( __FILE__ ) . 'js/ajax.js', array( 'jquery' ),'0.0.1',true );
+	 
+		// make the ajaxurl var available to the above script
+		wp_localize_script( 'ajax-test', 'the_ajax_script', array( 'ajaxurl' => plugin_dir_url( __FILE__ ).'class-ajax-handler.php' ) );	
+	}
 }
 
 ?>

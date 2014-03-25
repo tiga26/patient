@@ -38,7 +38,7 @@ class Patient_Db_Manager {
 
 	public function setPrefix($prefix) {
 
-		selff::$_prefix = $prefix;
+		self::$_prefix = $prefix;
 		return $this;
 	}
 
