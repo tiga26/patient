@@ -11,6 +11,16 @@ class Patient_Ajax_Handler{
 	private static $patient_data;
 	private static $action_type;	
 	private static $patient;
+	private static $status_code = array(
+		'' => array(
+			'code' => '1',
+			'message' => 'Ok',
+		),
+		'' => array(
+			'code' => '0',
+			'message' => 'Forbidden',
+		),
+	);
 
 	private static $type_to_table = array(
 		'symptom' => 'patient_user_symptoms',
@@ -64,11 +74,17 @@ class Patient_Ajax_Handler{
 	}
 
 	public static function _setSymptom() {
-
+		global $wpdb;
+		$params = self::_setParams();
+		$symptom = $wpdb->insert(self::$table,$params);
+		var_dump($symptom);
 	}
 
 	public static function _setAssay() {
-		
+		global $wpdb;
+		$params = self::_setParams();
+		$assay = $wpdb->insert(self::$table, $params);
+		var_dump($assay);		
 	}
 
 	public static function _setDiagnos() {
@@ -81,6 +97,35 @@ class Patient_Ajax_Handler{
 
 	public static function _setLifestyle() {
 		
+	}
+
+	public static function addSymptom() {
+
+	}
+
+	public static function addAssay() {
+
+	}
+
+	public static function addDiagnos() {
+
+	}
+
+	public static function addTherapy() {
+
+	}
+
+	public static function addLifestyle() {
+
+	}
+
+	private static function _setParams() {
+		$params = array();
+		foreach (self::$patient_data as $key => $value) {
+			$params[$key] = $value;
+		}
+
+		return $params;
 	}
 }
 ?>
