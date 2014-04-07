@@ -10,7 +10,7 @@ class Patient_Ajax_Handler{
 	private static $table;
 	private static $patient_data;
 	private static $action_type;	
-	private static $patient;
+	// private static $patient;
 	private static $status_code = array(
 		'' => array(
 			'code' => '1',
@@ -25,7 +25,7 @@ class Patient_Ajax_Handler{
 	private static $type_to_table = array(
 		'symptom' => 'patient_user_symptoms',
 		'assay' => 'patient_assay_result',
-		'diagnos' => 'patient_diagnosis',
+		'diagnos' => 'patient_doctor_diagnosis',
 		'therapy' => 'patient_therapy_result',
 		'lifestyle' => 'patient_lifestyle_result',
 	);
@@ -75,57 +75,55 @@ class Patient_Ajax_Handler{
 
 	public static function _setSymptom() {
 		global $wpdb;
-		$params = self::_setParams();
-		$symptom = $wpdb->insert(self::$table,$params);
+		$symptom = $wpdb->insert(self::$table, self::$patient_data);
 		var_dump($symptom);
 	}
 
 	public static function _setAssay() {
 		global $wpdb;
-		$params = self::_setParams();
-		$assay = $wpdb->insert(self::$table, $params);
+		self::$patient_data['ref_percent'] = self::$patient_data['ref_hi'] / self::$patient_data['ref_low'];
+		$assay = $wpdb->insert(self::$table, self::$patient_data);
 		var_dump($assay);		
 	}
 
 	public static function _setDiagnos() {
-		
+		global $wpdb;
+		$diagnos = $wpdb->insert(self::$table, self::$patient_data);
+		var_dump($diagnos);
 	}
 
 	public static function _setTherapy() {
-		
+		global $wpdb;
+		$therapy = $wpdb->insert(self::$table, self::$patient_data);
+		var_dump($therapy);
 	}
 
 	public static function _setLifestyle() {
-		
+		global $wpdb;
+		$lifestyle = $wpdb->insert(self::$table, self::$patient_data);
+		var_dump($lifestyle);
 	}
 
-	public static function addSymptom() {
-
-	}
-
-	public static function addAssay() {
-
-	}
-
-	public static function addDiagnos() {
+	public static function _addSymptom() {
 
 	}
 
-	public static function addTherapy() {
+	public static function _addAssay() {
 
 	}
 
-	public static function addLifestyle() {
+	public static function _addDiagnos() {
 
 	}
 
-	private static function _setParams() {
-		$params = array();
-		foreach (self::$patient_data as $key => $value) {
-			$params[$key] = $value;
-		}
+	public static function _addTherapy() {
 
-		return $params;
 	}
+
+	public static function _addLifestyle() {
+
+	}
+
 }
+
 ?>
