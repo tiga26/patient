@@ -84,4 +84,3 @@ jQuery("#dates").on('click', function() {
  	});
  	return false;
 });
-

@@ -105,7 +105,7 @@ class Patient_Ajax_Handler{
 	}
 
 	public static function _addSymptom() {
-
+		global $wpdb;
 	}
 
 	public static function _addAssay() {
