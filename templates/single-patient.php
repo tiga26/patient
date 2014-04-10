@@ -718,7 +718,19 @@ get_header();
 		},
 
 		saveAssays: function() {
-			
+			var dialog = $('.dialog.assays');
+
+			var current_data = {
+				
+				assay_id: 1,
+				relation_id: 1,
+				unit_id: 2,
+				result: 20,
+				ref_low: 7,
+				ref_hi: 10,
+				remarks: 'fsdfsdfsdfsdf'
+				
+			};
 		},
 
 		saveDiagnoses: function() {
