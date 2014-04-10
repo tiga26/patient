@@ -98,7 +98,6 @@ body .main-container input[type='text'] {
 }
 body .main-container .comment {
   background: url("../images/comment.png") no-repeat scroll right 0 rgba(0, 0, 0, 0) !important;
-  width: 52px !important;
   display: inline-block !important;
   height: 20px !important;
   vertical-align: middle;
@@ -119,6 +118,7 @@ body .main-container .comment .sbHolder .sbSelector {
 }
 body .main-container .comment .sbHolder .sbToggle {
   height: 20px;
+  width: 23px;
 }
 body .main-container .top_table_block table tr.dates {
   color: #494949;
@@ -155,12 +155,18 @@ body .main-container #accordion .comment {
   padding-left: 5px !important;
   text-align: left !important;
   vertical-align: middle;
-  min-width: 70px;
   cursor: pointer;
 }
-body .main-container #accordion .comment div {
+body .main-container #accordion .comment div:first-child {
   background-color: #FFFFFF;
-  margin-right: 25px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 5px;
+}
+body .main-container #accordion .comment div.comment_icon {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
 }
 body .main-container #accordion .comment.hovered {
   background: url("../images/node_select.png") no-repeat scroll right 0 rgba(0, 0, 0, 0) !important;
@@ -189,7 +195,7 @@ body .main-container #accordion .header-line div {
 body .main-container #accordion .header-line div.first-child {
   background-color: #f6faf6;
   cursor: pointer;
-  width: 16.9%;
+  width: 17.65%;
   height: 40px;
   border-right: 1px solid #eaeaea;
   padding-left: 20px;
@@ -233,7 +239,7 @@ body .main-container #accordion table tr td.none {
 }
 body .main-container #accordion table tr td:first-child {
   text-align: left;
-  width: 16.9%;
+  width: 17.65%;
 }
 body .main-container #accordion table .add-row {
   height: 40px;

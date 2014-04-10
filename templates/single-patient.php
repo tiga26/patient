@@ -24,7 +24,7 @@ get_header();
 		 			<td><input type="checkbox">21.04.2006</td>
 		 			<td><input type="checkbox">04.05.2006</td>
 		 			<td><input type="checkbox">30.05.2006</td>
-		 			<td><input type="text"><div class="add"></div></td>
+		 			<td><input type="checkbox">31.05.2006</td>
 		 		</tr>
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
@@ -157,7 +157,7 @@ get_header();
 						<td><input type="checkbox">DHT</td>
 						<td>15%</td>
 						<td>10%</td>
-						<td><div class="comment" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"><div>05%</div></div></td>
+						<td><div class="comment"><div>05%</div><div class="comment_icon" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
 						<td>20%</td>
 						<td>20%</td>
 						<td>-</td>
@@ -205,7 +205,7 @@ get_header();
 				<table class="diagnoses">
 					<tr>
 						<td><input type="checkbox">Osteoporosis</td>
-						<td><div class="comment" title="<div class='comment_block'><div>Doctor</div><div class='value'>Dr. Mindes,USA</div><div>Comment</div><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"><div>Dr.Si..</div></div></td>
+						<td><div class="comment"><div>Dr.Si..</div><div class="comment_icon" title="<div class='comment_block'><div>Doctor</div><div class='value'>Dr. Mindes,USA</div><div>Comment</div><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
 						<td class="none">None</td>
 						<td class="none">None</td>
 						<td class="none">None</td>
@@ -239,7 +239,7 @@ get_header();
 					</tr>
 					<tr>
 						<td><input type="checkbox">Arimide</td>
-						<td><div class="comment" title="<div class='comment_block'><div>Dosage:</div><div class='value'>15ml every 1 day</div><div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div><div>Effect:</div><br><div class='block_header'><div id='left_column_header'>Symptom</div><div id='right_column_header'>Effect</div><br></div><div><div class='effect_main_block'><div class='row'>Symptom1<div class='value'>1</div></div><div class='row'>Symptom1<div class='value'>1</div></div></div></div><div class='bottom-block'>User Coment</div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue."><div>20ml/2</div></div></div></td>
+						<td><div class="comment"><div>20ml/2</div><div class="comment_icon" title="<div class='comment_block'><div>Dosage:</div><div class='value'>15ml every 1 day</div><div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div><div>Effect:</div><br><div class='block_header'><div id='left_column_header'>Symptom</div><div id='right_column_header'>Effect</div><br></div><div><div class='effect_main_block'><div class='row'>Symptom1<div class='value'>1</div></div><div class='row'>Symptom1<div class='value'>1</div></div></div></div><div class='bottom-block'>User Coment</div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue."></div></div></div></td>
 						<td class="none">None</td>
 						<td>20ml/2</td>
 						<td>20ml/2</td>
@@ -524,16 +524,16 @@ get_header();
 		</div>
 	</div> -->
 <script>
-	jQuery( "#accordion,#accordion1" ).accordion({ 
+	$( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
 		collapsible: true,
 		heightStyle: "content",
 		activate: function( event, ui ) {
-			jQuery('.dialog').dialog( "close" );
+			$('.dialog').dialog( "close" );
 		},
 		beforeActivate: function(event, ui) {
 	         // The accordion believes a panel is being opened
-	         jQuery('.dialog').dialog( "close" );
+	         $('.dialog').dialog( "close" );
 	        if (ui.newHeader[0]) {
 	            var currHeader  = ui.newHeader;
 	            var currContent = currHeader.next('.ui-accordion-content');
@@ -558,120 +558,123 @@ get_header();
 	        return false; // Cancel the default action
 	    }  
 	});
-	jQuery('#rec_select,.effect_main_block select').selectbox({
-		width: 50,
+	$('#rec_select,.effect_main_block select').selectbox({
+		width: 40,
 		onOpen: function (inst) {
-			jQuery('.sbToggle.sbToggleOpen').parent().addClass('active');
+			$('.sbToggle.sbToggleOpen').parent().addClass('active');
 		},
 		onClose: function (inst) {
-			jQuery('.sbToggle').parent().removeClass('active');
+			$('.sbToggle').parent().removeClass('active');
 		},
 	});
-	jQuery('select').selectbox({
+	$('select').selectbox({
 		customScrollbar: true,
 		width: 90,
 		sbToggleOpen : false,
 		onOpen: function (inst) {
-			jQuery('.sbToggle.sbToggleOpen').parent().addClass('active');
+			$('.sbToggle.sbToggleOpen').parent().addClass('active');
 		},
 		onClose: function (inst) {
-			jQuery('.sbToggle').parent().removeClass('active');
+			$('.sbToggle').parent().removeClass('active');
 		},
 	});
 	
-	jQuery('.sbOptions').jScrollPane({
+	$('.sbOptions').jScrollPane({
 		showArrows: false,
 		autoReinitialise: true,
         autoReinitialiseDelay: 10,
 	});
-	jQuery('.effect_main_block').parent().jScrollPane();
+	$('.effect_main_block').parent().jScrollPane();
 
-	jQuery('.rec_status .sbHolder').hover(function(){
-		jQuery(this).find('.sbToggle').css('display','block');
-    	jQuery(this).css('border','1px solid #eaeaea');
-    	jQuery(this).css('background-color','#fff');
+	$('.rec_status .sbHolder').hover(function(){
+		$(this).find('.sbToggle').css('display','block');
+    	$(this).css('border','1px solid #eaeaea');
+    	$(this).css('background-color','#fff');
     },function(){
-		jQuery(this).find('.sbToggle').css('display','none');
-    	jQuery(this).css('border','none');
-    	jQuery(this).css('background-color','transparent');
+		$(this).find('.sbToggle').css('display','none');
+    	$(this).css('border','none');
+    	$(this).css('background-color','transparent');
     });
 
-	jQuery('#accordion1 label').click(function(event) {
+	$('#accordion1 label').click(function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		jQuery( ".dialog" ).dialog({ 
+		$( ".dialog" ).dialog({ 
 			position: { 
 				my: "left+20 bottom-20",
 				of: event,
 				collision: "none"
 			}
 		});
-		if(jQuery( ".dialog.symptom" ).dialog( "isOpen" )){
-			jQuery( ".dialog.symptom" ).dialog( "close" );
+		if($( ".dialog.symptom" ).dialog( "isOpen" )){
+			$( ".dialog.symptom" ).dialog( "close" );
 		}else{
-			jQuery( ".dialog.symptom" ).dialog( "open" );
+			$( ".dialog.symptom" ).dialog( "open" );
 		}
 	});
-	jQuery( ".dialog.assays .add" ).click(function() {
-		jQuery('.dialog.assays .selectBox-dropdown').css('display','none');
-		jQuery('.add_item').css('display','inline-block');
-		jQuery('.add').css('background-position','0px -31px');
+	$( ".dialog.assays .add" ).click(function() {
+		$('.dialog.assays .selectBox-dropdown').css('display','none');
+		$('.add_item').css('display','inline-block');
+		$('.add').css('background-position','0px -31px');
 	});
-	jQuery( ".dialog" ).dialog({ 
+	$( ".dialog" ).dialog({ 
 			autoOpen: false,
 			open: function( event, ui ) {
-				jQuery( document).tooltip("disable");
+				$( document).tooltip("disable");
 			},
 			close: function( event, ui ) {
-				jQuery( ".comment" ).removeClass("active");
-				jQuery( document).tooltip("enable");
+				$( ".comment" ).removeClass("active");
+				$( document).tooltip("enable");
 			}
 		});
-	jQuery( ".comment div" ).hover(function(event) {
-		jQuery( this ).parent().addClass('hovered');
-		//jQuery( this ).parent().css('border','1px solid #eaeaea !important');
+	$( ".comment div:first-child" ).hover(function(event) {
+		$( this ).parent().addClass('hovered');
+		//$( this ).parent().css('border','1px solid #eaeaea !important');
 	},function(event) {
-		jQuery( this ).parent().removeClass('hovered');
-		//jQuery( this ).parent().css('border','1px solid #eaeaea !important');
+		$( this ).parent().removeClass('hovered');
+		//$( this ).parent().css('border','1px solid #eaeaea !important');
 	});
-	jQuery( ".comment div" ).click(function(event) {
+	$( ".comment div:first-child" ).click(function(event) {
 		event.stopPropagation();
-		jQuery( ".dialog" ).dialog({ 
+		$( ".dialog" ).dialog({ 
 			position: { 
 				my: "left+20 bottom-20",
 				of: event,
 				collision: "fit flip"
 			}
 		});
-		var dialog_id = jQuery(this).closest('table').attr('class');
-		if(jQuery( ".dialog."+dialog_id ).dialog( "isOpen" )){
-			jQuery( ".dialog."+dialog_id ).dialog( "close" );
+		var dialog_id = $(this).closest('table').attr('class');
+		if($( ".dialog."+dialog_id ).dialog( "isOpen" )){
+			$( ".dialog."+dialog_id ).dialog( "close" );
 		}else{
-			jQuery('.dialog').dialog( "close" );
-			jQuery( this ).parent( '.comment' ).addClass('active');
-			jQuery( ".dialog."+dialog_id ).dialog( "open" );
+			$('.dialog').dialog( "close" );
+			$( this ).parent( '.comment' ).addClass('active');
+			$( ".dialog."+dialog_id ).dialog( "open" );
 		}
 	});
-	jQuery('.dialog').click(function(event){
+	$('.dialog').click(function(event){
 		event.stopPropagation();
 	});
-	jQuery(document).ready(function(){
-		jQuery('.dialog.diagnoses').find('.sbHolder').addClass('active');
-		jQuery.widget("ui.tooltip", jQuery.ui.tooltip, {
+	$('.btn').click(function(event){
+		event.stopPropagation();
+	});
+	$(document).ready(function(){
+		$('.dialog.diagnoses').find('.sbHolder').addClass('active');
+		$.widget("ui.tooltip", $.ui.tooltip, {
 	        options: {
 	            content: function () {
-	             return jQuery(this).prop('title');
+	             return $(this).prop('title');
 	           }
 	             }
 	         });
-		jQuery( document).tooltip({
+		$( document).tooltip({
 			collision: "flipfit",
 			position: {
 		        my: "left bottom",
 		        at: "left-50 top-15",
 		        using: function( position, feedback ) {
-					jQuery( this ).css( position );
-					jQuery( "<div>" )
+					$( this ).css( position );
+					$( "<div>" )
 					.addClass( "arrow" )
 					.addClass( feedback.vertical )
 					.addClass( feedback.horizontal )
@@ -679,9 +682,9 @@ get_header();
 				}
 			}
 		});
-		jQuery( document ).click(function(event){
+		$( document ).click(function(event){
 			if (event.which == 1) {
-				jQuery('.dialog').dialog('close');
+				$('.dialog').dialog('close');
 			};
 		});
 	});
