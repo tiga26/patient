@@ -524,16 +524,19 @@ get_header();
 		</div>
 	</div> -->
 <script>
-	$( "#accordion,#accordion1" ).accordion({ 
+	var id;
+	var type;
+
+	jQuery( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
 		collapsible: true,
 		heightStyle: "content",
 		activate: function( event, ui ) {
-			$('.dialog').dialog( "close" );
+			jQuery('.dialog').dialog( "close" );
 		},
 		beforeActivate: function(event, ui) {
 	         // The accordion believes a panel is being opened
-	         $('.dialog').dialog( "close" );
+	         jQuery('.dialog').dialog( "close" );
 	        if (ui.newHeader[0]) {
 	            var currHeader  = ui.newHeader;
 	            var currContent = currHeader.next('.ui-accordion-content');
@@ -558,123 +561,134 @@ get_header();
 	        return false; // Cancel the default action
 	    }  
 	});
-	$('#rec_select,.effect_main_block select').selectbox({
+
+	jQuery('#rec_select,.effect_main_block select').selectbox({
 		width: 40,
 		onOpen: function (inst) {
-			$('.sbToggle.sbToggleOpen').parent().addClass('active');
+			jQuery('.sbToggle.sbToggleOpen').parent().addClass('active');
 		},
 		onClose: function (inst) {
-			$('.sbToggle').parent().removeClass('active');
+			jQuery('.sbToggle').parent().removeClass('active');
 		},
 	});
-	$('select').selectbox({
+
+	jQuery('select').selectbox({
 		customScrollbar: true,
 		width: 90,
 		sbToggleOpen : false,
 		onOpen: function (inst) {
-			$('.sbToggle.sbToggleOpen').parent().addClass('active');
+			jQuery('.sbToggle.sbToggleOpen').parent().addClass('active');
 		},
 		onClose: function (inst) {
-			$('.sbToggle').parent().removeClass('active');
+			jQuery('.sbToggle').parent().removeClass('active');
 		},
 	});
 	
-	$('.sbOptions').jScrollPane({
+	jQuery('.sbOptions').jScrollPane({
 		showArrows: false,
 		autoReinitialise: true,
         autoReinitialiseDelay: 10,
 	});
-	$('.effect_main_block').parent().jScrollPane();
 
-	$('.rec_status .sbHolder').hover(function(){
-		$(this).find('.sbToggle').css('display','block');
-    	$(this).css('border','1px solid #eaeaea');
-    	$(this).css('background-color','#fff');
+	jQuery('.effect_main_block').parent().jScrollPane();
+
+	jQuery('.rec_status .sbHolder').hover(function(){
+		jQuery(this).find('.sbToggle').css('display','block');
+    	jQuery(this).css('border','1px solid #eaeaea');
+    	jQuery(this).css('background-color','#fff');
     },function(){
-		$(this).find('.sbToggle').css('display','none');
-    	$(this).css('border','none');
-    	$(this).css('background-color','transparent');
+		jQuery(this).find('.sbToggle').css('display','none');
+    	jQuery(this).css('border','none');
+    	jQuery(this).css('background-color','transparent');
     });
 
-	$('#accordion1 label').click(function(event) {
+	jQuery('#accordion1 label').click(function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		$( ".dialog" ).dialog({ 
+		jQuery( ".dialog" ).dialog({ 
 			position: { 
 				my: "left+20 bottom-20",
 				of: event,
 				collision: "none"
 			}
 		});
-		if($( ".dialog.symptom" ).dialog( "isOpen" )){
-			$( ".dialog.symptom" ).dialog( "close" );
+		if(jQuery( ".dialog.symptom" ).dialog( "isOpen" )){
+			jQuery( ".dialog.symptom" ).dialog( "close" );
 		}else{
-			$( ".dialog.symptom" ).dialog( "open" );
+			jQuery( ".dialog.symptom" ).dialog( "open" );
 		}
 	});
-	$( ".dialog.assays .add" ).click(function() {
-		$('.dialog.assays .selectBox-dropdown').css('display','none');
-		$('.add_item').css('display','inline-block');
-		$('.add').css('background-position','0px -31px');
+
+	jQuery( ".dialog.assays .add" ).click(function() {
+		jQuery('.dialog.assays .selectBox-dropdown').css('display','none');
+		jQuery('.add_item').css('display','inline-block');
+		jQuery('.add').css('background-position','0px -31px');
 	});
-	$( ".dialog" ).dialog({ 
-			autoOpen: false,
-			open: function( event, ui ) {
-				$( document).tooltip("disable");
-			},
-			close: function( event, ui ) {
-				$( ".comment" ).removeClass("active");
-				$( document).tooltip("enable");
-			}
-		});
-	$( ".comment div:first-child" ).hover(function(event) {
-		$( this ).parent().addClass('hovered');
-		//$( this ).parent().css('border','1px solid #eaeaea !important');
+
+	jQuery( ".dialog" ).dialog({ 
+		autoOpen: false,
+		open: function( event, ui ) {
+			jQuery( document).tooltip("disable");
+		},
+		close: function( event, ui ) {
+			jQuery( ".comment" ).removeClass("active");
+			jQuery( document).tooltip("enable");
+		}
+	});
+
+	jQuery( ".comment div:first-child" ).hover(function(event) {
+		jQuery( this ).parent().addClass('hovered');
+		//jQuery( this ).parent().css('border','1px solid #eaeaea !important');
 	},function(event) {
-		$( this ).parent().removeClass('hovered');
-		//$( this ).parent().css('border','1px solid #eaeaea !important');
+		jQuery( this ).parent().removeClass('hovered');
+		//jQuery( this ).parent().css('border','1px solid #eaeaea !important');
 	});
-	$( ".comment div:first-child" ).click(function(event) {
+
+	jQuery( ".comment div:first-child" ).click(function(event) {
 		event.stopPropagation();
-		$( ".dialog" ).dialog({ 
+		jQuery( ".dialog" ).dialog({ 
 			position: { 
 				my: "left+20 bottom-20",
 				of: event,
 				collision: "fit flip"
 			}
 		});
-		var dialog_id = $(this).closest('table').attr('class');
-		if($( ".dialog."+dialog_id ).dialog( "isOpen" )){
-			$( ".dialog."+dialog_id ).dialog( "close" );
+		var dialog_id = jQuery(this).closest('table').attr('class');
+		type = dialog_id;
+		if(jQuery( ".dialog."+dialog_id ).dialog( "isOpen" )){
+			jQuery( ".dialog."+dialog_id ).dialog( "close" );
 		}else{
-			$('.dialog').dialog( "close" );
-			$( this ).parent( '.comment' ).addClass('active');
-			$( ".dialog."+dialog_id ).dialog( "open" );
+			jQuery('.dialog').dialog( "close" );
+			jQuery( this ).parent( '.comment' ).addClass('active');
+			jQuery( ".dialog."+dialog_id ).dialog( "open" );
 		}
 	});
-	$('.dialog').click(function(event){
+
+	jQuery('.dialog').click(function(event){
 		event.stopPropagation();
 	});
-	$('.btn').click(function(event){
+
+	jQuery('.btn').click(function(event){
 		event.stopPropagation();
 	});
-	$(document).ready(function(){
-		$('.dialog.diagnoses').find('.sbHolder').addClass('active');
-		$.widget("ui.tooltip", $.ui.tooltip, {
+
+	jQuery(document).ready(function(){
+		jQuery('.dialog.diagnoses').find('.sbHolder').addClass('active');
+		jQuery.widget("ui.tooltip", jQuery.ui.tooltip, {
 	        options: {
 	            content: function () {
-	             return $(this).prop('title');
+	             return jQuery(this).prop('title');
 	           }
 	             }
 	         });
-		$( document).tooltip({
+		jQuery( document).tooltip({
 			collision: "flipfit",
 			position: {
 		        my: "left bottom",
 		        at: "left-50 top-15",
 		        using: function( position, feedback ) {
-					$( this ).css( position );
-					$( "<div>" )
+					jQuery( this ).css( position );
+					jQuery( "<div>" )
 					.addClass( "arrow" )
 					.addClass( feedback.vertical )
 					.addClass( feedback.horizontal )
@@ -682,12 +696,54 @@ get_header();
 				}
 			}
 		});
-		$( document ).click(function(event){
+		jQuery( document ).click(function(event){
 			if (event.which == 1) {
-				$('.dialog').dialog('close');
+				jQuery('.dialog').dialog('close');
 			};
 		});
 	});
+
+	jQuery('.save').on('click', function(){
+		Save.savePatientData(type);
+	});
+
+	Save = {
+
+		saveRecovery: function() {
+			
+		},
+
+		saveSymptoms: function() {
+			
+		},
+
+		saveAssays: function() {
+			
+		},
+
+		saveDiagnoses: function() {
+			
+		},
+
+		saveTherapies: function() {
+			
+		},
+
+		saveLifestyle: function() {
+			
+		},
+
+		savePatientData: function(type) {
+			eval('this.save' + this.ucfirst(type))(type);
+		},
+
+		ucfirst:  function(str) {
+		  str += '';
+		  var f = str.charAt(0).toUpperCase();
+		  return f + str.substr(1);
+		},
+	}
+
 </script>
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>
