@@ -19,12 +19,12 @@ get_header();
 		 	<table class="recovery">
 		 		<tr class="dates">
 		 			<td id='dates'>Dates</td>
-		 			<td><input type="checkbox">03.04.2006</td>
-		 			<td><input type="checkbox">15.04.2006</td>
-		 			<td><input type="checkbox">21.04.2006</td>
-		 			<td><input type="checkbox">04.05.2006</td>
-		 			<td><input type="checkbox">30.05.2006</td>
-		 			<td><input type="checkbox">31.05.2006</td>
+		 			<td data-relation-id="11"><input type="checkbox">03.04.2006</td>
+		 			<td data-relation-id="12"><input type="checkbox">15.04.2006</td>
+		 			<td data-relation-id="13"><input type="checkbox">21.04.2006</td>
+		 			<td data-relation-id="14"><input type="checkbox">04.05.2006</td>
+		 			<td data-relation-id="15"><input type="checkbox">30.05.2006</td>
+		 			<td data-relation-id="16"><input type="checkbox">31.05.2006</td>
 		 		</tr>
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
@@ -153,14 +153,14 @@ get_header();
 	 		</div>
 			<div>
 				<table class="assays">
-					<tr>
+					<tr data-assay-id='19'>
 						<td><input type="checkbox">DHT</td>
 						<td>15%</td>
-						<td>10%</td>
+						<td><div class="comment"><div>10%</div><div class="comment_icon" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
 						<td><div class="comment"><div>05%</div><div class="comment_icon" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
 						<td>20%</td>
 						<td>20%</td>
-						<td>-</td>
+						<td><div class="comment"><div>None</div></div></td>
 					</tr>
 					<tr>
 						<td><input type="checkbox">Testosterone</td>
@@ -307,17 +307,11 @@ get_header();
 			<select>
 				<option>mg</option>
 				<option>kg</option>
-				<option>kg</option>
-				<option>kg</option>
-				<option>kg</option>
-				<option>kg</option>
-				<option>kg</option>
-				<option>kg</option>
 			</select>
 			<input type='text' class="add_item">
 			<div class="add"></div><br>
 			Reference<span>*</span>:
-			<input type="text"> - <input type="text"> = <input type="text"> <br>
+			<input type="text" id="ref-low"> - <input type="text" id="ref-hi"> = <input type="text"> <br>
 			<textarea name='comment'></textarea>
 			<span>* Please fill out all required fields</span>
 			<div class="clear"></div>
@@ -526,6 +520,9 @@ get_header();
 <script>
 	var id;
 	var type;
+	var data;
+	var index
+	var selector_id;;
 
 	jQuery( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
@@ -654,7 +651,10 @@ get_header();
 			}
 		});
 		var dialog_id = jQuery(this).closest('table').attr('class');
+		index = jQuery(this).closest('td').index();
 		type = dialog_id;
+		selector_id = jQuery(this);
+
 		if(jQuery( ".dialog."+dialog_id ).dialog( "isOpen" )){
 			jQuery( ".dialog."+dialog_id ).dialog( "close" );
 		}else{
@@ -716,21 +716,51 @@ get_header();
 		saveSymptoms: function() {
 			
 		},
-
+		// <div class="dialog assays">Result<span>*</span>:
+		// 	<input type="text" id="first-child">
+		// 	<select>
+		// 		<option>mg</option>
+		// 		<option>kg</option>
+		// 	</select>
+		// 	<input type='text' class="add_item">
+		// 	<div class="add"></div><br>
+		// 	Reference<span>*</span>:
+		// 	<input type="text"> - <input type="text"> = <input type="text"> <br>
+		// 	<textarea name='comment'></textarea>
+		// 	<span>* Please fill out all required fields</span>
+		// 	<div class="clear"></div>
+		// 	<div class="btn">
+		// 		<a class="delete"></a>
+		// 		<a class="cancel"></a>
+		// 		<a class="save"></a>
+		// 	</div>
+		// </div>
 		saveAssays: function() {
-			var dialog = $('.dialog.assays');
+
+			var dialog = jQuery('.dialog.assays');
 
 			var current_data = {
 				
-				assay_id: 1,
-				relation_id: 1,
+				assay_id: selector_id.closest('tr').data('assay-id'),
+				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
 				unit_id: 2,
-				result: 20,
-				ref_low: 7,
-				ref_hi: 10,
-				remarks: 'fsdfsdfsdfsdf'
-				
+				result: dialog.find('#first-child').val(),
+				ref_low: dialog.find('#ref-low').val(),
+				ref_hi: dialog.find('#ref-hi').val(),
+				remarks: dialog.find('textarea').val()				
 			};
+
+			var datas = {
+				action: type,
+		        data: current_data,
+		        type: 'set'
+			};
+
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				alert(response);
+		 	});
+		 	return false;
+
 		},
 
 		saveDiagnoses: function() {
