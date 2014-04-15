@@ -10,25 +10,25 @@
 //  	return false;
 // });
 
-jQuery(".rec_status").on('click', function() {
-	var data = {
-		id: 1,
-	};
-	var datas = {
-		action: 'assay',
-        data: data,
-        type: 'get'
-	};
-	// the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
- 	jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-		alert(response);
- 	});
- 	return false;
-});
+// jQuery(".rec_status").on('click', function() {
+// 	var data = {
+// 		id: 1,
+// 	};
+// 	var datas = {
+// 		action: 'assay',
+//         data: data,
+//         type: 'get'
+// 	};
+// 	// the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
+//  	jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+// 		alert(response);
+//  	});
+//  	return false;
+// });
 
 // jQuery("#dates").on('click', function() {
 // 	var data = {
-// 		rrlation_id: 1,
+// 		relation_id: 1,
 // 		value: 20,
 // 		symptom_id: 2
 // 	};
@@ -66,21 +66,21 @@ jQuery(".rec_status").on('click', function() {
 //  	return false;
 // });
 
-jQuery("#dates").on('click', function() {
-	var data = {
-		diagnosis_id: 1,
-		relation_id: 1,
-		doctor_id: 16,
-		comment: 'sjkslkdfnsdkf'
-	};
-	var datas = {
-		action: 'diagnos',
-        data: data,
-        type: 'set'
-	};
-	// the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
- 	jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-		alert(response);
- 	});
- 	return false;
-});
+// jQuery("#dates").on('click', function() {
+// 	var data = {
+// 		diagnosis_id: 1,
+// 		relation_id: 1,
+// 		doctor_id: 16,
+// 		comment: 'sjkslkdfnsdkf'
+// 	};
+// 	var datas = {
+// 		action: 'diagnos',
+//         data: data,
+//         type: 'set'
+// 	};
+// 	// the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
+//  	jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+// 		alert(response);
+//  	});
+//  	return false;
+// });

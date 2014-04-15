@@ -42,6 +42,8 @@ get_header();
 			 			<option>60%</option>
 			 			<option>70%</option>
 			 			<option>80%</option>
+			 			<option>90%</option>
+			 			<option>100%</option>
 		 			</select></div>
 		 			</td>
 		 			<td>40%</td>
@@ -203,10 +205,10 @@ get_header();
 			</div>
 			<div>
 				<table class="diagnoses">
-					<tr>
+					<tr data-diagnosis-id="356">
 						<td><input type="checkbox">Osteoporosis</td>
 						<td><div class="comment"><div>Dr.Si..</div><div class="comment_icon" title="<div class='comment_block'><div>Doctor</div><div class='value'>Dr. Mindes,USA</div><div>Comment</div><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
-						<td class="none">None</td>
+						<td><div class="comment"><div>None</div></div></td>
 						<td class="none">None</td>
 						<td class="none">None</td>
 						<td class="none">None</td>
@@ -341,12 +343,12 @@ get_header();
 					<option>Georgia</option>
 				</select>
 				<select id="doctor_select" size="4">
-					<option>Doctor</option>
-					<option>Donals</option>
-					<option>Burns</option>
-					<option>Michael</option>
-					<option>Michael</option>
-					<option>Michael</option>
+					<option data-doctor-id="65">Doctor</option>
+					<option data-doctor-id="32">Donals</option>
+					<option data-doctor-id="87">Burns</option>
+					<option data-doctor-id="12">Michael</option>
+					<option data-doctor-id="9">Michael</option>
+					<option data-doctor-id="56">Michael</option>
 				</select>
 			</div>
 			<input type="text"><div class="add_doctor">+</div>
@@ -707,10 +709,15 @@ get_header();
 		Save.savePatientData(type);
 	});
 
+	jQuery('.sbFocus').on('click',function(){
+		console.log('sdfsdfsdf');
+	});
 	Save = {
 
 		saveRecovery: function() {
-			
+			jQuery(''.rec_select.sbSelector).on('click',function(){
+				console.log('sdfsdfsdf');
+			});
 		},
 
 		saveSymptoms: function() {
@@ -757,14 +764,31 @@ get_header();
 			};
 
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-				alert(response);
+				console.log(response);
 		 	});
 		 	return false;
 
 		},
 
 		saveDiagnoses: function() {
-			
+
+			var dialog = jQuery('.dialog.diagnoses');
+
+			var current_data = {
+				
+				diagnosis_id: selector_id.closest('tr').data('diagnosis-id'),
+				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
+				doctor_id: 16,
+				comment: dialog.find('textarea').val()			
+			};
+
+			console.log(current_data);
+
+			var datas = {
+				action: type,
+		        data: current_data,
+		        type: 'set'
+			};
 		},
 
 		saveTherapies: function() {
