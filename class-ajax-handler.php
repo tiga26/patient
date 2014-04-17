@@ -10,7 +10,8 @@ class Patient_Ajax_Handler{
 	private $user = 1;
 	private static $table;
 	private static $patient_data;
-	private static $action_type;	
+	private static $action_type;
+	private static $action;
 	// private static $patient;
 	private static $status_code = array(
 		0 => array(
@@ -31,8 +32,17 @@ class Patient_Ajax_Handler{
 		),
 		4 => array(
 			'status' => '4',
-			'message' => 'Custom message',
+			'message' => array(),
+			'fields' => array(),
 		)
+	);
+
+	private static $error_message = array(
+		'assays' => array(
+			'result' => 'The result field must be above 0',
+			'ref_low' => 'Please enter range from 0 - 100%',
+			'ref_hi' => 'Please enter range from 0 - 100%',
+			),
 	);
 
 	private static $type_to_table = array(
@@ -51,7 +61,7 @@ class Patient_Ajax_Handler{
 
 	public function init($data) {
 		
-		$action_name = $data['action'];
+		self::$action = $action_name = $data['action'];
 		$action_type = $data['type'];
 		self::$patient_data = $data['data'];
 		self::$table = self::$type_to_table[$action_name];
@@ -94,6 +104,16 @@ class Patient_Ajax_Handler{
 		$lifestyle = $wpdb->get_results($lifestyle_sql);	
 	}
 
+	public static function _getDoctor() {
+		global $wpdb;
+		$country = "'%".self::$patient_data['country']."%'";
+		$doctors_sql = 'SELECT * FROM '.self::$table.' WHERE country LIKE ('.$country.')';
+		// var_dump($doctors_sql);exit;
+		$doctors = $wpdb->get_results($doctors_sql);
+		var_dump($doctors);exit;
+		print_r(json_encode($doctors));
+	}
+
 	public static function _setSymptoms() {
 		global $wpdb;
 		$symptom = $wpdb->insert(self::$table, self::$patient_data);
@@ -102,10 +122,28 @@ class Patient_Ajax_Handler{
 
 	public static function _setAssays() {
 		global $wpdb;
-		// check inserting data use is_numeric function
-		// if() {
+		$validate = false;
+		if(!is_numeric(self::$patient_data['result'])) {
+			array_push(self::$status_code[4]['message'], self::$error_message[self::$action]['result']);
+			array_push(self::$status_code[4]['fields'], 'result');
+			$validate = true;
+		}
+		if(!is_numeric(self::$patient_data['ref_low']) || (int)self::$patient_data['ref_low'] < 0 || (int)self::$patient_data['ref_low'] > 100) {			
+			array_push(self::$status_code[4]['message'], self::$error_message[self::$action]['ref_low']);
+			array_push(self::$status_code[4]['fields'], 'ref_low');
+			$validate = true;
+		}
+		if(!is_numeric(self::$patient_data['ref_hi']) || (int)self::$patient_data['ref_hi'] < 0 || (int)self::$patient_data['ref_hi'] > 100) {
+			array_push(self::$status_code[4]['message'], self::$error_message[self::$action]['ref_hi']);
+			array_push(self::$status_code[4]['fields'], 'ref_hi');
+			$validate = true;
+		}
 
-		// }
+		if($validate) {
+			print_r(json_encode(self::$status_code[4]));
+			return;
+		}
+
 		self::$patient_data['ref_percent'] = self::$patient_data['ref_hi'] / self::$patient_data['ref_low'];
 		self::$patient_data['remarks'] = "'".self::$patient_data['remarks']."'";
 		$assay_data_str = implode(',', self::$patient_data);
@@ -177,7 +215,7 @@ class Patient_Ajax_Handler{
 		foreach ($relations as $relation) {
 			array_push($relations_array, $relation->relation_id);
 		}
-		if(!in_array(self::$patient_data['relation_id'], $relations_array)) {
+		if(!in_array(self::$patient_data['relation_id'], $relations_array) && self::$action != 'doctor') {
 			die();
 		}
 		$relation_str = implode(',', $relations_array);

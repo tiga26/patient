@@ -492,13 +492,13 @@ get_header();
 			</div>
 		</div>
 	</div> -->
-	<!-- <div class="pop-up" id="error_data_entry">
+	<div class="pop-up" id="error_data_entry" style="display:none;" >
 		<div class="pop-up-inner-block">
 			<p>Data Entry <b>Error</b></p>
-			<p>[ESC]</p><br><hr>
-			<span>Pleas enter range from <b>0-100%</b></span>
+			<p id="esc">[ESC]</p><br><hr>
+			<span></span>
 		</div>
-	</div> -->
+	</div>
 	<!-- <div class="pop-up" id="column_delete">
 		<div class="pop-up-inner-block">
 			<p>Delete <b>Column</b></p>
@@ -524,7 +524,7 @@ get_header();
 	var type;
 	var data;
 	var index
-	var selector_id;;
+	var selector_id;
 
 	jQuery( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
@@ -712,6 +712,16 @@ get_header();
 	jQuery('.sbFocus').on('click',function(){
 		console.log('sdfsdfsdf');
 	});
+
+	//custom javascript;
+	var diagnos_doctor_id;
+
+	jQuery(document).ready(function(){
+		Diagnos.setDoctorId();
+		Diagnos.filtrDoctorByCountry();
+	});
+	
+
 	Save = {
 
 		saveRecovery: function() {
@@ -764,8 +774,11 @@ get_header();
 			};
 
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-				console.log(response);
-		 	});
+				if(response.status == 4) {
+					dialog.dialog( "close" );
+					jQuery('#error_data_entry').css('display','block');
+				}
+		 	}, 'json');
 		 	return false;
 
 		},
@@ -778,7 +791,7 @@ get_header();
 				
 				diagnosis_id: selector_id.closest('tr').data('diagnosis-id'),
 				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
-				doctor_id: 16,
+				doctor_id: diagnos_doctor_id,
 				comment: dialog.find('textarea').val()			
 			};
 
@@ -808,7 +821,44 @@ get_header();
 		  var f = str.charAt(0).toUpperCase();
 		  return f + str.substr(1);
 		},
-	}
+	}	
+
+	Diagnos = {
+
+		setDoctorId: function() {
+			jQuery('#doctor_select').next().find('li').on('click', function(){
+				var index = jQuery(this).index();
+				diagnos_doctor_id = jQuery('#doctor_select').find('option:eq('+index+')').data('doctor-id');
+			});
+		},
+
+		filtrDoctorByCountry: function() {
+			jQuery('#country_select').next().find('li').on('click', function(){
+				var index = jQuery(this).index();
+				var country = jQuery('#country_select').find('option:eq('+index+')').text();
+				var current_data = {
+					country: country,
+				}
+				var datas = {
+					action: 'doctor',
+			        data: current_data,
+			        type: 'get'
+				};
+				console.log(current_data);
+				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					alert(response);
+		 		}, 'json');
+			});
+		}
+	}	
+
+	jQuery('#esc').on('click', function(){
+		jQuery('.pop-up').css('display','none');
+		setTimeout(function(){
+			jQuery('.dialog.'+type).dialog( "open" );
+		},50);		
+	});
+	
 
 </script>
 <?php get_sidebar(); ?>
