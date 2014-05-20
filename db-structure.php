@@ -531,6 +531,12 @@ return array(
 					'nonull' => ' NOT NULL',
 					'autoincrement' => '',
 				),
+				'submit_date' => array(
+					'type' => ' DATE',
+					'length' => '',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
 				'name' => array(
 					'type' => ' VARCHAR',
 					'length' => '(255)',

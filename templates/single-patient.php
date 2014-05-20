@@ -274,7 +274,7 @@ get_header();
 						<td><input type="text">
 							<div class="add"></div>
 						</td>
-						<td class="none">None</td>
+						<td class="none"></td>
 						<td class="none">None</td>
 						<td class="none">None</td>
 						<td class="none">None</td>
@@ -745,7 +745,7 @@ get_header();
 			jQuery( this ).addClass('active');
 			var tableForAppend = jQuery( this ).data('table');
 			jQuery( this ).parent('div').find('.btn.my').removeClass('active');
-			jQuery( 'table.'+tableForAppend ).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'>None</td><td class='none'>None</td><td class='none'>None</td><td class='none'>None</td><td class='none'>None</td><td>-</td></tr> ");
+			jQuery( 'table.'+tableForAppend ).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td></td></tr> ");
 		}
 	});
 
@@ -1076,6 +1076,7 @@ get_header();
 
 		addNewType: function(){
 			jQuery('.add-row').find('.add').live('click', function(){
+				var closest_tbody = jQuery(this).closest('tbody')
 				var add_type = jQuery(this).closest('table').attr('class');
 				var current_data = {};
 				if (add_type.indexOf("symptom") > -1) {
@@ -1089,6 +1090,18 @@ get_header();
 					data: current_data,
 					type: 'add'
 				};
+
+				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					if(response.status == 4) {
+						dialog.dialog( "close" );
+						jQuery('#error_data_entry').css('display','block');
+					} else {
+						console.log(response);
+						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+						// console.log('<tr data-'+add_type+'-id="'+response.id+'"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+					}
+			 	}, 'json');
+			 	return false;
 
 				console.log(datas);
 

@@ -52,14 +52,26 @@ class Patient_Ajax_Handler{
 	);
 
 	private static $type_to_table = array(
-		'recovery' => 'patient_recovery_status',
-		'symptom' => 'patient_user_symptoms',
-		'assays' => 'patient_assay_result',
-		'diagnoses' => 'patient_doctor_diagnosis',
-		'therapies' => 'patient_therapy_result',
-		'lifestyle' => 'patient_lifestyle_result',
-		'doctor' => 'patient_doctors',
-		'unit' => 'patient_units'
+		'set' => array(
+			'recovery' => 'patient_recovery_status',
+			'symptom' => 'patient_user_symptoms',
+			'assays' => 'patient_assay_result',
+			'diagnoses' => 'patient_doctor_diagnosis',
+			'therapies' => 'patient_therapy_result',
+			'lifestyle' => 'patient_lifestyle_result',	
+		),
+		'add' => array(
+			'symptom' => 'patient_symptoms',
+			'assays' => 'patient_assays',
+			'diagnoses' => 'patient_diagnosis',
+			'therapies' => 'patient_therapy',
+			'lifestyle' => 'patient_lifestyle',
+			'doctor' => 'patient_doctors',
+			'unit' => 'patient_units'
+		),
+		'get' => array(
+		),
+		
 	);
 
 	private static $type_to_id = array(
@@ -71,7 +83,12 @@ class Patient_Ajax_Handler{
 		self::$action = $action_name = $data['action'];
 		$action_type = $data['type'];
 		self::$patient_data = $data['data'];
-		self::$table = self::$type_to_table[$action_name];
+		self::$table = self::$type_to_table[$action_type][$action_name];
+
+		if($action_type == 'add') {
+			self::$patient_data['submit_date'] = date('Y-m-d H:i:s');
+			self::$patient_data['approved'] = 0;
+		}
 
 		// $this->checkUserOnDataUpdate();
 
@@ -257,22 +274,57 @@ class Patient_Ajax_Handler{
 
 	public static function _addSymptom() {
 		global $wpdb;
+		$add_symptom = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_symptom;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
-	public static function _addAssay() {
-
+	public static function _addAssays() {
+		global $wpdb;
+		$add_assay = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_assay;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
-	public static function _addDiagnos() {
-
+	public static function _addDiagnoses() {
+		global $wpdb;
+		$add_diagnos = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_diagnos;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
-	public static function _addTherapy() {
-
+	public static function _addTherapies() {
+		global $wpdb;
+		$add_therapy = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_therapy;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _addLifestyle() {
-
+		global $wpdb;
+		$add_lifestyle = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_lifestyle;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _addDoctor() {
