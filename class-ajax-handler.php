@@ -38,15 +38,22 @@ class Patient_Ajax_Handler{
 	);
 
 	private static $error_message = array(
+		'recovery' => array(
+			'value' => 'The value of recovery status must be 0%-100%',
+		),
 		'assays' => array(
 			'result' => 'The result field must be above 0',
 			'ref_low' => 'Please enter range from 0 - 100%',
 			'ref_hi' => 'Please enter range from 0 - 100%',
 			),
+		'diagnoses' => array(
+			'doctor_id' => 'Please choose doctor',
+		),
 	);
 
 	private static $type_to_table = array(
-		'symptoms' => 'patient_user_symptoms',
+		'recovery' => 'patient_recovery_status',
+		'symptom' => 'patient_user_symptoms',
 		'assays' => 'patient_assay_result',
 		'diagnoses' => 'patient_doctor_diagnosis',
 		'therapies' => 'patient_therapy_result',
@@ -66,7 +73,7 @@ class Patient_Ajax_Handler{
 		self::$patient_data = $data['data'];
 		self::$table = self::$type_to_table[$action_name];
 
-		$this->checkUserOnDataUpdate();
+		// $this->checkUserOnDataUpdate();
 
 		add_action('wp_ajax_'.$action_name, array( 'Patient_Ajax_Handler', '_'.$action_type.ucfirst($action_name) ) );
 		do_action('wp_ajax_'.$action_name);
@@ -108,14 +115,40 @@ class Patient_Ajax_Handler{
 		global $wpdb;
 		$country = "'%".self::$patient_data['country']."%'";
 		$doctors_sql = 'SELECT * FROM '.self::$table.' WHERE country LIKE ('.$country.')';
-		// var_dump($doctors_sql);exit;
-		$doctors = $wpdb->get_results($doctors_sql);
-		var_dump($doctors);exit;
 		print_r(json_encode($doctors));
+		$doctors = $wpdb->get_results($doctors_sql);
 	}
 
-	public static function _setSymptoms() {
+	public static function _setRecovery() {
 		global $wpdb;
+		$relation_id = "'".self::$patient_data['recovery_id']."'";
+		$value = "'".self::$patient_data['value']."'";
+		$remarks = "'".self::$patient_data['remarks']."'";
+
+		if(null != self::$patient_data['recovery_id']) {
+			$relation_id = "'".self::$patient_data['relation_id']."'";
+			$insert_recovery_sql = 'UPDATE '.self::$table.'
+									SET value = '.$value.',
+									remarks = '.$remarks.'
+									WHERE recovery_id='.self::$patient_data['recovery_id'];
+			$status = 2;
+		} else {
+			$insert_recovery_sql = 'INSERT INTO '.self::$table.' (relation_id,value,remarks)
+									VALUES('.$relation_id.','.$value.','.$remarks.')';
+			$status = 1;
+		}
+		$recovery = $wpdb->query( $insert_recovery_sql );
+		if($recovery === false) {
+			$status = 3;
+		} elseif($recovery == 0) {
+			$status = 0;
+		}
+		print_r(json_encode(self::$status_code[$status]));
+	}
+
+	public static function _setSymptom() {
+		global $wpdb;
+		var_dump(self::$table, self::$patient_data);exit;
 		$symptom = $wpdb->insert(self::$table, self::$patient_data);
 		var_dump($symptom);
 	}
@@ -162,8 +195,29 @@ class Patient_Ajax_Handler{
 
 	public static function _setDiagnoses() {
 		global $wpdb;
-		$diagnos = $wpdb->insert(self::$table, self::$patient_data);
-		var_dump($diagnos);
+		$validate = false;
+
+		if(!isset( self::$patient_data['doctor_id'])) {
+			array_push(self::$status_code[4]['message'], self::$error_message[self::$action]['doctor_id']);
+			array_push(self::$status_code[4]['fields'], 'doctor_id');
+			$validate = true;
+		}
+		
+		if($validate) {
+			print_r(json_encode(self::$status_code[4]));
+			return;
+		}
+
+		self::$patient_data['comment'] = "'".self::$patient_data['comment']."'";
+		$diagnosis_data_str = implode(',', self::$patient_data);
+		$insert_diagnosis_sql = 'INSERT INTO '.self::$table.'
+			 					(diagnosis_id,relation_id,doctor_id,comment)
+			 					VALUES('.$diagnosis_data_str.') ON DUPLICATE KEY UPDATE
+			 					diagnosis_id = '.self::$patient_data['diagnosis_id'].',
+			 					doctor_id = '.self::$patient_data['doctor_id'].',
+			 					comment = '.self::$patient_data['comment'].'';
+		$diagnosis = $wpdb->query( $insert_diagnosis_sql );
+		print_r(json_encode(self::$status_code[$diagnosis]));
 	}
 
 	public static function _setTherapies() {

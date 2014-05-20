@@ -33,6 +33,38 @@ return array(
 			'engine' => 'InnoDB',
 		),
 
+		'recovery_status' => array(
+			'fields' => array(
+				'recovery_id' => array(
+					'type' => ' INT',
+					'length' => '(11)',
+					'nonull' => ' NOT NULL',
+					'autoincrement' => ' AUTO_INCREMENT',
+				),
+				'relation_id' => array(
+					'type' => ' INT',
+					'length' => '(11)',
+					'nonull' => '',
+					'autoincrement' => '',
+				),				
+				'remarks' => array(
+					'type' => ' TEXT',
+					'length' => '',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
+				'value' => array(
+					'type' => ' INT',
+					'length' => '(3)',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
+			),
+
+			'primary_key' => 'recovery_id',
+			'engine' => 'InnoDB',
+		),
+
 		'user_symptoms' => array(
 			'fields' => array(
 				'user_symptom_id' => array(
@@ -353,6 +385,18 @@ return array(
 					'length' => '(11)',
 					'nonull' => ' NOT NULL',
 					'autoincrement' => '',
+				),				
+				'dosage' => array(
+					'type' => ' INT',
+					'length' => '(5)',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
+				'frequency' => array(
+					'type' => ' INT',
+					'length' => '(5)',
+					'nonull' => '',
+					'autoincrement' => '',
 				),
 			),
 			'primary_key' => 'therapy_result_id',
@@ -381,18 +425,6 @@ return array(
 				'comment' => array(
 					'type' => ' TEXT',
 					'length' => '',
-					'nonull' => '',
-					'autoincrement' => '',
-				),
-				'dosage' => array(
-					'type' => ' INT',
-					'length' => '(5)',
-					'nonull' => '',
-					'autoincrement' => '',
-				),
-				'frequency' => array(
-					'type' => ' INT',
-					'length' => '(5)',
 					'nonull' => '',
 					'autoincrement' => '',
 				),
