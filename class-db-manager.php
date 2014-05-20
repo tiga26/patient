@@ -43,22 +43,22 @@ class Patient_Db_Manager {
 	}
 
 	public function loadPatientAllData() {
-		$redis = new Predis\Client();
-		$patient_data = $redis->get('patient:id:'.$this->current_patient);
+		// $redis = new Predis\Client();
+		// $patient_data = $redis->get('patient:id:'.$this->current_patient);
 
-		if(null != $patient_data) {
-			$this->patient_data = json_decode($patient_data);
-			return $this;
-		} else {
+		// if(null != $patient_data) {
+		// 	$this->patient_data = json_decode($patient_data);
+		// 	return $this;
+		// } else {
 
 			foreach (self::$datas as $data) {
 				$this->loadPatientSingleData($data['handler']);			
 			}
 			$this->patient_data = (object) $this->patient_data;
 			$datas_json = json_encode($this->patient_data);
-			$redis->set('patient:id:'.$this->current_patient, $datas_json);
+			// $redis->set('patient:id:'.$this->current_patient, $datas_json);
 			return $this;
-		}
+		// }
 	}
 
 	public function loadPatientSingleData($data_name) {

@@ -121,22 +121,23 @@ class Patient_Ajax_Handler{
 
 	public static function _setRecovery() {
 		global $wpdb;
-		$relation_id = "'".self::$patient_data['recovery_id']."'";
+		$relation_id = "'".self::$patient_data['relation_id']."'";
 		$value = "'".self::$patient_data['value']."'";
 		$remarks = "'".self::$patient_data['remarks']."'";
 
 		if(null != self::$patient_data['recovery_id']) {
-			$relation_id = "'".self::$patient_data['relation_id']."'";
+			$recovery_id = "'".self::$patient_data['recovery_id']."'";
 			$insert_recovery_sql = 'UPDATE '.self::$table.'
 									SET value = '.$value.',
 									remarks = '.$remarks.'
-									WHERE recovery_id='.self::$patient_data['recovery_id'];
+									WHERE recovery_id='.$recovery_id;
 			$status = 2;
 		} else {
 			$insert_recovery_sql = 'INSERT INTO '.self::$table.' (relation_id,value,remarks)
 									VALUES('.$relation_id.','.$value.','.$remarks.')';
 			$status = 1;
 		}
+
 		$recovery = $wpdb->query( $insert_recovery_sql );
 		if($recovery === false) {
 			$status = 3;
@@ -148,9 +149,31 @@ class Patient_Ajax_Handler{
 
 	public static function _setSymptom() {
 		global $wpdb;
-		var_dump(self::$table, self::$patient_data);exit;
-		$symptom = $wpdb->insert(self::$table, self::$patient_data);
-		var_dump($symptom);
+		$relation_id = "'".self::$patient_data['relation_id']."'";
+		$value = "'".self::$patient_data['value']."'";
+		$symptom_id = "'".self::$patient_data['symptom_id']."'";
+		$comment = "'".self::$patient_data['comment']."'";
+
+		if(null != self::$patient_data['user_symptom_id']) {
+			$user_symptom_id = "'".self::$patient_data['user_symptom_id']."'";
+			$insert_symptom_sql = 'UPDATE '.self::$table.'
+									SET value = '.$value.',
+									comment = '.$comment.'
+									WHERE user_symptom_id='.$user_symptom_id;
+			$status = 2;
+		} else {
+			$insert_symptom_sql = 'INSERT INTO '.self::$table.' (relation_id,value,symptom_id,comment)
+									VALUES('.$relation_id.','.$value.','.$symptom_id.','.$comment.')';
+			$status = 1;
+		}
+		
+		$symptom = $wpdb->query( $insert_symptom_sql );
+		if($symptom === false) {
+			$status = 3;
+		} elseif($symptom == 0) {
+			$status = 0;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _setAssays() {

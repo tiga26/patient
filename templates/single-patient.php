@@ -52,7 +52,7 @@ get_header();
 	 						<td><input type="checkbox"><label>Symptom A</label></td>
 	 						<td>3</td>
 	 						<td class="none">None</td>
-	 						<td><div class="comment"><div>4</div><div class="comment_icon"></div></div></td>
+	 						<td data-user-symptom-id="1"><div class="comment"><div>4</div><div class="comment_icon"></div></div></td>
 	 						<td>3</td>
 	 						<td>3</td>
 	 						<td>-</td>
@@ -873,8 +873,9 @@ get_header();
 
 			var symptom_val = jQuery("#symptom-select").val();
 
-			var current_data = {				
-				recovery_id: selector_id.closest('tr').data('symptom-id'),
+			var current_data = {
+				user_symptom_id: selector_id.closest('td').data('user-symptom-id'),
+				symptom_id: selector_id.closest('tr').data('symptom-id'),
 				value: symptom_val, 
 				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
 				comment: dialog.find('textarea').val()				

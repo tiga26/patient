@@ -90,6 +90,12 @@ return array(
 					'length' => '(11)',
 					'nonull' => '',
 					'autoincrement' => '',
+				),								
+				'comment' => array(
+					'type' => ' TEXT',
+					'length' => '',
+					'nonull' => '',
+					'autoincrement' => '',
 				),
 
 			),
