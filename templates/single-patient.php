@@ -1054,7 +1054,7 @@ get_header();
 				},
 			});
 
-			jQuery('select').selectbox({
+			jQuery('.main-container select').selectbox({
 				customScrollbar: true,
 				width: 90,
 				sbToggleOpen : false,
@@ -1097,8 +1097,8 @@ get_header();
 						jQuery('#error_data_entry').css('display','block');
 					} else {
 						console.log(response);
-						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
-						// console.log('<tr data-'+add_type+'-id="'+response.id+'"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+						closest_tbody.find('.add-row').prev().fadeIn(1500);
 					}
 			 	}, 'json');
 			 	return false;
