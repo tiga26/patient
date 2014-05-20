@@ -659,7 +659,7 @@ get_header();
 		},
 	});
 
-	jQuery('select').selectbox({
+	jQuery('.main-container select').selectbox({
 		customScrollbar: true,
 		width: 90,
 		sbToggleOpen : false,
