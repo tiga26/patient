@@ -4,10 +4,13 @@ class Patient_Db_Manager {
 	
 	private static $_prefix = 'patient_';
 	private $current_patient;
-
+	private $relation_ids = array();
 	private $patient_data = array();
 
 	private static $datas = array(
+		'recovery' => array(
+			'handler' => 'recovery',
+			),
 		'symptoms' => array(
 			'handler' => 'symptoms',
 			),
@@ -69,19 +72,65 @@ class Patient_Db_Manager {
 		return $this;
 	}
 
+	private function _loadRecovery()  {
+		global $wpdb;
+
+		$recovery_sql = 'SELECT * FROM  (SELECT R.*,RS.recovery_id,RS.remarks,RS.value FROM '.self::$_prefix.'relations R
+					     INNER JOIN '.self::$_prefix.'recovery_status RS 
+					     ON R.relation_id = RS.relation_id
+					     WHERE R.user_id ='.$this->current_patient.'
+					     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
+
+	    $recoverys = $wpdb->get_results($recovery_sql);
+
+	    foreach ($recoverys as $recovery) {
+	    	array_push($this->relation_ids, $recovery->relation_id);
+	    }
+
+	    $this->patient_data['recovery'] = $recoverys;
+	}
+
 	private function _loadSymptoms() {
 		global $wpdb;
 
-		$symptoms_sql = 'SELECT * FROM '.self::$_prefix.'relations R
+		$relation_ids_str = implode(',', $this->relation_ids);
+
+		$symptoms_array = array(
+			'mental' =>array(),
+			'sexual' => array(),
+			'physical' => array(),
+			'hormonal' => array()
+		);
+		$symptoms_sql = 'SELECT R.relation_id,R.date,US.user_symptom_id,Us.value,US.symptom_id,US.comment,S.name as symptom_name,SC.symptom_category_id FROM '.self::$_prefix.'relations R
 						 INNER JOIN '.self::$_prefix.'user_symptoms US
 						 ON R.relation_id = US.relation_id
 						 INNER JOIN '.self::$_prefix.'symptoms S
 						 ON US.symptom_id = S.symptom_id
 						 INNER JOIN '.self::$_prefix.'symptoms_category SC
 						 ON S.symptom_category_id = SC.symptom_category_id
-						 WHERE R.user_id ='.$this->current_patient;
+						 WHERE R.relation_id IN ('.$relation_ids_str.')
+						 ORDER BY R.date';
+		
 		$symptoms = $wpdb->get_results($symptoms_sql);
-		$this->patient_data['symptoms'] = $symptoms;
+
+		foreach ($symptoms as $symptom) {
+			switch ($symptom->symptom_category_id) {
+				case '1':
+					array_push($symptoms_array['mental'], $symptom);
+					break;
+				case '2':
+					array_push($symptoms_array['sexual'], $symptom);
+					break;
+				case '3':
+					array_push($symptoms_array['physical'], $symptom);
+					break;
+				case '4':
+					array_push($symptoms_array['hormonal'], $symptom);
+					break;
+			}
+		}
+		var_dump($symptoms_array['sexual']);exit;
+		$this->patient_data['symptoms'] = $symptoms_array;
 
 	}
 

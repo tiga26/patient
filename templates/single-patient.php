@@ -10,7 +10,8 @@ $patient_data = $patient->setPatient(1)
 						->loadPatientAllData()
 						->getPatientData();
 
-// var_dump($patient_data);exit;
+
+var_dump($patient_data->symptoms);exit;
 get_header();
 ?>
 <div class="main-container">
