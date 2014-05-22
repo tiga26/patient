@@ -8,6 +8,9 @@ class Patient_Db_Manager {
 	private $patient_data = array();
 
 	private static $datas = array(
+		'dates' => array(
+			'handler' => 'dates',
+			),
 		'recovery' => array(
 			'handler' => 'recovery',
 			),
@@ -35,7 +38,7 @@ class Patient_Db_Manager {
 	}
 
 	public function getPatientData() {
-
+		
 		return $this->patient_data;
 	}
 
@@ -72,22 +75,49 @@ class Patient_Db_Manager {
 		return $this;
 	}
 
+	private function _loadDates() {
+		global $wpdb;
+
+		$date_sql = 'SELECT * FROM  (SELECT * FROM '.self::$_prefix.'relations R				    
+				     WHERE R.user_id ='.$this->current_patient.'
+				     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
+	
+	    $dates = $wpdb->get_results($date_sql);
+
+	    foreach ($dates as $date) {
+	    	$this->relation_ids[$date->date] = $date->relation_id;
+	    }
+	    	    
+	    $this->patient_data['dates'] = $dates;
+	}
+
 	private function _loadRecovery()  {
 		global $wpdb;
 
-		$recovery_sql = 'SELECT * FROM  (SELECT R.*,RS.recovery_id,RS.remarks,RS.value FROM '.self::$_prefix.'relations R
+		$relation_ids_str = implode(',', $this->relation_ids);
+
+		$recovery_sql = 'SELECT R.*,RS.recovery_id,RS.remarks,RS.value FROM '.self::$_prefix.'relations R
 					     INNER JOIN '.self::$_prefix.'recovery_status RS 
 					     ON R.relation_id = RS.relation_id
-					     WHERE R.user_id ='.$this->current_patient.'
-					     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
+					     WHERE R.relation_id IN ('.$relation_ids_str.')
+						 ORDER BY R.date';
 
 	    $recoverys = $wpdb->get_results($recovery_sql);
+	    $recovery_assoc = array();
 
 	    foreach ($recoverys as $recovery) {
-	    	array_push($this->relation_ids, $recovery->relation_id);
+	    	$recovery_assoc[$recovery->relation_id] = $recovery;	
 	    }
 
-	    $this->patient_data['recovery'] = $recoverys;
+	    foreach ($this->relation_ids as $id) {
+	    		    	
+	    	if(!array_key_exists($id, $recovery_assoc)) {
+	    		$recovery_assoc[$id] = array();
+	    	}
+	    }
+	    ksort($recovery_assoc);
+
+	    $this->patient_data['recovery'] = $recovery_assoc;
 	}
 
 	private function _loadSymptoms() {
@@ -129,7 +159,7 @@ class Patient_Db_Manager {
 					break;
 			}
 		}
-		var_dump($symptoms_array['sexual']);exit;
+		
 		$this->patient_data['symptoms'] = $symptoms_array;
 
 	}
