@@ -180,6 +180,12 @@ return array(
 					'nonull' => ' NOT NULL',
 					'autoincrement' => '',
 				),
+				'assay_category_id' => array(
+					'type' => ' INT',
+					'length' => '(11)',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
 				'submit_date' => array(
 					'type' => ' DATE',
 					'length' => '',

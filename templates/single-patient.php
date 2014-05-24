@@ -4,14 +4,38 @@
  */
 require_once dirname(__FILE__).'/../class-db-manager.php';
 
-$patient = new Patient_Db_Manager();
+if(validDate($_GET['start_date']) && validDate($_GET['end_date'])){
+	$dates['start'] = $_GET['start_date'];
+	$dates['end'] = $_GET['end_date'];
+} else {
+	$dates = array();
+}
 
+$patient = new Patient_Db_Manager();
+// echo '<pre>';
 $patient_data = $patient->setPatient(1)
-						->loadPatientAllData()
+						->loadPatientAllData($dates)
 						->getPatientData();
 
-var_dump($patient_data->dates);
-var_dump($patient_data->recovery);exit;
+// var_dump('dates',$patient_data->dates);
+// echo '<br>';
+// echo '<br>';
+// var_dump('recovery',$patient_data->recovery);exit;
+// echo '<br>';
+// echo '<br>';
+// var_dump('symptoms',$patient_data->symptoms);
+// echo '<br>';
+// echo '<br>';
+// var_dump('assays',$patient_data->assays);
+// echo '<br>';
+// echo '<br>';
+// var_dump('diagnosis',$patient_data->diagnosis);
+// echo '<br>';
+// echo '<br>';
+// var_dump('therapies',$patient_data->therapies);
+// echo '<br>';
+// echo '<br>';
+// var_dump('lifestyle',$patient_data->lifestyle);exit;
 get_header();
 ?>
 <div class="main-container">
@@ -20,16 +44,28 @@ get_header();
 		 	<table class="recovery">
 		 		<tr class="dates">
 		 			<td id='dates'>Dates</td>
-		 			<td data-relation-id="11"><input type="checkbox">03.04.2006</td>
+		 			<?php foreach ($patient_data->dates as $date) : ?>
+		 				<td data-relation-id="<?php echo $date->relation_id;?>"><input type="checkbox"><?php echo $date->date;?></td>
+		 			<?php endforeach;?>
+		 			<!-- <td data-relation-id="11"><input type="checkbox">03.04.2006</td>
 		 			<td data-relation-id="12"><input type="checkbox">15.04.2006</td>
 		 			<td data-relation-id="13"><input type="checkbox">21.04.2006</td>
 		 			<td data-relation-id="14"><input type="checkbox">04.05.2006</td>
 		 			<td data-relation-id="15"><input type="checkbox">30.05.2006</td>
-		 			<td data-relation-id="16"><input type="checkbox">31.05.2006</td>
+		 			<td data-relation-id="16"><input type="checkbox">31.05.2006</td> -->
 		 		</tr>
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
-		 			<td data-recovery-id='698'>10%</td>
+		 			<?php foreach ($patient_data->recovery as $recovery) : ?>
+		 				<?php if(empty($recovery)): ?>
+		 					<td><div class="comment"><div>-</div></div></td>
+		 				<?php else: ?>
+		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>">
+				 				<div class="comment"><div><?php echo $recovery->value;?>%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $recovery->remarks;?></div>"></div></div></div>
+				 			</td>
+				 		<?php endif; ?>
+		 			<?php endforeach;?>
+		 			<!-- <td data-recovery-id='698'>10%</td>
 		 			<td data-recovery-id='1235'>20%</td>
 		 			<td data-recovery-id='6589'>
 		 			<div class="comment"><div>05%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div>
@@ -37,7 +73,7 @@ get_header();
 		 			</td>
 		 			<td>40%</td>
 		 			<td>50%</td>
-		 			<td>-</td>
+		 			<td>-</td> -->
 		 		</tr>
 		 	</table>
 		</div>
@@ -1121,3 +1157,14 @@ get_header();
 </script>
 <?php //get_sidebar(); ?>
 <?php get_footer(); ?>
+
+<?php
+	function validDate($date) {
+		if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date))
+	    {
+	        return true;
+	    }else{
+	        return false;
+	    }
+	}
+?>
