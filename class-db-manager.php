@@ -170,34 +170,63 @@ class Patient_Db_Manager {
 		$symptoms = $wpdb->get_results($symptoms_sql);
 
 		foreach ($symptoms as $symptom) {
-			switch ($symptom->symptom_category_id) {
+			switch ($symptom->symptom_category_id) {				
 				case '1':
-					$symptoms_array['mental'][$symptom->relation_id] = $symptom;
+					if(!array_key_exists($symptom->symptom_id,$symptoms_array['mental'])) {
+						$symptoms_array['mental'][$symptom->symptom_id] = array();
+						array_push($symptoms_array['mental'][$symptom->symptom_id], $symptom);
+					} else {
+						array_push($symptoms_array['mental'][$symptom->symptom_id], $symptom);
+					}					
 					break;
 				case '2':
-					$symptoms_array['sexual'][$symptom->relation_id] = $symptom;
+					if(!array_key_exists($symptom->symptom_id,$symptoms_array['sexual'])) {
+						$symptoms_array['sexual'][$symptom->symptom_id] = array();
+						array_push($symptoms_array['sexual'][$symptom->symptom_id], $symptom);
+					} else {
+						array_push($symptoms_array['sexual'][$symptom->symptom_id], $symptom);
+					}
 					break;
 				case '3':
-					$symptoms_array['physical'][$symptom->relation_id] = $symptom;
+					if(!array_key_exists($symptom->symptom_id,$symptoms_array['physical'])) {
+						$symptoms_array['physical'][$symptom->symptom_id] = array();
+						array_push($symptoms_array['physical'][$symptom->symptom_id], $symptom);
+					} else {
+						array_push($symptoms_array['physical'][$symptom->symptom_id], $symptom);
+					}
 					break;
 				case '4':
-					$symptoms_array['hormonal'][$symptom->relation_id] = $symptom;
+					if(!array_key_exists($symptom->symptom_id,$symptoms_array['hormonal'])) {
+						$symptoms_array['hormonal'][$symptom->symptom_id] = array();
+						array_push($symptoms_array['hormonal'][$symptom->symptom_id], $symptom);
+					} else {
+						array_push($symptoms_array['hormonal'][$symptom->symptom_id], $symptom);
+					}
 					break;
 			}
 		}
-
-		foreach ($symptoms_array as $type => $symptom) {
-			
-			foreach ($this->relation_ids as $id) {	    		    	
-		    	if(!array_key_exists($id, $symptom)) {		    		
-		    		$symptom[$id] = array();
-		    	}		    	
-		    }
-		    $symptom = $this->customSort($symptom, $this->relation_ids);
-		    $symptoms_array[$type] = $symptom;
-
+		foreach ($symptoms_array as $category => $bytype) {
+			foreach ($bytype as $symptom) {
+				foreach ($symptom as $key => $value) {
+					$tmp_value = $value;
+					unset($symptoms_array[$category][$value->symptom_id][$key]);
+					$symptoms_array[$category][$value->symptom_id][$tmp_value->relation_id] = $tmp_value;
+				}
+			}
 		}
-		
+
+		foreach ($symptoms_array as $category => $bytype) {
+			foreach ($bytype as $key => $symptom) {
+				// var_dump($symptom);
+				foreach ($this->relation_ids as $id) {	
+			    	if(!array_key_exists($id, $symptom)) {		    		
+			    		$symptom[$id] = array();
+			    	}		    	
+			    }
+			    $symptom = $this->customSort($symptom, $this->relation_ids);
+			    $symptoms_array[$category][$key] = $symptom;
+			}
+		}
 		$this->patient_data['symptoms'] = $symptoms_array;
 
 	}
@@ -216,23 +245,36 @@ class Patient_Db_Manager {
 					   ON A.assay_category_id = AC.assay_category_id
 					   WHERE R.relation_id IN ('.$relation_ids_str.')
 					   ORDER BY R.date';
-					   
+		   
 	    $assays = $wpdb->get_results($assays_sql);
 
 	    $assay_assoc = array();
 
 	    foreach ($assays as $assay) {
-	    	$assay_assoc[$assay->relation_id] = $assay;	
+	    	if(!array_key_exists($assay->assay_id,$assay_assoc)) {
+				$assay_assoc[$assay->assay_id] = array();
+				array_push($assay_assoc[$assay->assay_id], $assay);
+			} else {
+				array_push($assay_assoc[$assay->assay_id], $assay);
+			}	    	
 	    }
+	  	
+	  	foreach ($assay_assoc as $assay_id => $assay) {
+	  		foreach ($assay as $key => $value) {
+	  			$tmp_value = $value;
+				unset($assay_assoc[$assay_id][$key]);
+				$assay_assoc[$assay_id][$tmp_value->relation_id] = $tmp_value;
+	  		}
+	  	}
 
-	    foreach ($this->relation_ids as $id) {
-	    		    	
-	    	if(!array_key_exists($id, $assay_assoc)) {
-	    		$assay_assoc[$id] = array();
-	    	}
-	    }
-
-	    $assay_assoc = $this->customSort($assay_assoc, $this->relation_ids);
+	  	foreach ($assay_assoc as $assay_id => $assay) {
+	  		foreach ($this->relation_ids as $id) {		    		    	
+		    	if(!array_key_exists($id, $assay)) {		    		
+		    		$assay_assoc[$assay_id][$id] = array();
+		    	}
+		    }
+		    $assay_assoc[$assay_id] = $this->customSort($assay_assoc[$assay_id], $this->relation_ids);
+	  	}	    
 
 	    $this->patient_data['assays'] = $assay_assoc;
 	}
@@ -251,23 +293,37 @@ class Patient_Db_Manager {
 						  ON DD.doctor_id = DOC.doctor_id
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
-					   	  
+				   	  
 		$diagnosis = $wpdb->get_results($diagnosis_sql);
 
 		$diagnos_assoc = array();
+		
 
-	    foreach ($diagnosis as $diagnos) {
-	    	$diagnos_assoc[$diagnos->relation_id] = $diagnos;	
+		foreach ($diagnosis as $diagnos) {
+	    	if(!array_key_exists($diagnos->diagnosis_id,$diagnos_assoc)) {
+				$diagnos_assoc[$diagnos->diagnosis_id] = array();
+				array_push($diagnos_assoc[$diagnos->diagnosis_id], $diagnos);
+			} else {
+				array_push($diagnos_assoc[$diagnos->diagnosis_id], $diagnos);
+			}	    	
 	    }
+	  	
+	  	foreach ($diagnos_assoc as $diagnosis_id => $diagnos) {
+	  		foreach ($diagnos as $key => $value) {
+	  			$tmp_value = $value;
+				unset($diagnos_assoc[$diagnosis_id][$key]);
+				$diagnos_assoc[$diagnosis_id][$tmp_value->relation_id] = $tmp_value;
+	  		}
+	  	}
 
-	    foreach ($this->relation_ids as $id) {
-	    		    	
-	    	if(!array_key_exists($id, $diagnos_assoc)) {
-	    		$diagnos_assoc[$id] = array();
-	    	}
-	    }
-
-	    $diagnos_assoc = $this->customSort($diagnos_assoc, $this->relation_ids);
+	  	foreach ($diagnos_assoc as $diagnosis_id => $diagnos) {
+	  		foreach ($this->relation_ids as $id) {		    		    	
+		    	if(!array_key_exists($id, $diagnos)) {		    		
+		    		$diagnos_assoc[$diagnosis_id][$id] = array();
+		    	}
+		    }
+		    $diagnos_assoc[$diagnosis_id] = $this->customSort($diagnos_assoc[$diagnosis_id], $this->relation_ids);
+	  	}
 
 		$this->patient_data['diagnosis'] = $diagnos_assoc;
 	}
@@ -290,18 +346,31 @@ class Patient_Db_Manager {
 
 		$therapy_assoc = array();
 
-	    foreach ($therapies as $therapy) {
-	    	$therapy_assoc[$therapy->relation_id] = $therapy;	
+		foreach ($therapies as $therapy) {
+	    	if(!array_key_exists($therapy->therapy_id,$therapy_assoc)) {
+				$therapy_assoc[$therapy->therapy_id] = array();
+				array_push($therapy_assoc[$therapy->therapy_id], $therapy);
+			} else {
+				array_push($therapy_assoc[$therapy->therapy_id], $therapy);
+			}	    	
 	    }
-
-	    foreach ($this->relation_ids as $id) {
-	    		    	
-	    	if(!array_key_exists($id, $therapy_assoc)) {
-	    		$therapy_assoc[$id] = array();
-	    	}
-	    }
-
-	    $therapy_assoc = $this->customSort($therapy_assoc, $this->relation_ids);
+	  	
+	  	foreach ($therapy_assoc as $therapy_id => $therapy) {
+	  		foreach ($therapy as $key => $value) {
+	  			$tmp_value = $value;
+				unset($therapy_assoc[$therapy_id][$key]);
+				$therapy_assoc[$therapy_id][$tmp_value->relation_id] = $tmp_value;
+	  		}
+	  	}
+	  	
+	  	foreach ($therapy_assoc as $therapy_id => $therapy) {
+	  		foreach ($this->relation_ids as $id) {		    		    	
+		    	if(!array_key_exists($id, $therapy)) {		    		
+		    		$therapy_assoc[$therapy_id][$id] = array();
+		    	}
+		    }
+		    $therapy_assoc[$therapy_id] = $this->customSort($therapy_assoc[$therapy_id], $this->relation_ids);
+	  	}
 
 		$this->patient_data['therapies'] = $therapy_assoc;
 
@@ -323,23 +392,36 @@ class Patient_Db_Manager {
 						  ON L.lifestyle_category_id = LC.lifestyle_category_id
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
-					   	  
+				   	  
 		$lifestyles = $wpdb->get_results($lifestyle_sql);
-
+		
 		$lifestyle_assoc = array();
 
-	    foreach ($lifestyles as $lifestyle) {
-	    	$lifestyle_assoc[$lifestyle->relation_id] = $lifestyle;	
+		foreach ($lifestyles as $lifestyle) {
+	    	if(!array_key_exists($lifestyle->lifestyle_id,$lifestyle_assoc)) {
+				$lifestyle_assoc[$lifestyle->lifestyle_id] = array();
+				array_push($lifestyle_assoc[$lifestyle->lifestyle_id], $lifestyle);
+			} else {
+				array_push($lifestyle_assoc[$lifestyle->lifestyle_id], $lifestyle);
+			}	    	
 	    }
-
-	    foreach ($this->relation_ids as $id) {
-	    		    	
-	    	if(!array_key_exists($id, $lifestyle_assoc)) {
-	    		$lifestyle_assoc[$id] = array();
-	    	}
-	    }
-
-	    $lifestyle_assoc = $this->customSort($lifestyle_assoc, $this->relation_ids);
+	  	
+	  	foreach ($lifestyle_assoc as $lifestyle_id => $lifestyle) {
+	  		foreach ($lifestyle as $key => $value) {
+	  			$tmp_value = $value;
+				unset($lifestyle_assoc[$lifestyle_id][$key]);
+				$lifestyle_assoc[$lifestyle_id][$tmp_value->relation_id] = $tmp_value;
+	  		}
+	  	}
+	  	
+	  	foreach ($lifestyle_assoc as $lifestyle_id => $lifestyle) {
+	  		foreach ($this->relation_ids as $id) {		    		    	
+		    	if(!array_key_exists($id, $lifestyle)) {		    		
+		    		$lifestyle_assoc[$lifestyle_id][$id] = array();
+		    	}
+		    }
+		    $lifestyle_assoc[$lifestyle_id] = $this->customSort($lifestyle_assoc[$lifestyle_id], $this->relation_ids);
+	  	}	  	
 
 		$this->patient_data['lifestyle'] = $lifestyle_assoc;
 	}

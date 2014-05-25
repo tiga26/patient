@@ -4,7 +4,7 @@
  */
 require_once dirname(__FILE__).'/../class-db-manager.php';
 
-if(validDate($_GET['start_date']) && validDate($_GET['end_date'])){
+if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 	$dates['start'] = $_GET['start_date'];
 	$dates['end'] = $_GET['end_date'];
 } else {
@@ -20,7 +20,7 @@ $patient_data = $patient->setPatient(1)
 // var_dump('dates',$patient_data->dates);
 // echo '<br>';
 // echo '<br>';
-// var_dump('recovery',$patient_data->recovery);exit;
+// var_dump('recovery',$patient_data->recovery);
 // echo '<br>';
 // echo '<br>';
 // var_dump('symptoms',$patient_data->symptoms);
@@ -58,7 +58,7 @@ get_header();
 		 			<td>Recovery Status</td>
 		 			<?php foreach ($patient_data->recovery as $recovery) : ?>
 		 				<?php if(empty($recovery)): ?>
-		 					<td><div class="comment"><div>-</div></div></td>
+		 					<td><div class="comment"><div>---</div></div></td>
 		 				<?php else: ?>
 		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>">
 				 				<div class="comment"><div><?php echo $recovery->value;?>%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $recovery->remarks;?></div>"></div></div></div>
@@ -85,93 +85,71 @@ get_header();
 	 			<div id="accordion1">
 	 				<div data-category-id="1">Mental Symptoms</div>
 	 				<table class="symptom">
-	 					<tr data-symptom-id="69874">
-	 						<td><input type="checkbox"><label>Symptom A</label></td>
-	 						<td>3</td>
-	 						<td class="none">None</td>
-	 						<td data-user-symptom-id="1"><div class="comment"><div>4</div><div class="comment_icon"></div></div></td>
-	 						<td>3</td>
-	 						<td>3</td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr data-symptom-id="985">
-	 						<td><input type="checkbox"><label>Symptom B</label></td>
-	 						<td>-</td>
-	 						<td>3</td>
-	 						<td>3</td>
-	 						<td>2</td>
-	 						<td>3</td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr data-symptom-id="74">
-	 						<td><input type="checkbox">Symptom C</td>
-	 						<td>-</td>
-	 						<td>3</td>
-	 						<td>2</td>
-	 						<td>2</td>
-	 						<td>2</td>
-	 						<td>-</td>
-	 					</tr>
+	 					<?php foreach ($patient_data->symptoms['mental'] as $symptom_id => $symptom_array) : ?>
+	 						<?php $tmp_symptom = current(array_filter($symptom_array));?>
+	 						<?php $symptom_name = $tmp_symptom->symptom_name;?>
+	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
+		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
+					 				<?php if(empty($symptom)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>
+			 			<?php endforeach;?>
 	 				</table>
 	 				<div data-category-id="2">Sexual Symptoms</div>
 	 				<table class="symptom">
-	 					<tr data-symptom-id="321">
-	 						<td><input type="checkbox">Symptom D</td>
-	 						<td>3</td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr data-symptom-id="356">
-	 						<td><input type="checkbox">Symptom E</td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr data-symptom-id="469">
-	 						<td><input type="checkbox">Symptom F</td>
-	 						<td>-</td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td></td>
-	 						<td>-</td>
-	 					</tr>
+	 					<?php foreach ($patient_data->symptoms['sexual'] as $symptom_id => $symptom_array) : ?>
+	 						<?php $tmp_symptom = current(array_filter($symptom_array));?>
+	 						<?php $symptom_name = $tmp_symptom->symptom_name;?>
+	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
+		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
+					 				<?php if(empty($symptom)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>	
+			 			<?php endforeach;?>
 	 				</table>
 	 				<div data-category-id="3">Physical Symptoms</div>
 	 				<table class="symptom">
-	 					<tr  data-symptom-id="987">
-	 						<td><input type="checkbox">Symptom G</td>
-	 						<td>-</td>
-	 						<td>2</td>
-	 						<td>3</td>
-	 						<td class="none">None</td>
-	 						<td class="none">None</td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr  data-symptom-id="365">
-	 						<td><label><input type="checkbox">Symptom H</label></td>
-	 						<td>-</td>
-	 						<td>1</td>
-	 						<td>2</td>
-	 						<td>3</td>
-	 						<td class="none">None</td>
-	 						<td>-</td>
-	 					</tr>
-	 					<tr  data-symptom-id="117">
-	 						<td><label><input type="checkbox">Symptom I<label></td>
-	 						<td>1</td>
-	 						<td>4</td>
-	 						<td>3</td>
-	 						<td class="none">None</td>
-	 						<td class="none">None</td>
-	 						<td>-</td>
-	 					</tr>
+	 					<?php foreach ($patient_data->symptoms['physical'] as $symptom_id => $symptom_array) : ?>
+	 						<?php $tmp_symptom = current(array_filter($symptom_array));?>
+	 						<?php $symptom_name = $tmp_symptom->symptom_name;?>
+	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
+		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
+					 				<?php if(empty($symptom)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>	
+			 			<?php endforeach;?>
+	 				</table>
+	 				<div data-category-id="4">Hormonal Symptoms</div>
+	 				<table class="symptom">
+	 					<?php foreach ($patient_data->symptoms['hormonal'] as $symptom_id => $symptom_array) : ?>
+	 						<?php $tmp_symptom = current(array_filter($symptom_array));?>
+	 						<?php $symptom_name = $tmp_symptom->symptom_name;?>
+	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
+		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
+					 				<?php if(empty($symptom)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>	
+			 			<?php endforeach;?>
 	 				</table>
 	 			</div>
 			</div>
@@ -180,49 +158,20 @@ get_header();
 	 		</div>
 			<div>
 				<table class="assays">
-					<tr data-assay-id='19'>
-						<td><input type="checkbox">DHT</td>
-						<td>15%</td>
-						<td><div class="comment"><div>10%</div><div class="comment_icon" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
-						<td><div class="comment"><div>05%</div><div class="comment_icon" title="<div class='comment_block'><div>Result<span>*</span>:</div><div class='value'>15mg</div><div>Reference<span>*</span>:</div><div class='value'>10mg - 20mg = 50%</div><div>User Coment</div><br><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
-						<td>20%</td>
-						<td>20%</td>
-						<td><div class="comment"><div>None</div></div></td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Testosterone</td>
-						<td>15%</td>
-						<td>10%</td>
-						<td>05%</td>
-						<td>20%</td>
-						<td>20%</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">3a-diol-G</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>20%</td>
-						<td>20%</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Example 01</td>
-						<td class="none">None</td>
-						<td>10%</td>
-						<td>05%</td>
-						<td>20%</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Example 02</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>05%</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr>
+					<?php foreach ($patient_data->assays as $assay_id => $assay_array) : ?>
+	 						<?php $tmp_assay = current(array_filter($assay_array));?>
+	 						<?php $assay_name = $tmp_assay->assay_name;?>
+	 						<tr data-assay-id="<?php echo $assay_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
+		 						<?php foreach ($assay_array as $assay_id => $assay):?>
+					 				<?php if(empty($assay)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>"><div class="comment"><div><?php echo $assay->result;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>
+			 			<?php endforeach;?>					
 				</table>
 			</div>
 			<div class="header-line">
@@ -230,24 +179,20 @@ get_header();
 			</div>
 			<div>
 				<table class="diagnoses">
-					<tr data-diagnosis-id="356">
-						<td><input type="checkbox">Osteoporosis</td>
-						<td><div class="comment"><div>Dr.Si..</div><div class="comment_icon" title="<div class='comment_block'><div>Doctor</div><div class='value'>Dr. Mindes,USA</div><div>Comment</div><br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div></td>
-						<td><div class="comment"><div>-</div><div class="comment_icon"></div></div></td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Tertiary Hipogonadian</td>
-						<td>Dr.Si..</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr>
+					<?php foreach ($patient_data->diagnosis as $diagnosis_id => $diagnosis_array) : ?>
+	 						<?php $tmp_diagnos = current(array_filter($diagnosis_array));?>
+	 						<?php $diagnos_name = $tmp_diagnos->name;?>
+	 						<tr data-diagnosis-id="<?php echo $diagnosis_id;?>">
+		 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
+		 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
+					 				<?php if(empty($diagnos)): ?>
+					 					<td class="none">None</td>
+					 				<?php else: ?>
+							 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>"><div class="comment"><div><?php echo $diagnos->doc_name;?></div><div class="comment_icon"></div></div></td>
+							 		<?php endif; ?>
+						 		<?php endforeach;?>
+						 	</tr>
+			 			<?php endforeach;?>
 				</table>
 			</div>
 			<div class="header-line">
@@ -959,7 +904,6 @@ get_header();
 		        type: 'set'
 			};
 
-
 			console.log(current_data);
 
 		},
@@ -982,6 +926,7 @@ get_header();
 		        data: current_data,
 		        type: 'set'
 			};
+
 			console.log(current_data);
 			// jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
 			// 	if(response.status == 4) {
@@ -1160,10 +1105,9 @@ get_header();
 
 <?php
 	function validDate($date) {
-		if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date))
-	    {
+		if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date)) {
 	        return true;
-	    }else{
+	    } else {
 	        return false;
 	    }
 	}
