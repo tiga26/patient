@@ -234,30 +234,30 @@ get_header();
 	 						<?php foreach ($therapies_array as $therapy_id => $therapy):?>
 				 				<?php if(empty($therapy)): ?>
 				 					<td class="none">None</td>
-				 					<?php //var_dump($patient_data->effetcs['therapy']);?>
 				 				<?php else: ?>
 						 			<td>
 						 				<div class="comment">
-						 					<div>20ml/2</div>
+						 					<div><?php echo $therapy->dosage;?>ml/<?php echo $therapy->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
 						 													 	<div>Dosage:</div><div class='value'>15ml every 1 day</div>
-						 													 	<div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div>
-						 													 	<div>Effect:</div><br>
-						 													 	<?php if(!empty($patient_data->effetcs['therapy'])):?>
+						 													 	<div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div>						 													 	
+						 													 	<?php if(!empty($patient_data->effects['therapy'])):?>
+						 													 		<div>Effect:</div><br>
 						 													 		<div class='block_header'>
 						 													 			<div id='left_column_header'>Symptom</div>
 						 													 			<div id='right_column_header'>Effect</div>
 						 													 			<br>
 						 													 		</div>
-						 													 	<?php endif; ?>
-						 													 	<?php if(in_array($therapy->therapy_id,$patient_data->effetcs['therapy'])):?>
+						 													 	<?php endif; ?>						 													 	
+						 													 	<?php if(array_key_exists($therapy->therapy_result_id,$patient_data->effects['therapy'])):?>
 							 													 	<div>
 							 													 		<div class='effect_main_block'>
-							 													 			<div class='row'><?php echo $patient_data->effetcs['therapy'][$therapy->therapy_id]->name;?><div class='value'><?php echo $patient_data->effetcs['therapy'][$therapy->therapy_id]->value;?></div></div>
+							 													 			<div class='row'><?php echo $patient_data->effects['therapy'][$therapy->therapy_result_id]->name;?><div class='value'><?php echo $patient_data->effects['therapy'][$therapy->therapy_result_id]->value;?></div></div>
 							 													 		</div>
 							 			 										 	</div>
 					 			 										 		<?php endif;?>
-						 													 	<div class='bottom-block'>User Coment</div><?php echo $therapy->comment;?>.">
+						 													 	<div class='bottom-block'>User Coment</div><?php echo $therapy->comment;?>.
+						 													 </div>">
 											</div>
 						 				</div>
 						 			</td>
@@ -272,10 +272,79 @@ get_header();
 			</div>
 			<div>
 				<table class="lifestyle">
-					<tr>
+					<?php foreach ($patient_data->lifestyle as $lifestyle_id => $lifestyles_array) : ?>
+ 						<?php $tmp_lifestyle = current(array_filter($lifestyles_array));?>
+ 						<?php $lifestyle_name = $tmp_lifestyle->name;?>
+ 						<tr data-lifestyle-id="<?php echo $lifestyley_id;?>">
+	 						<td><input type="checkbox"><label><?php echo $lifestyle_name;?></label></td>
+	 						<?php foreach ($lifestyles_array as $lifestyle_id => $lifestyle):?>
+				 				<?php if(empty($lifestyle)): ?>
+				 					<td class="none">None</td>
+				 				<?php else: ?>
+						 			<td>
+						 				<div class="comment">
+						 					<div><?php echo $lifestyle->quantity;?>/<?php echo $lifestyle->frequency;?></div>
+						 					<div class="comment_icon" title="<div class='comment_block'>
+						 														<?php echo $lifestyle->quantity;?>/<?php echo $lifestyle->frequency;?>
+						 														<br>
+						 														<?php if(!empty($patient_data->effects['therapy'])):?>
+						 													 		<div>Effect:</div><br>
+						 													 		<div class='block_header'>
+						 													 			<div id='left_column_header'>Symptom</div>
+						 													 			<div id='right_column_header'>Effect</div>
+						 													 			<br>
+						 													 		</div>
+						 													 	<?php endif; ?>						 													 	
+						 													 	<?php if(array_key_exists($lifestyle->lifestyle_result_id,$patient_data->effects['lifestyle'])):?>
+							 													 	<div>
+							 													 		<div class='effect_main_block'>
+							 													 			<div class='row'><?php echo $patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id]->name;?><div class='value'><?php echo $patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id]->value;?></div></div>
+							 													 		</div>
+							 			 										 	</div>
+					 			 										 		<?php endif;?>
+																				<div class='bottom-block'>User Coment</div><?php echo $lifestyle->comment;?>.
+																			</div>">										 					
+											</div>
+						 				</div>
+						 			</td>
+						 		<?php endif; ?>
+					 		<?php endforeach;?>
+					 	</tr>
+		 			<?php endforeach;?>
+					<!-- <tr>
 						<td><input type="checkbox">Daily Physical Training<br></td>
 						<td>1/Day</td>
-						<td><div class="comment"><div>1/Day</div><div class="comment_icon" title="<div class='comment_block'><div class='frequency_main_block'><div class='row'><div class='left_part'>1/Day</div>Once a day or more</div><div class='row'><div class='left_part'>1/Month</div>Once a month or more</div></div><div>Effect:</div><br><div class='block_header'><div id='left_column_header'>Symptom</div><div id='right_column_header'>Effect</div><br></div><div><div class='effect_main_block'><div class='row'>Symptom1<div class='value'>1</div></div><div class='row'>Symptom1<div class='value'>1</div></div></div></div><div class='bottom-block'>User Coment</div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue."></div></div></div></td>
+						<td><div class="comment">
+								<div>1/Day</div>
+									<div class="comment_icon" title="
+																	<div class='comment_block'>
+																		<div class='frequency_main_block'>
+																			<div class='row'>
+																				<div class='left_part'>1/Day</div>
+																				Once a day or more
+																			</div>
+																			<div class='row'>
+																				<div class='left_part'>1/Month</div>
+																				Once a month or more
+																			</div>
+																		</div>
+																		<div>Effect:</div><br>
+																		<div class='block_header'>
+																			<div id='left_column_header'>Symptom</div>
+																			<div id='right_column_header'>Effect</div>
+																			<br>
+																		</div>
+																		<div>
+																			<div class='effect_main_block'>
+																				<div class='row'>Symptom1<div class='value'>1</div></div>
+																				<div class='row'>Symptom1<div class='value'>1</div></div>
+																			</div>
+																		</div>
+																		<div class='bottom-block'>User Coment</div>rtis congue.
+																	</div>">
+									</div>
+							</div>
+						</td>
 						<td>None</td>
 						<td>None</td>
 						<td>1/Week</td>
@@ -289,7 +358,7 @@ get_header();
 						<td class="none">None</td>
 						<td class="none">None</td>
 						<td>-</td>
-					</tr>
+					</tr> -->
 				</table>
 			</div>
 		</div>

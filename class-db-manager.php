@@ -383,7 +383,7 @@ class Patient_Db_Manager {
 
 		$relation_ids_str = implode(',', $this->relation_ids);
 
-		$lifestyle_sql = 'SELECT R.date,R.user_id,LR.*,L.lifestyle_category_id as category_id,L.submit_date,L.name as admin_comment,L.approved,LF.frequency,LF.quantity,LF.name as frequency_name,LC.name as category_name FROM '.self::$_prefix.'relations R
+		$lifestyle_sql = 'SELECT R.date,R.user_id,LR.*,L.lifestyle_category_id as category_id,L.submit_date,L.name,L.approved,LF.frequency,LF.quantity,LF.name as frequency_name,LC.name as category_name FROM '.self::$_prefix.'relations R
 						  INNER JOIN '.self::$_prefix.'lifestyle_result LR
 						  ON R.relation_id = LR.relation_id
 						  INNER JOIN '.self::$_prefix.'lifestyle L

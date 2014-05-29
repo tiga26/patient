@@ -569,7 +569,7 @@ return array(
 				),
 				'frequency' => array(
 					'type' => ' ENUM',
-					'length' => '("doctor1","doctor2")',
+					'length' => '("Day","Week","Month")',
 					'nonull' => '',
 					'autoincrement' => '',
 				),
