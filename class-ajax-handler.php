@@ -353,6 +353,145 @@ class Patient_Ajax_Handler{
 
 	}
 
+	public static function _getallSymptom() {
+		global $wpdb;
+
+		$patient_id = 1;//change to BuddyPress user_id
+
+		$symptoms_array = array(
+			'mental' => array(),
+			'sexual' => array(),
+			'physical' => array(),
+			'hormonal' => array()
+		);
+
+		$symptom_sql = 'SELECT * FROM patient_symptoms WHERE symptom_id	NOT IN
+						(SELECT S.symptom_id FROM patient_relations R
+							INNER JOIN patient_user_symptoms US
+							ON R.relation_id = US.relation_id
+							INNER JOIN patient_symptoms S
+							ON US.symptom_id = S.symptom_id
+						WHERE R.user_id = '.$patient_id.')';
+		
+		$symptoms = $wpdb->get_results($symptom_sql);
+
+		foreach ($symptoms as $symptom) {
+			switch ($symptom->symptom_category_id) {				
+				case '1':					
+						array_push($symptoms_array['mental'], $symptom);									
+					break;
+				case '2':					
+						array_push($symptoms_array['sexual'], $symptom);					
+					break;
+				case '3':					
+						array_push($symptoms_array['physical'], $symptom);					
+					break;
+				case '4':					
+						array_push($symptoms_array['hormonal'], $symptom);					
+					break;
+			}
+		}
+
+		print_r(json_encode($symptoms_array));
+	}
+
+	public static function _getallAssays() {
+		global $wpdb;
+
+		$patient_id = 1;//change to BuddyPress user_id
+
+		$assays_array = array();
+
+		$assay_sql = 'SELECT * FROM patient_assays WHERE assay_id NOT IN
+						(SELECT S.assay_id FROM patient_relations R
+							INNER JOIN patient_assay_result AR
+							ON R.relation_id = AR.relation_id
+							INNER JOIN patient_assays S
+							ON AR.assay_id = S.assay_id
+						WHERE R.user_id = '.$patient_id.')';
+		
+		$assays = $wpdb->get_results($assay_sql);
+
+		foreach ($assays as $assay) {								
+			array_push($assays_array, $assay);			
+		}
+		
+		print_r(json_encode($assays_array));
+		
+	}
+	
+	public static function _getallDiagnoses() {
+		global $wpdb;
+
+		$patient_id = 1;//change to BuddyPress user_id
+
+		$diagnosis_array = array();
+
+		$diagnos_sql = 'SELECT * FROM patient_diagnosis WHERE diagnosis_id NOT IN
+						(SELECT D.diagnosis_id FROM patient_relations R
+							INNER JOIN patient_doctor_diagnosis DD
+							ON R.relation_id = DD.relation_id
+							INNER JOIN patient_diagnosis D
+							ON DD.diagnosis_id = D.diagnosis_id
+						WHERE R.user_id = '.$patient_id.')';
+		
+		$diagnosis = $wpdb->get_results($diagnos_sql);
+
+		foreach ($diagnosis as $diagnos) {								
+			array_push($diagnosis_array, $diagnos);			
+		}
+		
+		print_r(json_encode($diagnosis_array));
+	}
+
+	public static function _getallTherapies() {
+		global $wpdb;
+
+		$patient_id = 1;//change to BuddyPress user_id
+
+		$therapies_array = array();
+
+		$therapy_sql = 'SELECT * FROM patient_therapy WHERE therapy_id NOT IN
+						(SELECT T.therapy_id FROM patient_relations R
+							INNER JOIN patient_therapy_result TR
+							ON R.relation_id = TR.relation_id
+							INNER JOIN patient_therapy T
+							ON TR.therapy_id = T.therapy_id
+						WHERE R.user_id = '.$patient_id.')';
+		
+		$therapies = $wpdb->get_results($therapy_sql);
+
+		foreach ($therapies as $therapy) {								
+			array_push($therapies_array, $therapy);			
+		}
+		
+		print_r(json_encode($therapies_array));
+	}
+
+	public static function _getallLifestyle() {
+		global $wpdb;
+
+		$patient_id = 1;//change to BuddyPress user_id
+
+		$lifestyles_array = array();
+
+		$lifestyle_sql = 'SELECT * FROM patient_lifestyle WHERE lifestyle_id NOT IN
+						(SELECT L.lifestyle_id FROM patient_relations R
+							INNER JOIN patient_lifestyle_result LR
+							ON R.relation_id = LR.relation_id
+							INNER JOIN patient_lifestyle L
+							ON LR.lifestyle_id = L.lifestyle_id
+						WHERE R.user_id = '.$patient_id.')';
+		
+		$lifestyles = $wpdb->get_results($lifestyle_sql);
+
+		foreach ($lifestyles as $lifestyle) {								
+			array_push($lifestyles_array, $lifestyle);			
+		}
+		
+		print_r(json_encode($lifestyles_array));
+	}
+
 }
 
 ?>

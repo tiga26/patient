@@ -814,14 +814,16 @@ get_header();
 		event.stopPropagation();
 		if ( jQuery( this ).hasClass('active')){
 			event.preventDefault();
-		}else if(jQuery( this ).hasClass('my')){
+		}else if(jQuery( this ).hasClass('my')){			
 			jQuery( this ).addClass('active');
-			var tableForAppend = jQuery( this ).data('table');
+			var tableForAppend = jQuery( this ).data('table');			
+			All.removeAll(tableForAppend);
 			jQuery( this ).parent('div').find('.btn.all').removeClass('active');
 			jQuery( 'table.'+tableForAppend ).find('tr:last-child').remove();
 		}else{
 			jQuery( this ).addClass('active');
 			var tableForAppend = jQuery( this ).data('table');
+			All.addAll(tableForAppend);
 			jQuery( this ).parent('div').find('.btn.my').removeClass('active');
 			jQuery( 'table.'+tableForAppend ).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td></td></tr> ");
 		}
@@ -1185,7 +1187,26 @@ get_header();
 
 			});
 		},
-	}	
+	}
+
+	All = {
+
+		removeAll: function(type) {
+
+		},
+
+		addAll: function(type) {
+			console.log(type);
+			var datas = {
+				action: type,
+				type: 'getall'
+			};
+
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				
+		 	}, 'json');
+		}
+	}
 
 	jQuery('#esc').on('click', function(){
 		jQuery('.pop-up').css('display','none');
