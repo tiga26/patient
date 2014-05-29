@@ -103,6 +103,10 @@
   height: 40px;
   vertical-align: middle;
 }
+.main-container .top_table_block table tr td label{
+  width: 150px;
+  overflow: hidden;
+}
 .main-container .top_table_block table tr td:first-child {
   text-align: left;
 }

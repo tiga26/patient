@@ -35,7 +35,8 @@ $patient_data = $patient->setPatient(1)
 // var_dump('therapies',$patient_data->therapies);
 // echo '<br>';
 // echo '<br>';
-// var_dump('lifestyle',$patient_data->lifestyle);exit;
+// var_dump('lifestyle',$patient_data->effects['therapy']);
+// exit;
 get_header();
 ?>
 <div class="main-container">
@@ -47,12 +48,6 @@ get_header();
 		 			<?php foreach ($patient_data->dates as $date) : ?>
 		 				<td data-relation-id="<?php echo $date->relation_id;?>"><input type="checkbox"><?php echo $date->date;?></td>
 		 			<?php endforeach;?>
-		 			<!-- <td data-relation-id="11"><input type="checkbox">03.04.2006</td>
-		 			<td data-relation-id="12"><input type="checkbox">15.04.2006</td>
-		 			<td data-relation-id="13"><input type="checkbox">21.04.2006</td>
-		 			<td data-relation-id="14"><input type="checkbox">04.05.2006</td>
-		 			<td data-relation-id="15"><input type="checkbox">30.05.2006</td>
-		 			<td data-relation-id="16"><input type="checkbox">31.05.2006</td> -->
 		 		</tr>
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
@@ -65,15 +60,6 @@ get_header();
 				 			</td>
 				 		<?php endif; ?>
 		 			<?php endforeach;?>
-		 			<!-- <td data-recovery-id='698'>10%</td>
-		 			<td data-recovery-id='1235'>20%</td>
-		 			<td data-recovery-id='6589'>
-		 			<div class="comment"><div>05%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue.</div>"></div></div>
-		 			</div>
-		 			</td>
-		 			<td>40%</td>
-		 			<td>50%</td>
-		 			<td>-</td> -->
 		 		</tr>
 		 	</table>
 		</div>
@@ -94,7 +80,12 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td class="none">None</td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 				<div class="comment">
+							 					<div><?php echo $symptom->value;?></div>
+							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
+							 				</div>
+							 			</td>
 							 		<?php endif; ?>
 						 		<?php endforeach;?>
 						 	</tr>
@@ -111,7 +102,12 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td class="none">None</td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 				<div class="comment">
+							 					<div><?php echo $symptom->value;?></div>
+							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
+							 				</div>
+							 			</td>
 							 		<?php endif; ?>
 						 		<?php endforeach;?>
 						 	</tr>	
@@ -128,7 +124,12 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td class="none">None</td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 				<div class="comment">
+							 					<div><?php echo $symptom->value;?></div>
+							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
+							 				</div>
+							 			</td>
 							 		<?php endif; ?>
 						 		<?php endforeach;?>
 						 	</tr>	
@@ -145,7 +146,12 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td class="none">None</td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>"><div class="comment"><div><?php echo $symptom->value;?></div><div class="comment_icon"></div></div></td>
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 				<div class="comment">
+							 					<div><?php echo $symptom->value;?></div>
+							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
+							 				</div>
+							 			</td>
 							 		<?php endif; ?>
 						 		<?php endforeach;?>
 						 	</tr>	
@@ -159,19 +165,29 @@ get_header();
 			<div>
 				<table class="assays">
 					<?php foreach ($patient_data->assays as $assay_id => $assay_array) : ?>
-	 						<?php $tmp_assay = current(array_filter($assay_array));?>
-	 						<?php $assay_name = $tmp_assay->assay_name;?>
-	 						<tr data-assay-id="<?php echo $assay_id;?>">
-		 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
-		 						<?php foreach ($assay_array as $assay_id => $assay):?>
-					 				<?php if(empty($assay)): ?>
-					 					<td class="none">None</td>
-					 				<?php else: ?>
-							 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>"><div class="comment"><div><?php echo $assay->result;?></div><div class="comment_icon"></div></div></td>
-							 		<?php endif; ?>
-						 		<?php endforeach;?>
-						 	</tr>
-			 			<?php endforeach;?>					
+ 						<?php $tmp_assay = current(array_filter($assay_array));?>
+ 						<?php $assay_name = $tmp_assay->assay_name;?>
+ 						<tr data-assay-id="<?php echo $assay_id;?>">
+	 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
+	 						<?php foreach ($assay_array as $assay_id => $assay):?>
+				 				<?php if(empty($assay)): ?>
+				 					<td class="none">None</td>
+				 				<?php else: ?>
+						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>">
+						 				<div class="comment">
+						 					<div><?php echo $assay->result;?></div>
+						 					<div class="comment_icon" title="<div class='comment_block'>
+						 														<div>Result<span>*</span>:</div><div class='value'><?php echo $assya->result;?>mg</div>
+						 														<div>Reference<span>*</span>:</div><div class='value'><?php echo $assay->ref_low;?>mg - <?php echo $assay->ref_hi;?>mg = <?php echo $assay->ref_percent;?>%</div>
+						 														<div>User Coment</div><br><br><br><?php echo $assay->remarks;?>
+					 														 </div>">
+											</div>
+						 				</div>
+						 			</td>
+						 		<?php endif; ?>
+					 		<?php endforeach;?>
+					 	</tr>
+		 			<?php endforeach;?>					
 				</table>
 			</div>
 			<div class="header-line">
@@ -180,19 +196,29 @@ get_header();
 			<div>
 				<table class="diagnoses">
 					<?php foreach ($patient_data->diagnosis as $diagnosis_id => $diagnosis_array) : ?>
-	 						<?php $tmp_diagnos = current(array_filter($diagnosis_array));?>
-	 						<?php $diagnos_name = $tmp_diagnos->name;?>
-	 						<tr data-diagnosis-id="<?php echo $diagnosis_id;?>">
-		 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
-		 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
-					 				<?php if(empty($diagnos)): ?>
-					 					<td class="none">None</td>
-					 				<?php else: ?>
-							 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>"><div class="comment"><div><?php echo $diagnos->doc_name;?></div><div class="comment_icon"></div></div></td>
-							 		<?php endif; ?>
-						 		<?php endforeach;?>
-						 	</tr>
-			 			<?php endforeach;?>
+ 						<?php $tmp_diagnos = current(array_filter($diagnosis_array));?>
+ 						<?php $diagnos_name = $tmp_diagnos->name;?>
+ 						<tr data-diagnosis-id="<?php echo $diagnosis_id;?>">
+	 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
+	 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
+				 				<?php if(empty($diagnos)): ?>
+				 					<td class="none">None</td>
+				 				<?php else: ?>
+						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>">
+						 				<div class="comment">
+						 					<div><?php echo $diagnos->doc_name;?></div>
+						 					<div class="comment_icon" title="<div class='comment_block'>
+					 														 	<div>Doctor</div>
+					 														 	<div class='value'><?php echo $diagnos->doc_name;?>,<?php echo $diagnos->country;?></div>
+					 														 	<div>Comment</div><br><br><?php echo $diagnos->comment;?>
+					 														 </div>">
+											</div>
+						 				</div>
+						 			</td>
+						 		<?php endif; ?>
+					 		<?php endforeach;?>
+					 	</tr>
+		 			<?php endforeach;?>
 				</table>
 			</div>
 			<div class="header-line">
@@ -200,33 +226,45 @@ get_header();
 			</div>
 			<div>
 				<table class="therapies">
-					<tr>
-						<td><input type="checkbox">TRT</td>
-						<td>20ml/2</td>
-						<td class="none">None</td>
-						<td class="none">None</td> 
-						<td class="none">None</td>
-						<td>20ml/2</td>
-						<td>-</td>
-					</tr>
-					<tr data-therapy-id="56984">
-						<td><input type="checkbox">Arimide</td>
-						<td><div class="comment"><div>20ml/2</div><div class="comment_icon" title="<div class='comment_block'><div>Dosage:</div><div class='value'>15ml every 1 day</div><div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div><div>Effect:</div><br><div class='block_header'><div id='left_column_header'>Symptom</div><div id='right_column_header'>Effect</div><br></div><div><div class='effect_main_block'><div class='row'>Symptom1<div class='value'>1</div></div><div class='row'>Symptom1<div class='value'>1</div></div></div></div><div class='bottom-block'>User Coment</div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc venenatis augue erat, sit amet vulputate quam pretium nec. Suspendisse nec mauris a justo lobortis congue."></div></div></div></td>
-						<td class="none">None</td>
-						<td>20ml/2</td>
-						<td>20ml/2</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Zinc Suppliments</td>
-						<td>20ml/2</td>
-						<td class="none">None</td>
-						<td>20ml/2</td>
-						<td>20ml/2</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr>
+					<?php foreach ($patient_data->therapies as $therapy_id => $therapies_array) : ?>
+ 						<?php $tmp_therapy = current(array_filter($therapies_array));?>
+ 						<?php $therapy_name = $tmp_therapy->name;?>
+ 						<tr data-therapy-id="<?php echo $therapy_id;?>">
+	 						<td><input type="checkbox"><label><?php echo $therapy_name;?></label></td>
+	 						<?php foreach ($therapies_array as $therapy_id => $therapy):?>
+				 				<?php if(empty($therapy)): ?>
+				 					<td class="none">None</td>
+				 					<?php //var_dump($patient_data->effetcs['therapy']);?>
+				 				<?php else: ?>
+						 			<td>
+						 				<div class="comment">
+						 					<div>20ml/2</div>
+						 					<div class="comment_icon" title="<div class='comment_block'>
+						 													 	<div>Dosage:</div><div class='value'>15ml every 1 day</div>
+						 													 	<div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div>
+						 													 	<div>Effect:</div><br>
+						 													 	<?php if(!empty($patient_data->effetcs['therapy'])):?>
+						 													 		<div class='block_header'>
+						 													 			<div id='left_column_header'>Symptom</div>
+						 													 			<div id='right_column_header'>Effect</div>
+						 													 			<br>
+						 													 		</div>
+						 													 	<?php endif; ?>
+						 													 	<?php if(in_array($therapy->therapy_id,$patient_data->effetcs['therapy'])):?>
+							 													 	<div>
+							 													 		<div class='effect_main_block'>
+							 													 			<div class='row'><?php echo $patient_data->effetcs['therapy'][$therapy->therapy_id]->name;?><div class='value'><?php echo $patient_data->effetcs['therapy'][$therapy->therapy_id]->value;?></div></div>
+							 													 		</div>
+							 			 										 	</div>
+					 			 										 		<?php endif;?>
+						 													 	<div class='bottom-block'>User Coment</div><?php echo $therapy->comment;?>.">
+											</div>
+						 				</div>
+						 			</td>
+						 		<?php endif; ?>
+					 		<?php endforeach;?>
+					 	</tr>
+		 			<?php endforeach;?>
 				</table>
 			</div>
 			<div class="header-line">
@@ -252,17 +290,6 @@ get_header();
 						<td class="none">None</td>
 						<td>-</td>
 					</tr>
-					<!-- <tr class="add-row">
-						<td><input type="text">
-							<div class="add"></div>
-						</td>
-						<td class="none"></td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr> --> 
 				</table>
 			</div>
 		</div>

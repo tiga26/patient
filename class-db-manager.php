@@ -29,6 +29,9 @@ class Patient_Db_Manager {
 			),
 		'lifestyle' => array(
 			'handler' => 'lifestyle'
+			),
+		'effects' => array(
+			'handler' => 'effects'
 			)
 		);
 
@@ -217,7 +220,6 @@ class Patient_Db_Manager {
 
 		foreach ($symptoms_array as $category => $bytype) {
 			foreach ($bytype as $key => $symptom) {
-				// var_dump($symptom);
 				foreach ($this->relation_ids as $id) {	
 			    	if(!array_key_exists($id, $symptom)) {		    		
 			    		$symptom[$id] = array();
@@ -424,6 +426,67 @@ class Patient_Db_Manager {
 	  	}	  	
 
 		$this->patient_data['lifestyle'] = $lifestyle_assoc;
+	}
+
+	private function _loadEffects() {
+		global $wpdb;
+
+		$therapies_array = array();
+		$lifestyle_array = array();
+
+		$effects_array = array(
+			'therapy' => array(),
+			'lifestyle' => array(),
+		);
+
+		foreach ($this->patient_data['therapies'] as $therapie_id => $therapies) {
+			foreach ($therapies as $relation_id => $therapie) {
+				if(!empty($therapie)){
+					array_push($therapies_array,$therapie->therapy_result_id);
+				}				
+			}		
+		}
+
+		foreach ($this->patient_data['lifestyle'] as $lifestyle_id => $lifestyles) {
+			foreach ($lifestyles as $relation_id => $lifestyle) {
+				if(!empty($lifestyle)) {
+					array_push($lifestyle_array,$lifestyle->lifestyle_result_id);
+				}				
+			}		
+		}
+
+		if(!empty($therapies_array)) {
+			$therapies_str = implode(',', $therapies_array);
+			$ther = "'".'therapie'."'";				
+			$effect_therapies_sql = 'SELECT E.*,S.symptom_id,S.name FROM '.self::$_prefix.'effect as E
+									 INNER JOIN '.self::$_prefix.'user_symptoms US
+									 ON E.user_symptom_id = US.user_symptom_id
+									 INNER JOIN '.self::$_prefix.'symptoms S
+									 ON US.symptom_id = S.symptom_id
+									 WHERE E.efficient_id IN ('.$therapies_str.') AND E.type = '.$ther.'';
+			$effect_therapies = $wpdb->get_results($effect_therapies_sql);
+			foreach ($effect_therapies as $effect) {
+				$effects_array['therapy'][$effect->efficient_id] = $effect;
+			}
+		}
+
+		if(!empty($lifestyle_array)) {
+			$lifestyle_str = implode(',', $lifestyle_array);
+			$lifestyle = "'".'lifestyle'."'";
+			$effect_lifestyle_sql = 'SELECT E.*,S.symptom_id,S.name FROM '.self::$_prefix.'effect as E
+									 INNER JOIN '.self::$_prefix.'user_symptoms US
+									 ON E.user_symptom_id = US.user_symptom_id
+									 INNER JOIN '.self::$_prefix.'symptoms S
+									 ON US.symptom_id = S.symptom_id
+									 WHERE E.efficient_id IN ('.$lifestyle_str.') AND E.type = '.$lifestyle.'';
+			$effect_lifestyle = $wpdb->get_results($effect_lifestyle_sql);
+			foreach ($effect_lifestyle as $effect) {
+				$effects_array['lifestyle'][$effect->efficient_id] = $effect;
+			}
+		}
+		
+		$this->patient_data['effects'] = $effects_array;
+
 	}
 
 	private function customSort(Array $array, Array $orderArray) {

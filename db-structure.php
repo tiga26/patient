@@ -634,9 +634,15 @@ return array(
 					'nonull' => ' NOT NULL',
 					'autoincrement' => '',
 				),
-				'efiicient_id' => array(
+				'efficient_id' => array(
 					'type' => ' INT',
 					'length' => '(11)',
+					'nonull' => ' NOT NULL',
+					'autoincrement' => '',
+				),
+				'value' => array(
+					'type' => ' TINYINT',
+					'length' => '(3)',
 					'nonull' => ' NOT NULL',
 					'autoincrement' => '',
 				),
