@@ -235,7 +235,7 @@ get_header();
 				 				<?php if(empty($therapy)): ?>
 				 					<td class="none">None</td>
 				 				<?php else: ?>
-						 			<td>
+						 			<td data-therapy-result-id="<?php echo $therapy->therapt_result_id;?>">
 						 				<div class="comment">
 						 					<div><?php echo $therapy->dosage;?>ml/<?php echo $therapy->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
@@ -281,7 +281,7 @@ get_header();
 				 				<?php if(empty($lifestyle)): ?>
 				 					<td class="none">None</td>
 				 				<?php else: ?>
-						 			<td>
+						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>">
 						 				<div class="comment">
 						 					<div><?php echo $lifestyle->quantity;?>/<?php echo $lifestyle->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
@@ -819,13 +819,12 @@ get_header();
 			var tableForAppend = jQuery( this ).data('table');			
 			All.removeAll(tableForAppend);
 			jQuery( this ).parent('div').find('.btn.all').removeClass('active');
-			jQuery( 'table.'+tableForAppend ).find('tr:last-child').remove();
+			// jQuery( 'table.'+tableForAppend ).find('tr:last-child').remove();
 		}else{
 			jQuery( this ).addClass('active');
 			var tableForAppend = jQuery( this ).data('table');
 			All.addAll(tableForAppend);
-			jQuery( this ).parent('div').find('.btn.my').removeClass('active');
-			jQuery( 'table.'+tableForAppend ).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td></td></tr> ");
+			jQuery( this ).parent('div').find('.btn.my').removeClass('active');			
 		}
 	});
 
@@ -1192,18 +1191,75 @@ get_header();
 	All = {
 
 		removeAll: function(type) {
+			var data = {
+				symptom : 'user-symptom-id',
+				assays : 'assay-result-id',
+				diagnoses : 'doctor-diagnosis-id',
+				therapies : 'therapy-result-id',
+				lifestyle : 'lifestyle-result-id',
+			}
+			var data_attr = eval('data.' + type);			
 
+			jQuery( 'table.'+type).find('tbody').find('tr').each(function() {
+				var is_user_data = false;
+				jQuery(this).find('td').each(function(){
+					if(jQuery(this).data(data_attr) != undefined) {
+						is_user_data = true;
+						return false;
+					}					
+				});
+				if(is_user_data == false) {
+					jQuery(this).remove();		
+				}
+			});
 		},
 
 		addAll: function(type) {
-			console.log(type);
+			
 			var datas = {
 				action: type,
 				type: 'getall'
 			};
 
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-				
+
+				switch(type) {
+					case 'symptom':					
+						response.mental.forEach(function(mental){
+							jQuery( '#accordion' ).find('[data-category-id=1]').next().append("<tr data-symptom-id="+mental.symptom_id+"><td><input type='checkbox'>"+mental.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+						response.sexual.forEach(function(sexual){
+							jQuery( '#accordion' ).find('[data-category-id=2]').next().append("<tr data-symptom-id="+sexual.symptom_id+"><td><input type='checkbox'>"+sexual.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+						response.physical.forEach(function(physical){
+							jQuery( '#accordion' ).find('[data-category-id=3]').next().append("<tr data-symptom-id="+physical.symptom_id+"><td><input type='checkbox'>"+physical.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+						response.hormonal.forEach(function(hormonal){
+							jQuery( '#accordion' ).find('[data-category-id=4]').next().append("<tr data-symptom-id="+hormonal.symptom_id+"><td><input type='checkbox'>"+hormonal.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+					break;
+					case 'assays':
+						response.forEach(function(assay){
+							jQuery( 'table.'+type ).append("<tr data-assay-id="+assay.assay_id+"><td><input type='checkbox'>"+assay.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+					break;
+					case 'diagnoses':
+						response.forEach(function(diagnos){
+							jQuery( 'table.'+type ).append("<tr data-diagnosis-id="+diagnos.diagnosis_id+"><td><input type='checkbox'>"+diagnos.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+					break;
+					case 'therapies':
+						response.forEach(function(therapy){
+							jQuery( 'table.'+type ).append("<tr data-therapy-id="+therapy.therapy_id+"><td><input type='checkbox'>"+therapy.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+					break;
+					case 'lifestyle':
+						response.forEach(function(lifestyle){
+							jQuery( 'table.'+type ).append("<tr data-lifestyle-id="+lifestyle.lifestyle_id+"><td><input type='checkbox'>"+lifestyle.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+						});
+					break;
+				}
+				jQuery( 'table.'+type).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td></td></tr> ");
 		 	}, 'json');
 		}
 	}
