@@ -94,12 +94,28 @@ class Patient_Db_Manager {
 				     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
 	
 	    $dates = $wpdb->get_results($date_sql);
+	    $dates_array = array();
+	    if(count($dates) < 6) {
+	    	$max_id_sql = 'SELECT relation_id FROM '.self::$_prefix.'relations ORDER BY relation_id DESC LIMIT 1';
+	    	$max_id_array = $wpdb->get_results($max_id_sql);
+	    	$max_id = $max_id_array[0]->relation_id;
+	    }
 
 	    foreach ($dates as $date) {
 	    	$this->relation_ids[$date->date] = $date->relation_id;
+	    	$dates_array[$date->relation_id] = $date;
 	    }
-	   	
-	    $this->patient_data['dates'] = $dates;
+
+	    if(count($dates) < 6) {
+	    	$more_relations_cnt = 6 - count($dates);
+	    	
+	    	for ($i = 1; $i <= $more_relations_cnt; $i++) { 
+	    		$this->relation_ids[] = $max_id + $i * 1000;
+	    	}
+	    }
+
+
+	    $this->patient_data['dates'] = $dates_array;
 	}
 
 	private function _loadBydates() {

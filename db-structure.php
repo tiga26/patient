@@ -410,6 +410,12 @@ return array(
 					'nonull' => '',
 					'autoincrement' => '',
 				),
+				'frequency' => array(
+					'type' => ' TINYINT',
+					'length' => '(1)',
+					'nonull' => '',
+					'autoincrement' => '',
+				),
 			),
 			'primary_key' => 'therapy_result_id',
 			'engine' => 'InnoDB',

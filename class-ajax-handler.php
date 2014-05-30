@@ -262,8 +262,53 @@ class Patient_Ajax_Handler{
 
 	public static function _setTherapies() {
 		global $wpdb;
-		$therapy = $wpdb->insert(self::$table, self::$patient_data);
-		var_dump($therapy);
+		// var_dump(self::$patient_data);exit;
+
+		$relation_id = "'".self::$patient_data['relation_id']."'";
+		$dosage = "'".self::$patient_data['dosage']."'";
+		$frequency = "'".self::$patient_data['frequency']."'";
+		$therapy_id = "'".self::$patient_data['therapy_id']."'";
+		$comment = "'".self::$patient_data['comment']."'";
+		$self_prescribed = "'".self::$patient_data['self_prescribed']."'";
+		$effect = self::$patient_data['effect'];
+
+		if(null != self::$patient_data['therapy_result_id']) {
+			$efficient = $therapy_result_id = self::$patient_data['therapy_result_id'];
+			$insert_therapy_sql = 'UPDATE '.self::$table.'
+									SET dosage = '.$dosage.',
+									frequency = '.$frequency.',
+									self_prescribed = '.$self_prescribed.',
+									comment = '.$comment.'
+									WHERE therapy_result_id='.$therapy_result_id;
+			$status = 2;
+		} else {
+			$insert_therapy_sql = 'INSERT INTO '.self::$table.' (therapy_id,comment,relation_id,dosage,frequency,self_prescribed)
+									VALUES('.$therapy_id.','.$comment.','.$relation_id.','.$dosage.','.$frequency.','.$self_prescribed.')';
+			$status = 1;
+		}
+		
+		$therapy = $wpdb->query( $insert_therapy_sql );
+
+		if(!isset($efficient)) {
+			$efficient = $wpdb->insert_id;
+		}
+		
+		if($therapy === false) {
+			$status = 3;
+		} elseif($therapy == 0) {
+			$status = 0;
+		}
+		$type = 'therapie';
+		$effect_type = "'".$type."'";
+		foreach ($effect as $user_symptom_id => $effect_value) {
+			$insert_effect_sql = 'INSERT INTO patient_effect
+			 					  (type,user_symptom_id,efficient_id,value)
+			 					  VALUES('.$effect_type.','.$user_symptom_id.','.$efficient.','.$effect_value.') ON DUPLICATE KEY UPDATE
+			 					  value = '.$effect_value.'';
+		  	$effect = $wpdb->query( $insert_effect_sql);
+		}
+
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _setLifestyle() {
