@@ -423,6 +423,7 @@ get_header();
 		</div>
 
 		<div class="dialog symptom">
+			<div>Symptom Severity:</div>
 			<select id="symptom-select">
 				<option value="-3">Medium worsening -3</option>	
 				<option value="-2">Mild worsening -2</option>
@@ -442,20 +443,14 @@ get_header();
 		<div class="dialog diagnoses">Doctor:
 			<div class="block_opened_select">
 				<select id="country_select" size="5">
-					<option>Country</option>
-					<option>Usa</option>
-					<option>Armenia</option>
-					<option>Usbek</option>
-					<option>Moscow</option>
-					<option>Georgia</option>
+					<?php foreach ($patient_data->country as $country): ?>
+						<option><?php echo $country->country;?></option>
+					<?php endforeach;?>
 				</select>
 				<select id="doctor_select" size="4">
-					<option data-doctor-id="65">Doctor</option>
-					<option data-doctor-id="32">Donals</option>
-					<option data-doctor-id="87">Burns</option>
-					<option data-doctor-id="12">Michael</option>
-					<option data-doctor-id="9">Michael</option>
-					<option data-doctor-id="56">Michael</option>
+					<?php foreach($patient_data->doctors as $doctor):?>
+						<option value="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
+					<?php endforeach;?>
 				</select>
 			</div>
 			<input type="text"><div class="add_doctor">+</div>
@@ -477,20 +472,14 @@ get_header();
 			Doctor:
 			<div class="block_opened_select">
 				<select id="country_select" size="5">
-					<option>Country</option>
-					<option>Usa</option>
-					<option>Armenia</option>
-					<option>Usbek</option>
-					<option>Moscow</option>
-					<option>Georgia</option>
+					<?php foreach ($patient_data->country as $country): ?>
+						<option><?php echo $country->country;?></option>
+					<?php endforeach;?>
 				</select>
 				<select id="doctor_select" size="4">
-					<option>Doctor</option>
-					<option>Donals</option>
-					<option>Burns</option>
-					<option>Michael</option>
-					<option>Michael</option>
-					<option>Michael</option>
+					<?php foreach($patient_data->doctors as $doctor):?>
+						<option value="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
+					<?php endforeach;?>
 				</select>
 			</div>
 			<input type="text"><div class="add_doctor">+</div>
@@ -501,43 +490,7 @@ get_header();
 				<div id="right_column_header">Effect</div>
 			</div>
 			<div>
-				<div class="effect_main_block">
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
+				<div class="effect_main_block">					
 				</div>
 			</div>
 				Your Comment:
@@ -568,43 +521,7 @@ get_header();
 				<div id="right_column_header">Effect</div>
 			</div>
 			<div>
-				<div class="effect_main_block">
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
-					<div class="row">Symptom1
-						<select>
-							<option>1</option>
-							<option>2</option>
-						</select>
-					</div>
+				<div class="effect_main_block">					
 				</div>
 			</div>
 				Your Comment:
@@ -1106,11 +1023,12 @@ get_header();
 		setDoctorId: function() {
 			jQuery('#doctor_select').next().find('li').on('click', function(){
 				var index = jQuery(this).index();
-				diagnos_doctor_id = jQuery('#doctor_select').find('option:eq('+index+')').data('doctor-id');
+				diagnos_doctor_id = jQuery('#doctor_select').val();
+				console.log(diagnos_doctor_id);
 			});
 		},
 
-		filtrDoctorByCountry: function() {
+		filtrDoctorByCountry: function() {			
 			jQuery('#country_select').next().find('li').on('click', function(){
 				var index = jQuery(this).index();
 				var country = jQuery('#country_select').find('option:eq('+index+')').text();
@@ -1122,10 +1040,10 @@ get_header();
 			        data: current_data,
 			        type: 'get'
 				};
-				console.log(current_data);
-				// jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-				// 	alert(response);
-		 	// 	}, 'json');
+				
+				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					// alert(response);
+		 		}, 'json');
 			});
 		}
 	}

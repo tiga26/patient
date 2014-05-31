@@ -32,7 +32,10 @@ class Patient_Db_Manager {
 			),
 		'effects' => array(
 			'handler' => 'effects'
-			)
+			),
+		'doctors' => array(
+			'handler' => 'doctors'
+			),
 		);
 
 	public function setPatient($patient) {
@@ -502,6 +505,17 @@ class Patient_Db_Manager {
 		}
 		
 		$this->patient_data['effects'] = $effects_array;
+
+	}
+
+	private function _loadDoctors() {
+		global $wpdb;
+		
+		$doctors_sql = 'SELECT * FROM '.self::$_prefix.'doctors ';
+		$this->patient_data['doctors'] =  $wpdb->get_results($doctors_sql);
+
+		$country_sql = 'SELECT * FROM '.self::$_prefix.'doctors GROUP BY country';
+		$this->patient_data['country'] =  $wpdb->get_results($country_sql);
 
 	}
 

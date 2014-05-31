@@ -70,6 +70,7 @@ class Patient_Ajax_Handler{
 			'unit' => 'patient_units'
 		),
 		'get' => array(
+			'doctor' => 'patient_doctors',
 		),
 		
 	);
@@ -132,8 +133,8 @@ class Patient_Ajax_Handler{
 		global $wpdb;
 		$country = "'%".self::$patient_data['country']."%'";
 		$doctors_sql = 'SELECT * FROM '.self::$table.' WHERE country LIKE ('.$country.')';
-		print_r(json_encode($doctors));
 		$doctors = $wpdb->get_results($doctors_sql);
+		print_r(json_encode($doctors));
 	}
 
 	public static function _setRecovery() {
@@ -298,15 +299,19 @@ class Patient_Ajax_Handler{
 		} elseif($therapy == 0) {
 			$status = 0;
 		}
-		$type = 'therapie';
-		$effect_type = "'".$type."'";
-		foreach ($effect as $user_symptom_id => $effect_value) {
-			$insert_effect_sql = 'INSERT INTO patient_effect
-			 					  (type,user_symptom_id,efficient_id,value)
-			 					  VALUES('.$effect_type.','.$user_symptom_id.','.$efficient.','.$effect_value.') ON DUPLICATE KEY UPDATE
-			 					  value = '.$effect_value.'';
-		  	$effect = $wpdb->query( $insert_effect_sql);
+
+		if($therapy !== false) {
+			$type = 'therapie';
+			$effect_type = "'".$type."'";
+			foreach ($effect as $user_symptom_id => $effect_value) {
+				$insert_effect_sql = 'INSERT INTO patient_effect
+				 					  (type,user_symptom_id,efficient_id,value)
+				 					  VALUES('.$effect_type.','.$user_symptom_id.','.$efficient.','.$effect_value.') ON DUPLICATE KEY UPDATE
+				 					  value = '.$effect_value.'';
+			  	$effect = $wpdb->query( $insert_effect_sql);
+			}
 		}
+		
 
 		print_r(json_encode(self::$status_code[$status]));
 	}
