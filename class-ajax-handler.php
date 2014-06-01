@@ -263,7 +263,6 @@ class Patient_Ajax_Handler{
 
 	public static function _setTherapies() {
 		global $wpdb;
-		// var_dump(self::$patient_data);exit;
 
 		$relation_id = "'".self::$patient_data['relation_id']."'";
 		$dosage = "'".self::$patient_data['dosage']."'";
@@ -271,6 +270,7 @@ class Patient_Ajax_Handler{
 		$therapy_id = "'".self::$patient_data['therapy_id']."'";
 		$comment = "'".self::$patient_data['comment']."'";
 		$self_prescribed = "'".self::$patient_data['self_prescribed']."'";
+		$doctor_id = self::$patient_data['doctor_id'];
 		$effect = self::$patient_data['effect'];
 
 		if(null != self::$patient_data['therapy_result_id']) {
@@ -279,15 +279,16 @@ class Patient_Ajax_Handler{
 									SET dosage = '.$dosage.',
 									frequency = '.$frequency.',
 									self_prescribed = '.$self_prescribed.',
+									doctor_id = '.$doctor_id.',
 									comment = '.$comment.'
 									WHERE therapy_result_id='.$therapy_result_id;
 			$status = 2;
 		} else {
-			$insert_therapy_sql = 'INSERT INTO '.self::$table.' (therapy_id,comment,relation_id,dosage,frequency,self_prescribed)
-									VALUES('.$therapy_id.','.$comment.','.$relation_id.','.$dosage.','.$frequency.','.$self_prescribed.')';
+			$insert_therapy_sql = 'INSERT INTO '.self::$table.' (therapy_id,doctor_id,comment,relation_id,dosage,frequency,self_prescribed)
+									VALUES('.$therapy_id.','.$doctor_id.','.$comment.','.$relation_id.','.$dosage.','.$frequency.','.$self_prescribed.')';
 			$status = 1;
 		}
-		
+		// var_dump($insert_therapy_sql);exit;
 		$therapy = $wpdb->query( $insert_therapy_sql );
 
 		if(!isset($efficient)) {
@@ -310,16 +311,59 @@ class Patient_Ajax_Handler{
 				 					  value = '.$effect_value.'';
 			  	$effect = $wpdb->query( $insert_effect_sql);
 			}
-		}
-		
+		}		
 
 		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _setLifestyle() {
 		global $wpdb;
-		$lifestyle = $wpdb->insert(self::$table, self::$patient_data);
-		var_dump($lifestyle);
+
+		$lifestyle_id = "'".self::$patient_data['lifestyle_id']."'";		
+		$lifestyle_frequency_id = "'".self::$patient_data['lifestyle_frequency_id']."'";
+		$relation_id = "'".self::$patient_data['relation_id']."'";
+		$comment = "'".self::$patient_data['comment']."'";
+
+		$effect = self::$patient_data['effect'];
+
+		if(null != self::$patient_data['lifestyle_result_id']) {
+			$efficient = $lifestyle_result_id = self::$patient_data['lifestyle_result_id'];
+			$insert_lifestyle_sql = 'UPDATE '.self::$table.'
+									SET lifestyle_frequency_id = '.$lifestyle_frequency_id.',
+									comment = '.$comment.'
+									WHERE lifestyle_result_id='.$lifestyle_result_id;
+			$status = 2;
+		} else {
+			$insert_lifestyle_sql = 'INSERT INTO '.self::$table.' (lifestyle_id,lifestyle_frequency_id,relation_id,comment)
+									VALUES('.$lifestyle_id.','.$lifestyle_frequency_id.','.$relation_id.','.$comment.')';
+			$status = 1;
+		}
+		
+		$lifestyle = $wpdb->query( $insert_lifestyle_sql );
+
+		if(!isset($efficient)) {
+			$efficient = $wpdb->insert_id;
+		}
+		
+		if($lifestyle === false) {
+			$status = 3;
+		} elseif($lifestyle == 0) {
+			$status = 0;
+		}
+
+		if($lifestyle !== false) {
+			$type = 'lifestyle';
+			$effect_type = "'".$type."'";
+			foreach ($effect as $user_symptom_id => $effect_value) {
+				$insert_effect_sql = 'INSERT INTO patient_effect
+				 					  (type,user_symptom_id,efficient_id,value)
+				 					  VALUES('.$effect_type.','.$user_symptom_id.','.$efficient.','.$effect_value.') ON DUPLICATE KEY UPDATE
+				 					  value = '.$effect_value.'';
+			  	$effect = $wpdb->query( $insert_effect_sql);
+			}
+		}		
+
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _addSymptom() {

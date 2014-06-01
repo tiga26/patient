@@ -353,13 +353,15 @@ class Patient_Db_Manager {
 		global $wpdb;
 
 		$relation_ids_str = implode(',', $this->relation_ids);
-		$therapies_sql = 'SELECT R.date,R.user_id,TR.*,T.therapy_category_id,T.name,T.comment as admin_comment,TC.name as therapy_name FROM '.self::$_prefix.'relations R
+		$therapies_sql = 'SELECT R.date,R.user_id,TR.*,T.therapy_category_id,T.name,T.comment as admin_comment,TC.name as therapy_name,D.name as doc_name,D.city,D.country FROM '.self::$_prefix.'relations R
 						  INNER JOIN '.self::$_prefix.'therapy_result TR
 						  ON R.relation_id = TR.relation_id
 						  INNER JOIN '.self::$_prefix.'therapy T
 						  ON TR.therapy_id = T.therapy_id
 						  INNER JOIN '.self::$_prefix.'therapy_category TC
 						  ON T.therapy_category_id = TC.therapy_category_id
+						  INNER JOIN '.self::$_prefix.'doctors D
+						  ON TR.doctor_id = D.doctor_id
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
 
@@ -485,7 +487,12 @@ class Patient_Db_Manager {
 									 WHERE E.efficient_id IN ('.$therapies_str.') AND E.type = '.$ther.'';
 			$effect_therapies = $wpdb->get_results($effect_therapies_sql);
 			foreach ($effect_therapies as $effect) {
-				$effects_array['therapy'][$effect->efficient_id] = $effect;
+				if(!isset($effects_array['therapy'][$effect->efficient_id])) {
+					$effects_array['therapy'][$effect->efficient_id] = array();
+					array_push($effects_array['therapy'][$effect->efficient_id], $effect);
+				} else {
+					array_push($effects_array['therapy'][$effect->efficient_id], $effect);
+				}				
 			}
 		}
 
@@ -500,7 +507,12 @@ class Patient_Db_Manager {
 									 WHERE E.efficient_id IN ('.$lifestyle_str.') AND E.type = '.$lifestyle.'';
 			$effect_lifestyle = $wpdb->get_results($effect_lifestyle_sql);
 			foreach ($effect_lifestyle as $effect) {
-				$effects_array['lifestyle'][$effect->efficient_id] = $effect;
+				if(!isset($effects_array['lifestyle'][$effect->efficient_id])) {
+					$effects_array['lifestyle'][$effect->efficient_id] = array();
+					array_push($effects_array['lifestyle'][$effect->efficient_id], $effect);
+				} else {
+					array_push($effects_array['lifestyle'][$effect->efficient_id], $effect);
+				}	
 			}
 		}
 		

@@ -634,22 +634,22 @@
 .dialog.lifestyle .sbHolder {
   vertical-align: top;
 }
-.dialog.diagnoses #country_select + .sbHolder,
-.dialog.therapies #country_select + .sbHolder,
-.dialog.lifestyle #country_select + .sbHolder {
+.dialog.diagnoses .country_select + .sbHolder,
+.dialog.therapies .country_select + .sbHolder,
+.dialog.lifestyle .country_select + .sbHolder {
   width: 130px !important;
   border-width: 1px 0 1px 1px !important;
   border-color: #267893 !important;
   border-radius: 5px 0px 0 0 !important;
 }
-.dialog.diagnoses #country_select + .sbHolder .sbToggle,
-.dialog.therapies #country_select + .sbHolder .sbToggle,
-.dialog.lifestyle #country_select + .sbHolder .sbToggle {
+.dialog.diagnoses .country_select + .sbHolder .sbToggle,
+.dialog.therapies .country_select + .sbHolder .sbToggle,
+.dialog.lifestyle .country_select + .sbHolder .sbToggle {
   display: none;
 }
-.dialog.diagnoses #country_select + .sbHolder .sbOptions,
-.dialog.therapies #country_select + .sbHolder .sbOptions,
-.dialog.lifestyle #country_select + .sbHolder .sbOptions {
+.dialog.diagnoses .country_select + .sbHolder .sbOptions,
+.dialog.therapies .country_select + .sbHolder .sbOptions,
+.dialog.lifestyle .country_select + .sbHolder .sbOptions {
   border-color: #267893;
   width: 130px;
   display: block !important;
@@ -657,23 +657,23 @@
   border-radius: 0px !important;
   border-width: 1px 0 1px 1px !important;
 }
-.dialog.diagnoses #doctor_select + .sbHolder,
-.dialog.therapies #doctor_select + .sbHolder,
-.dialog.lifestyle #doctor_select + .sbHolder {
+.dialog.diagnoses .doctor_select + .sbHolder,
+.dialog.therapies .doctor_select + .sbHolder,
+.dialog.lifestyle .doctor_select + .sbHolder {
   border-width: 1px 1px 1px 1px !important;
   border-radius: 0px 5px 0 0 !important;
   margin-left: -4px;
   border-color: #267893 !important;
   width: 172px !important;
 }
-.dialog.diagnoses #doctor_select + .sbHolder .sbToggle,
-.dialog.therapies #doctor_select + .sbHolder .sbToggle,
-.dialog.lifestyle #doctor_select + .sbHolder .sbToggle {
+.dialog.diagnoses .doctor_select + .sbHolder .sbToggle,
+.dialog.therapies .doctor_select + .sbHolder .sbToggle,
+.dialog.lifestyle .doctor_select + .sbHolder .sbToggle {
   display: none;
 }
-.dialog.diagnoses #doctor_select + .sbHolder .sbOptions,
-.dialog.therapies #doctor_select + .sbHolder .sbOptions,
-.dialog.lifestyle #doctor_select + .sbHolder .sbOptions {
+.dialog.diagnoses .doctor_select + .sbHolder .sbOptions,
+.dialog.therapies .doctor_select + .sbHolder .sbOptions,
+.dialog.lifestyle .doctor_select + .sbHolder .sbOptions {
   border-color: #267893;
   width: 172px;
   display: block !important;

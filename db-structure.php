@@ -573,9 +573,9 @@ return array(
 					'nonull' => ' NOT NULL',
 					'autoincrement' => ' AUTO_INCREMENT',
 				),
-				'frequency' => array(
+				'name' => array(
 					'type' => ' ENUM',
-					'length' => '("Day","Week","Month")',
+					'length' => '("Once a day or more","Once a week or more","Once a month or more")',
 					'nonull' => '',
 					'autoincrement' => '',
 				),
@@ -585,10 +585,10 @@ return array(
 					'nonull' => '',
 					'autoincrement' => '',
 				),
-				'name' => array(
-					'type' => ' VARCHAR',
-					'length' => '(255)',
-					'nonull' => ' NOT NULL',
+				'frequency' => array(
+					'type' => ' ENUM',
+					'length' => '("Day","Week","Month")',
+					'nonull' => '',
 					'autoincrement' => '',
 				),
 			),

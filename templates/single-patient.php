@@ -35,7 +35,7 @@ $patient_data = $patient->setPatient(1)
 // var_dump('therapies',$patient_data->therapies);
 // echo '<br>';
 // echo '<br>';
-// var_dump('lifestyle',$patient_data->effects['therapy']);
+// var_dump('lifestyle',$patient_data->effects);
 // exit;
 get_header();
 ?>
@@ -59,11 +59,11 @@ get_header();
 		 			<td>Recovery Status</td>
 		 			<?php foreach ($patient_data->recovery as $relation_id => $recovery) : ?>
 		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])): //add else statement if empty and there is no date for this?>
-		 					<td><div class="comment"><div>None</div></div></td>
+		 					<td><div class="comment"><div>-</div><div class="comment_icon"  title="<div class='comment_block'>No data availible</div>"></div></div></td>
 	 					<?php elseif (empty($recovery) && empty($patient_data->dates[$relation_id])): ?>
-	 						<td>-</td>
+	 						<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 		 				<?php else: ?>
-		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>">
+		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>" data-comment="<?php echo $recovery->remarks;?>" data-value="<?php echo $recovery->value;?>">
 				 				<div class="comment"><div><?php echo $recovery->value;?>%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $recovery->remarks;?></div>"></div></div></div>
 				 			</td>
 				 		<?php endif; ?>
@@ -86,7 +86,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td>-</td>
+					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
 							 				<div class="comment">
@@ -108,7 +108,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td>-</td>
+					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
 							 				<div class="comment">
@@ -130,7 +130,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td>-</td>
+					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
 							 				<div class="comment">
@@ -152,7 +152,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td>-</td>
+					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
 							 				<div class="comment">
@@ -179,7 +179,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
 	 						<?php foreach ($assay_array as $assay_id => $assay):?>
 				 				<?php if(empty($assay)): ?>
-				 					<td class="none">None</td>
+				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>">
 						 				<div class="comment">
@@ -210,7 +210,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
 	 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
 				 				<?php if(empty($diagnos)): ?>
-				 					<td class="none">None</td>
+				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>">
 						 				<div class="comment">
@@ -241,14 +241,14 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $therapy_name;?></label></td>
 	 						<?php foreach ($therapies_array as $therapy_id => $therapy):?>
 				 				<?php if(empty($therapy)): ?>
-				 					<td><div class="comment"><div>05%</div></div></td>
+				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-therapy-result-id="<?php echo $therapy->therapy_result_id;?>">
 						 				<div class="comment">
 						 					<div><?php echo $therapy->dosage;?>ml/<?php echo $therapy->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
-						 													 	<div>Dosage:</div><div class='value'>15ml every 1 day</div>
-						 													 	<div>Doctor:</div><div class='value'>Dr. Mindesaa,USA</div>						 													 	
+						 													 	<div>Dosage:</div><div class='value'><?php echo $therapy->dosage;?>ml every <?php echo $therapy->frequency;?> day</div>
+						 													 	<div>Doctor:</div><div class='value'>Dr. <?php echo $therapy->doc_name;?>,<?php echo $therapy->country;?></div>						 													 	
 						 													 	<?php if(!empty($patient_data->effects['therapy'])):?>
 						 													 		<div>Effect:</div><br>
 						 													 		<div class='block_header'>
@@ -258,10 +258,12 @@ get_header();
 						 													 		</div>
 						 													 	<?php endif; ?>						 													 	
 						 													 	<?php if(array_key_exists($therapy->therapy_result_id,$patient_data->effects['therapy'])):?>
-							 													 	<div>
+						 													 		<div>
 							 													 		<div class='effect_main_block'>
-							 													 			<div class='row'><?php echo $patient_data->effects['therapy'][$therapy->therapy_result_id]->name;?><div class='value'><?php echo $patient_data->effects['therapy'][$therapy->therapy_result_id]->value;?></div></div>
-							 													 		</div>
+								 													 		<?php foreach ($patient_data->effects['therapy'][$therapy->therapy_result_id] as $effect):?>								 													 	
+								 													 			<div class='row'><?php echo $effect->name;?><div class='value'><?php echo $effect->value;?></div></div>								 													 		
+									 			 										 	<?php endforeach;?>
+							 			 										 		</div>
 							 			 										 	</div>
 					 			 										 		<?php endif;?>
 						 													 	<div class='bottom-block'>User Coment</div><?php echo $therapy->comment;?>.
@@ -276,18 +278,18 @@ get_header();
 				</table>
 			</div>
 			<div class="header-line">
-				<div class="first-child">Lyfestyle</div><div class="btn my active" data-table='lifestyle'>my lifestyle type</div><div class="btn all" data-table='lifestyle'>all lifestyle types</div>
+				<div class="first-child">Lyfestyle</div><div class="btn my active" data-table='lifestyle'>my lifestyle</div><div class="btn all" data-table='lifestyle'>all lifestyle</div>
 			</div>
 			<div>
 				<table class="lifestyle">
 					<?php foreach ($patient_data->lifestyle as $lifestyle_id => $lifestyles_array) : ?>
  						<?php $tmp_lifestyle = current(array_filter($lifestyles_array));?>
  						<?php $lifestyle_name = $tmp_lifestyle->name;?>
- 						<tr data-lifestyle-id="<?php echo $lifestyley_id;?>">
+ 						<tr data-lifestyle-id="<?php echo $lifestyle_id;?>">
 	 						<td><input type="checkbox"><label><?php echo $lifestyle_name;?></label></td>
 	 						<?php foreach ($lifestyles_array as $lifestyle_id => $lifestyle):?>
 				 				<?php if(empty($lifestyle)): ?>
-				 					<td><div class="comment"><div>05%</div><div class="comment_icon"></div></div></td>
+				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>">
 						 				<div class="comment">
@@ -302,12 +304,14 @@ get_header();
 						 													 			<div id='right_column_header'>Effect</div>
 						 													 			<br>
 						 													 		</div>
-						 													 	<?php endif; ?>						 													 	
+						 													 	<?php endif; ?>
 						 													 	<?php if(array_key_exists($lifestyle->lifestyle_result_id,$patient_data->effects['lifestyle'])):?>
-							 													 	<div>
+						 													 		<div>
 							 													 		<div class='effect_main_block'>
-							 													 			<div class='row'><?php echo $patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id]->name;?><div class='value'><?php echo $patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id]->value;?></div></div>
-							 													 		</div>
+								 													 		<?php foreach ($patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id] as $effect):?>								 													 	
+								 													 			<div class='row'><?php echo $effect->name;?><div class='value'><?php echo $effect->value;?></div></div>								 													 		
+									 			 										 	<?php endforeach;?>
+							 			 										 		</div>
 							 			 										 	</div>
 					 			 										 		<?php endif;?>
 																				<div class='bottom-block'>User Coment</div><?php echo $lifestyle->comment;?>.
@@ -318,55 +322,7 @@ get_header();
 						 		<?php endif; ?>
 					 		<?php endforeach;?>
 					 	</tr>
-		 			<?php endforeach;?>
-					<!-- <tr>
-						<td><input type="checkbox">Daily Physical Training<br></td>
-						<td>1/Day</td>
-						<td><div class="comment">
-								<div>1/Day</div>
-									<div class="comment_icon" title="
-																	<div class='comment_block'>
-																		<div class='frequency_main_block'>
-																			<div class='row'>
-																				<div class='left_part'>1/Day</div>
-																				Once a day or more
-																			</div>
-																			<div class='row'>
-																				<div class='left_part'>1/Month</div>
-																				Once a month or more
-																			</div>
-																		</div>
-																		<div>Effect:</div><br>
-																		<div class='block_header'>
-																			<div id='left_column_header'>Symptom</div>
-																			<div id='right_column_header'>Effect</div>
-																			<br>
-																		</div>
-																		<div>
-																			<div class='effect_main_block'>
-																				<div class='row'>Symptom1<div class='value'>1</div></div>
-																				<div class='row'>Symptom1<div class='value'>1</div></div>
-																			</div>
-																		</div>
-																		<div class='bottom-block'>User Coment</div>rtis congue.
-																	</div>">
-									</div>
-							</div>
-						</td>
-						<td>None</td>
-						<td>None</td>
-						<td>1/Week</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox">Erat Situm Gelatis<br></td>
-						<td>Avoid</td>
-						<td>Avoid</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td class="none">None</td>
-						<td>-</td>
-					</tr> -->
+		 			<?php endforeach;?>					
 				</table>
 			</div>
 		</div>
@@ -423,7 +379,7 @@ get_header();
 		</div>
 
 		<div class="dialog symptom">
-			<div>Symptom Severity:</div>
+			<span style="vertical-align:middle;">Symptom Severity:</span>
 			<select id="symptom-select">
 				<option value="-3">Medium worsening -3</option>	
 				<option value="-2">Mild worsening -2</option>
@@ -442,14 +398,14 @@ get_header();
 		</div>
 		<div class="dialog diagnoses">Doctor:
 			<div class="block_opened_select">
-				<select id="country_select" size="5">
+				<select class="country_select" size="5">
 					<?php foreach ($patient_data->country as $country): ?>
 						<option><?php echo $country->country;?></option>
 					<?php endforeach;?>
 				</select>
-				<select id="doctor_select" size="4">
+				<select class="doctor_select" size="4">
 					<?php foreach($patient_data->doctors as $doctor):?>
-						<option value="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
+						<option data-doctor-id="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
 					<?php endforeach;?>
 				</select>
 			</div>
@@ -471,14 +427,14 @@ get_header();
 			<div class="every_day_div">every <input type="text" id="second-child">  day</div><br>
 			Doctor:
 			<div class="block_opened_select">
-				<select id="country_select" size="5">
+				<select class="country_select" size="5">
 					<?php foreach ($patient_data->country as $country): ?>
 						<option><?php echo $country->country;?></option>
 					<?php endforeach;?>
 				</select>
-				<select id="doctor_select" size="4">
+				<select class="doctor_select" size="4">
 					<?php foreach($patient_data->doctors as $doctor):?>
-						<option value="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
+						<option data-doctor-id="<?php echo $doctor->doctor_id;?>"><?php echo $doctor->name;?></option>
 					<?php endforeach;?>
 				</select>
 			</div>
@@ -502,15 +458,15 @@ get_header();
 		</div>
 		<div class="dialog lifestyle">Frequency:
 			<div class="frequency_main_block">
-				<div class="row">
+				<div class="row" data-lifestyle-frequency-id="1">
 					<label><div class="right_part">1/Day</div>
 					Once a day or more<input type="checkbox"></label>
 				</div>
-				<div class="row">
+				<div class="row" data-lifestyle-frequency-id="2">
 					<label><div class="right_part">1/Week</div>
 					Once a week or more<input type="checkbox"></label>
 				</div>
-				<div class="row">
+				<div class="row" data-lifestyle-frequency-id="3">
 					<label><div class="right_part">1/Month</div>
 					Once a month or more<input type="checkbox"></label>
 				</div>
@@ -770,12 +726,13 @@ get_header();
 			dialog_id = type = 'symptom';
 		}
 
-		if(type == 'therapies') {
+		if(type == 'therapies' || type == 'lifestyle') {
 			Add.addSymptomEffect();
 		}
-
-		console.log(dialog_id);
+		Diagnos.setDoctorId();
+		Diagnos.filtrDoctorByCountry();
 		selector_id = jQuery(this);
+		Fill.fillDialogData(type);
 
 		if(jQuery( ".dialog."+dialog_id ).dialog( "isOpen" )){
 			jQuery( ".dialog."+dialog_id ).dialog( "close" );
@@ -830,8 +787,6 @@ get_header();
 	var recovery_val;
 
 	jQuery(document).ready(function(){
-		Diagnos.setDoctorId();
-		Diagnos.filtrDoctorByCountry();
 		Add.addNewType();
 	});
 	
@@ -862,14 +817,12 @@ get_header();
 					dialog.dialog( "close" );
 					jQuery('#error_data_entry').css('display','block');
 				} else {
-					console.log(response);
+
 				}
 		 	}, 'json');
 
 		 	return false;
 
-
-			console.log(datas);
 		},
 
 		saveSymptom: function() {
@@ -892,14 +845,12 @@ get_header();
 		        type: 'set'
 			};
 
-			console.log(datas);
-
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
 				if(response.status == 4) {
 					dialog.dialog( "close" );
 					jQuery('#error_data_entry').css('display','block');
 				} else {
-					console.log(response);
+
 				}
 		 	}, 'json');
 		 	return false;
@@ -927,7 +878,14 @@ get_header();
 		        type: 'set'
 			};
 
-			console.log(current_data);
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				if(response.status == 4) {
+					dialog.dialog( "close" );
+					jQuery('#error_data_entry').css('display','block');
+				} else {
+
+				}
+		 	}, 'json');
 
 		},
 
@@ -940,7 +898,8 @@ get_header();
 				diagnosis_id: selector_id.closest('tr').data('diagnosis-id'),
 				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
 				doctor_id: diagnos_doctor_id,
-				comment: dialog.find('textarea').val()			
+				comment: dialog.find('textarea').val(),
+				doctor_id: diagnos_doctor_id,		
 			};
 			
 
@@ -950,16 +909,15 @@ get_header();
 		        type: 'set'
 			};
 
-			console.log(current_data);
-			// jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-			// 	if(response.status == 4) {
-			// 		dialog.dialog( "close" );
-			// 		jQuery('#error_data_entry').css('display','block');
-			// 	} else {
-			// 		console.log(response);
-			// 	}
-		 // 	}, 'json');
-		 // 	return false;
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				if(response.status == 4) {
+					dialog.dialog( "close" );
+					jQuery('#error_data_entry').css('display','block');
+				} else {
+
+				}
+		 	}, 'json');
+		 	return false;
 		},
 
 		saveTherapies: function() {
@@ -981,6 +939,7 @@ get_header();
 				frequency: dialog.find('#second-child').val(),
 				self_prescribed: prescribed,
 				effect: effect_obj,
+				doctor_id: diagnos_doctor_id,
 
 			};
 
@@ -995,7 +954,7 @@ get_header();
 					dialog.dialog( "close" );
 					jQuery('#error_data_entry').css('display','block');
 				} else {
-					console.log(response);
+
 				}
 		 	}, 'json');
 		 	return false;
@@ -1004,6 +963,47 @@ get_header();
 		},
 
 		saveLifestyle: function() {
+			var dialog = jQuery('.dialog.lifestyle');
+			var effect_sel = dialog.find('.effect_main_block .row');
+			var effect_obj = {};
+			var frequency_select = dialog.find('.frequency_main_block .row'); 
+			var lifestyle_frequency_id;
+
+			jQuery.each(frequency_select, function(){
+				if(jQuery(this).find('input').is(":checked")) {
+					lifestyle_frequency_id = jQuery(this).data('lifestyle-frequency-id');
+					return false;
+				}
+			});
+			
+			jQuery.each(effect_sel, function(){
+				effect_obj[jQuery('table.symptom').find('[data-symptom-id='+jQuery(this).data('symptom-id')+']').find('td:eq('+index+')').data('user-symptom-id')] = jQuery(this).find('.sbSelector').text();
+			});
+			
+			var current_data = {
+				lifestyle_result_id: selector_id.closest('td').data('lifestyle-result-id'),
+				lifestyle_id: selector_id.closest('tr').data('lifestyle-id'),
+				lifestyle_frequency_id: lifestyle_frequency_id,
+				relation_id: jQuery('.dates').find('td:eq('+index+')').data('relation-id'),
+				comment: dialog.find('textarea').val(),
+				effect: effect_obj,				
+			};
+
+			var datas = {
+				action: type,
+		        data: current_data,
+		        type: 'set'
+			};
+			
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				if(response.status == 4) {
+					dialog.dialog( "close" );
+					jQuery('#error_data_entry').css('display','block');
+				} else {
+
+				}
+		 	}, 'json');
+		 	return false;
 			
 		},
 
@@ -1016,22 +1016,66 @@ get_header();
 		  var f = str.charAt(0).toUpperCase();
 		  return f + str.substr(1);
 		},
-	}	
+	}
+
+	Fill = {
+		fillRecovery: function() {
+			var value = selector_id.closest('td').data('value');
+			var comment = selector_id.closest('td').data('comment');
+
+			jQuery('#rec_select').val(value);
+			jQuery('.dialog.recovery').find('textarea').text(comment);
+		},
+
+		fillSymptom: function() {
+			console.log('fillsymp');
+		},
+
+		fillAssays: function() {
+			console.log('fillassay');
+		},
+
+		fillDiagnoses: function() {
+			console.log('filldiag');
+		},
+
+		fillTherapies: function() {
+			console.log('fillther');
+		},
+
+		fillLifestyle: function() {
+			console.log('filllife');
+		},
+
+		fillDialogData: function(type) {
+			eval('this.fill' + this.ucfirst(type))(type);
+		},
+
+		ucfirst:  function(str) {
+		  str += '';
+		  var f = str.charAt(0).toUpperCase();
+		  return f + str.substr(1);
+		},
+	}
 
 	Diagnos = {
 
 		setDoctorId: function() {
-			jQuery('#doctor_select').next().find('li').on('click', function(){
+			
+			jQuery('.dialog.'+type+' .doctor_select').next().find('li').on('click', function(){
 				var index = jQuery(this).index();
-				diagnos_doctor_id = jQuery('#doctor_select').val();
-				console.log(diagnos_doctor_id);
+				diagnos_doctor_id = jQuery('.dialog.'+type+' .doctor_select').find('option:eq('+index+')').data('doctor-id');
+				return false;
 			});
 		},
 
-		filtrDoctorByCountry: function() {			
-			jQuery('#country_select').next().find('li').on('click', function(){
+		filtrDoctorByCountry: function() {
+			var doctor_select = jQuery('.dialog.'+type+' .doctor_select');
+			var country_select = jQuery('.dialog.'+type+' .country_select');
+			country_select.next().find('li').on('click', function(){
 				var index = jQuery(this).index();
-				var country = jQuery('#country_select').find('option:eq('+index+')').text();
+				var country = jQuery('.dialog.'+type+' .country_select').find('option:eq('+index+')').text();
+
 				var current_data = {
 					country: country,
 				}
@@ -1042,8 +1086,18 @@ get_header();
 				};
 				
 				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					doctor_select.find('option').remove();
+					doctor_select.next().find('li').remove();
+					jQuery.each(response,function(insex,doctor){
+						doctor_select.append('<option data-doctor-id='+doctor.doctor_id+'>'+doctor.name+'</option>');
+						doctor_select.next().find('.jspPane').append('<li><a href=#'+doctor.name+' rel='+doctor.name+' class="">'+doctor.name+'</a></li>');
+					});
+					// All.restructureSelect();
+					Diagnos.setDoctorId();
+
 					// alert(response);
 		 		}, 'json');
+
 			});
 		}
 	}
@@ -1057,7 +1111,6 @@ get_header();
 			jQuery.each(obj,function(){
 				jQuery.each(jQuery(this).find('tr'), function(){
 					if(jQuery(this).find('td:eq('+index+')').text() != '-'){
-						console.log(jQuery(this).data('symptom-id'));
 						symptom_ids[jQuery(this).data('symptom-id')] = jQuery(this).find('td:eq(0)').text();
 					}
 				});
@@ -1071,7 +1124,45 @@ get_header();
 
 			jQuery('.effect_main_block').empty().append(effect);
 
+			All.restructureSelect();			
 
+		},
+
+		addNewType: function(){
+			jQuery('.add-row').find('.add').live('click', function(){
+				var closest_tbody = jQuery(this).closest('tbody')
+				var add_type = jQuery(this).closest('table').attr('class');
+				var current_data = {};
+				if (add_type.indexOf("symptom") > -1) {
+					add_type = 'symptom';
+					current_data.symptom_category_id = jQuery(this).closest('table').prev().data('category-id');
+				}
+				current_data.name = jQuery(this).prev().val();
+
+				var datas = {
+					action: add_type,
+					data: current_data,
+					type: 'add'
+				};
+
+				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					if(response.status == 4) {
+						dialog.dialog( "close" );
+						jQuery('#error_data_entry').css('display','block');
+					} else {
+						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+						closest_tbody.find('.add-row').prev().fadeIn(1500);
+					}
+			 	}, 'json');
+			 	return false;
+
+			});
+		},
+	}
+
+	All = {
+
+		restructureSelect: function() {
 			jQuery('#rec_select,.effect_main_block select').selectbox({
 				width: 40,
 				onOpen: function (inst) {
@@ -1099,45 +1190,7 @@ get_header();
 				autoReinitialise: true,
 		        autoReinitialiseDelay: 10,
 			});
-
 		},
-
-		addNewType: function(){
-			jQuery('.add-row').find('.add').live('click', function(){
-				var closest_tbody = jQuery(this).closest('tbody')
-				var add_type = jQuery(this).closest('table').attr('class');
-				var current_data = {};
-				if (add_type.indexOf("symptom") > -1) {
-					add_type = 'symptom';
-					current_data.symptom_category_id = jQuery(this).closest('table').prev().data('category-id');
-				}
-				current_data.name = jQuery(this).prev().val();
-
-				var datas = {
-					action: add_type,
-					data: current_data,
-					type: 'add'
-				};
-
-				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-					if(response.status == 4) {
-						dialog.dialog( "close" );
-						jQuery('#error_data_entry').css('display','block');
-					} else {
-						console.log(response);
-						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
-						closest_tbody.find('.add-row').prev().fadeIn(1500);
-					}
-			 	}, 'json');
-			 	return false;
-
-				console.log(datas);
-
-			});
-		},
-	}
-
-	All = {
 
 		removeAll: function(type) {
 			var data = {
