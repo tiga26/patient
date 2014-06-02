@@ -574,6 +574,7 @@ get_header();
 	var data;
 	var index
 	var selector_id;
+	var selected_date;
 
 	jQuery( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
@@ -1359,6 +1360,14 @@ jQuery(document).ready(function () {
 		jQuery(this).css('display','none');
 		jQuery('.datepicker').css('display','block');
 		jQuery('#add-date').css('display','block');
+	});
+
+	jQuery('#add-date').on('click',function(){		
+		if(selected_date == undefined) {
+			jQuery('.datepicker').css({'border-color':'red'});
+			jQuery('.datepicker').datepicker('show');
+			return false;
+		}
 	});
 
             
