@@ -88,7 +88,7 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
 							 					<div><?php echo $symptom->value;?></div>
 							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
@@ -110,7 +110,7 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
 							 					<div><?php echo $symptom->value;?></div>
 							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
@@ -132,7 +132,7 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
 							 					<div><?php echo $symptom->value;?></div>
 							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
@@ -154,7 +154,7 @@ get_header();
 					 				<?php if(empty($symptom)): ?>
 					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
 					 				<?php else: ?>
-							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>">
+							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
 							 					<div><?php echo $symptom->value;?></div>
 							 					<div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $symptom->comment;?></div>"></div>
@@ -819,6 +819,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 
 		 	return false;
@@ -852,6 +854,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 		 	return false;
 			
@@ -885,6 +889,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 
 		},
@@ -916,6 +922,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 		 	return false;
 		},
@@ -956,6 +964,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 		 	return false;
 
@@ -1002,6 +1012,8 @@ get_header();
 				} else {
 
 				}
+				location.reload();
+
 		 	}, 'json');
 		 	return false;
 			
@@ -1023,12 +1035,63 @@ get_header();
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
 
-			jQuery('#rec_select').val(value);
+			jQuery('.dialog.recovery').find('.sbSelector').text(value+'%');
 			jQuery('.dialog.recovery').find('textarea').text(comment);
 		},
 
 		fillSymptom: function() {
-			console.log('fillsymp');
+			var value = selector_id.closest('td').data('value');
+			var comment = selector_id.closest('td').data('comment');
+			var name;
+			// console.log(value);
+			// console.log(comment);
+
+			var value_obj = {
+				0: {
+					value : '-2',
+					name : 'Mild worsening'
+
+				},
+				1: {
+					value : '-1',
+					name : 'Very mild worsening'
+
+				},
+				2: {
+					value : '0',
+					name : 'No change'
+
+				},
+				3: {
+					value : '1',
+					name : 'Very mild improvement'
+
+				},
+				4: {
+					value : '2',
+					name : 'Mild improvement'
+
+				},
+				5: {
+					value : '3',
+					name : 'Medium improvement'
+				},
+				6: {
+					value : '-3',
+					name : 'Medium worsening'
+				}
+
+			}
+
+			jQuery.each(value_obj, function(index, symptom){
+				if(parseInt(symptom.value) == value) {
+					name = symptom.name;
+				}
+			});
+
+			jQuery('.dialog.symptom').find('.sbSelector').text(name);
+			jQuery('.dialog.symptom').find('textarea').text(comment);
+
 		},
 
 		fillAssays: function() {
