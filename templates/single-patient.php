@@ -37,6 +37,7 @@ $patient_data = $patient->setPatient(1)
 // echo '<br>';
 // var_dump('lifestyle',$patient_data->effects);
 // exit;
+
 get_header();
 ?>
 <div class="main-container">
@@ -44,7 +45,8 @@ get_header();
 	 	<div class="top_table_block">
 		 	<table class="recovery">
 		 		<tr class="dates">
-		 			<td id='dates'>Dates</td>
+		 			<input class="datepicker" data-date-format="yyyy-dd-mm" style="width:80px; height:25px; position: absolute;left: 90px;top: 123px; font-size:12px;display:none;"><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;position: absolute;left: 175px;top: 123px; font-size:12px;display:none;">Add</button><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;position: absolute;left: 155px;top: 123px; font-size:12px;">Add Date</button>
+		 			<td id='dates'>Dates</td>   		        
 		 			<?php foreach ($patient_data->dates as $date) : ?>
 		 				<td data-relation-id="<?php echo $date->relation_id;?>"><input type="checkbox"><?php echo $date->date;?></td>
 		 			<?php endforeach;?>
@@ -1338,6 +1340,30 @@ get_header();
 	
 
 </script>
+
+<script>
+jQuery(document).ready(function () {
+
+	var date_picker = jQuery('.datepicker').datepicker({
+		    startDate: '-3d'
+		}).on('changeDate', function(ev){
+		  	date_picker.datepicker('hide');
+		  	var date = new Date(date_picker.datepicker('getDate').valueOf());
+		  	var year = date.getFullYear();
+		  	var month = date.getMonth();
+		  	var day = date.getDate();
+		  	selected_date = year+'-'+month+'-'+day;
+	});
+
+	jQuery('#add-date-button').on('click',function(){
+		jQuery(this).css('display','none');
+		jQuery('.datepicker').css('display','block');
+		jQuery('#add-date').css('display','block');
+	});
+
+            
+});
+  </script>
 <?php //get_sidebar(); ?>
 <?php get_footer(); ?>
 

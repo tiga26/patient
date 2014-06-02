@@ -81,12 +81,14 @@ class Patient_Plugin {
 		wp_enqueue_style( 'jquery-jscrollpane', $css_url.'/jquery.jscrollpane.css' );
 		wp_enqueue_style( 'jquery-selectBox', $css_url.'/jquery.selectBox.css' );
 		wp_enqueue_style( 'bootstrat', $css_url.'/bootstrap.min.css' );
+		wp_enqueue_style( 'datepicker', $css_url.'/datepicker.css' );
 
 		wp_enqueue_script( 'jquery-ui-custom-min', $js_url.'/jquery-ui-1.10.4.custom.min.js', array('jquery'));
 		wp_enqueue_script( 'jquery-jscrollpane-min', $js_url.'/jquery.jscrollpane.min.js', array('jquery'));
 		wp_enqueue_script( 'jquery-mousewheel', $js_url.'/jquery.mousewheel.js', array('jquery'));		
 		wp_enqueue_script( 'jquery-select', $js_url.'/jquery.selectBox-0.2.js', array('jquery'));
 		wp_enqueue_script( 'jquery-bootstrap', $js_url.'/bootstrap.min.js', array('jquery'));
+		wp_enqueue_script( 'jquery-datepicker', $js_url.'/bootstrap-datepicker.js', array('jquery'));
 
 		// wp_localize_script( 'ajax-test', 'the_ajax_script', array( 'ajaxurl' => plugin_dir_url( __FILE__ ).'class-ajax-handler.php' ) );	
 
