@@ -13,7 +13,7 @@ if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 
 $patient = new Patient_Db_Manager();
 // echo '<pre>';
-$patient_data = $patient->setPatient(1)
+$patient_data = $patient->setPatient(2)
 						->loadPatientAllData($dates)
 						->getPatientData();
 
@@ -989,7 +989,7 @@ get_header();
 					return false;
 				}
 			});
-			
+
 			jQuery.each(effect_sel, function(){
 				effect_obj[jQuery('table.symptom').find('[data-symptom-id='+jQuery(this).data('symptom-id')+']').find('td:eq('+index+')').data('user-symptom-id')] = jQuery(this).find('.sbSelector').text();
 			});
@@ -1397,12 +1397,13 @@ jQuery(document).ready(function () {
 		};
 
 		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+			var inc = 0;
 			jQuery('.main-container tr').each(function(){
-				jQuery(this).children('td').eq(1).remove();
+				jQuery(this).children('td').eq(inc+1).remove();
 				if(jQuery(this).attr('class') == 'dates') {
-					jQuery(this).find('td:eq(0)').after('<td data-relation-id='+response.id+'><input type="checkbox">'+selected_date+'</td>');
+					jQuery(this).find('td:eq('+inc+')').after('<td data-relation-id='+response.id+'><input type="checkbox">'+selected_date+'</td>');
 				} else {
-					jQuery(this).find('td:eq(0)').after("<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>");
+					jQuery(this).find('td:eq('+inc+')').after("<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>");
 				}
 
 				jQuery( ".comment div:first-child" ).hover(function(event) {

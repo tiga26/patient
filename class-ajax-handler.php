@@ -7,7 +7,7 @@ $ajax->init($_POST);
 
 class Patient_Ajax_Handler{
 	
-	private $user = 1;
+	private static $patient_id = 2;
 	private static $table;
 	private static $patient_data;
 	private static $action_type;
@@ -441,7 +441,7 @@ class Patient_Ajax_Handler{
 
 		$date_array = array(
 			'date' => self::$patient_data['date'],
-			'user_id' => '1', // change to $bp->user_id;
+			'user_id' => self::$patient_id, // change to $bp->user_id;
 		);
 		
 		$add_date = $wpdb->insert(self::$table, $date_array);
@@ -476,7 +476,7 @@ class Patient_Ajax_Handler{
 	public static function _getallSymptom() {
 		global $wpdb;
 
-		$patient_id = 1;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;//change to BuddyPress user_id
 
 		$symptoms_array = array(
 			'mental' => array(),
@@ -518,7 +518,7 @@ class Patient_Ajax_Handler{
 	public static function _getallAssays() {
 		global $wpdb;
 
-		$patient_id = 1;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;//change to BuddyPress user_id
 
 		$assays_array = array();
 
@@ -543,7 +543,7 @@ class Patient_Ajax_Handler{
 	public static function _getallDiagnoses() {
 		global $wpdb;
 
-		$patient_id = 1;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;//change to BuddyPress user_id
 
 		$diagnosis_array = array();
 
@@ -567,7 +567,7 @@ class Patient_Ajax_Handler{
 	public static function _getallTherapies() {
 		global $wpdb;
 
-		$patient_id = 1;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;//change to BuddyPress user_id
 
 		$therapies_array = array();
 
@@ -591,7 +591,7 @@ class Patient_Ajax_Handler{
 	public static function _getallLifestyle() {
 		global $wpdb;
 
-		$patient_id = 1;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;//change to BuddyPress user_id
 
 		$lifestyles_array = array();
 
