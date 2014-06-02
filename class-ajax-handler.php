@@ -45,7 +45,7 @@ class Patient_Ajax_Handler{
 			'result' => 'The result field must be above 0',
 			'ref_low' => 'Please enter range from 0 - 100%',
 			'ref_hi' => 'Please enter range from 0 - 100%',
-			),
+		),
 		'diagnoses' => array(
 			'doctor_id' => 'Please choose doctor',
 		),
@@ -67,7 +67,8 @@ class Patient_Ajax_Handler{
 			'therapies' => 'patient_therapy',
 			'lifestyle' => 'patient_lifestyle',
 			'doctor' => 'patient_doctors',
-			'unit' => 'patient_units'
+			'unit' => 'patient_units',
+			'date' => 'patient_relations',
 		),
 		'get' => array(
 			'doctor' => 'patient_doctors',
@@ -340,7 +341,7 @@ class Patient_Ajax_Handler{
 		}
 		
 		$lifestyle = $wpdb->query( $insert_lifestyle_sql );
-
+		
 		if(!isset($efficient)) {
 			$efficient = $wpdb->insert_id;
 		}
@@ -427,6 +428,31 @@ class Patient_Ajax_Handler{
 
 	public static function _addUnit() {
 
+	}
+
+	public static function _addDate() {
+		global $wpdb;
+
+		if(self::$patient_data['date'] == '') {
+			$status = 3;
+			print_r(json_encode(self::$status_code[$status]));
+			return;
+		}
+
+		$date_array = array(
+			'date' => self::$patient_data['date'],
+			'user_id' => '1', // change to $bp->user_id;
+		);
+		
+		$add_date = $wpdb->insert(self::$table, $date_array);
+		$status = $add_date;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
+
+		// $insert_
 	}
 	//can't change relation_id but can change single data id
 	private function checkUserOnDataUpdate() {

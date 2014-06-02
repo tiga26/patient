@@ -415,7 +415,7 @@ class Patient_Db_Manager {
 						  ON L.lifestyle_category_id = LC.lifestyle_category_id
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
-				   	  
+			   	  
 		$lifestyles = $wpdb->get_results($lifestyle_sql);
 		
 		$lifestyle_assoc = array();

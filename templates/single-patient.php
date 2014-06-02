@@ -45,8 +45,8 @@ get_header();
 	 	<div class="top_table_block">
 		 	<table class="recovery">
 		 		<tr class="dates">
-		 			<input class="datepicker" data-date-format="yyyy-dd-mm" style="width:80px; height:25px; position: absolute;left: 90px;top: 123px; font-size:12px;display:none;"><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;position: absolute;left: 175px;top: 123px; font-size:12px;display:none;">Add</button><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;position: absolute;left: 155px;top: 123px; font-size:12px;">Add Date</button>
-		 			<td id='dates'>Dates</td>   		        
+		 			<!-- <input class="datepicker" data-date-format="yyyy-dd-mm" style="width:75px; height:25px; position: relative;left: 80px;top: 58px; font-size:12px;display:none;line-height: normal;"><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;position: relative;left: 160px;top: 33px; font-size:12px;display:none;">Add</button><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;position: relative;left: 135px;top: 39px; font-size:12px;">Add Date</button> -->
+		 			<td id='dates'><span style="line-height:25px;">Dates</span><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;font-size:12px;float:right;margin-right:5px;display:none;">Add</button><input class="datepicker" data-date-format="yyyy-dd-mm" style="width:75px; height:25px;font-size:12px;line-height: normal;float:right;margin-right:5px;display:none;color:#333333"><div id="right-date" style="width:65px;height:25px;float:right"><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;font-size:12px;float:right;margin-right:5px;">Add Date</button></div></td>   		        
 		 			<?php foreach ($patient_data->dates as $date) : ?>
 		 				<td data-relation-id="<?php echo $date->relation_id;?>"><input type="checkbox"><?php echo $date->date;?></td>
 		 			<?php endforeach;?>
@@ -61,9 +61,9 @@ get_header();
 		 			<td>Recovery Status</td>
 		 			<?php foreach ($patient_data->recovery as $relation_id => $recovery) : ?>
 		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])): //add else statement if empty and there is no date for this?>
-		 					<td><div class="comment"><div>-</div><div class="comment_icon"  title="<div class='comment_block'>No data availible</div>"></div></div></td>
+		 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 	 					<?php elseif (empty($recovery) && empty($patient_data->dates[$relation_id])): ?>
-	 						<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+	 						<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 		 				<?php else: ?>
 		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>" data-comment="<?php echo $recovery->remarks;?>" data-value="<?php echo $recovery->value;?>">
 				 				<div class="comment"><div><?php echo $recovery->value;?>%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $recovery->remarks;?></div>"></div></div></div>
@@ -88,7 +88,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -110,7 +110,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -132,7 +132,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -154,7 +154,7 @@ get_header();
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
 					 				<?php if(empty($symptom)): ?>
-					 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -181,7 +181,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
 	 						<?php foreach ($assay_array as $assay_id => $assay):?>
 				 				<?php if(empty($assay)): ?>
-				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>">
 						 				<div class="comment">
@@ -212,7 +212,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
 	 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
 				 				<?php if(empty($diagnos)): ?>
-				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>">
 						 				<div class="comment">
@@ -243,7 +243,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $therapy_name;?></label></td>
 	 						<?php foreach ($therapies_array as $therapy_id => $therapy):?>
 				 				<?php if(empty($therapy)): ?>
-				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-therapy-result-id="<?php echo $therapy->therapy_result_id;?>">
 						 				<div class="comment">
@@ -291,7 +291,7 @@ get_header();
 	 						<td><input type="checkbox"><label><?php echo $lifestyle_name;?></label></td>
 	 						<?php foreach ($lifestyles_array as $lifestyle_id => $lifestyle):?>
 				 				<?php if(empty($lifestyle)): ?>
-				 					<td><div class="comment"><div>-</div><div class="comment_icon" title="<div class='comment_block'>No data availible</div>"></div></div></td>
+				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 				 				<?php else: ?>
 						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>">
 						 				<div class="comment">
@@ -712,7 +712,8 @@ get_header();
 		}
 	});
 
-	jQuery( ".comment div:first-child" ).click(function(event) {
+	jQuery( ".comment div:first-child" ).live('click',function(event) {
+		console.log('kjjk');
 		event.stopPropagation();
 		jQuery( ".dialog" ).dialog({ 
 			position: { 
@@ -1037,6 +1038,9 @@ get_header();
 		fillRecovery: function() {
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
+			if(value == undefined) {
+				value = 0;
+			}
 
 			jQuery('.dialog.recovery').find('.sbSelector').text(value+'%');
 			jQuery('.dialog.recovery').find('textarea').text(comment);
@@ -1046,8 +1050,6 @@ get_header();
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
 			var name;
-			// console.log(value);
-			// console.log(comment);
 
 			var value_obj = {
 				0: {
@@ -1290,46 +1292,52 @@ get_header();
 			};
 
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-
+				var add_td = "<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>"
 				switch(type) {
 					case 'symptom':					
 						response.mental.forEach(function(mental){
-							jQuery( '#accordion' ).find('[data-category-id=1]').next().append("<tr data-symptom-id="+mental.symptom_id+"><td><input type='checkbox'>"+mental.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( '#accordion' ).find('[data-category-id=1]').next().append("<tr data-symptom-id="+mental.symptom_id+"><td><input type='checkbox'><label>"+mental.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 						response.sexual.forEach(function(sexual){
-							jQuery( '#accordion' ).find('[data-category-id=2]').next().append("<tr data-symptom-id="+sexual.symptom_id+"><td><input type='checkbox'>"+sexual.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( '#accordion' ).find('[data-category-id=2]').next().append("<tr data-symptom-id="+sexual.symptom_id+"><td><input type='checkbox'><label>"+sexual.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 						response.physical.forEach(function(physical){
-							jQuery( '#accordion' ).find('[data-category-id=3]').next().append("<tr data-symptom-id="+physical.symptom_id+"><td><input type='checkbox'>"+physical.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( '#accordion' ).find('[data-category-id=3]').next().append("<tr data-symptom-id="+physical.symptom_id+"><td><input type='checkbox'><label>"+physical.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 						response.hormonal.forEach(function(hormonal){
-							jQuery( '#accordion' ).find('[data-category-id=4]').next().append("<tr data-symptom-id="+hormonal.symptom_id+"><td><input type='checkbox'>"+hormonal.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( '#accordion' ).find('[data-category-id=4]').next().append("<tr data-symptom-id="+hormonal.symptom_id+"><td><input type='checkbox'><label>"+hormonal.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 					break;
 					case 'assays':
 						response.forEach(function(assay){
-							jQuery( 'table.'+type ).append("<tr data-assay-id="+assay.assay_id+"><td><input type='checkbox'>"+assay.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( 'table.'+type ).append("<tr data-assay-id="+assay.assay_id+"><td><input type='checkbox'><label>"+assay.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 					break;
 					case 'diagnoses':
 						response.forEach(function(diagnos){
-							jQuery( 'table.'+type ).append("<tr data-diagnosis-id="+diagnos.diagnosis_id+"><td><input type='checkbox'>"+diagnos.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( 'table.'+type ).append("<tr data-diagnosis-id="+diagnos.diagnosis_id+"><td><input type='checkbox'><label>"+diagnos.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 					break;
 					case 'therapies':
 						response.forEach(function(therapy){
-							jQuery( 'table.'+type ).append("<tr data-therapy-id="+therapy.therapy_id+"><td><input type='checkbox'>"+therapy.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( 'table.'+type ).append("<tr data-therapy-id="+therapy.therapy_id+"><td><input type='checkbox'><label>"+therapy.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 					break;
 					case 'lifestyle':
 						response.forEach(function(lifestyle){
-							jQuery( 'table.'+type ).append("<tr data-lifestyle-id="+lifestyle.lifestyle_id+"><td><input type='checkbox'>"+lifestyle.name+"</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>");
+							jQuery( 'table.'+type ).append("<tr data-lifestyle-id="+lifestyle.lifestyle_id+"><td><input type='checkbox'><label>"+lifestyle.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
 						});
 					break;
 				}
 				jQuery( 'table.'+type).append("<tr class='add-row'><td><input type='text'><div class='add'></div></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td class='none'></td><td></td></tr> ");
+
+				jQuery( ".comment div:first-child" ).hover(function(event) {
+					jQuery( this ).parent().addClass('hovered');
+				},function(event) {
+					jQuery( this ).parent().removeClass('hovered');
+				});
 		 	}, 'json');
-		}
+		},
 	}
 
 	jQuery('#esc').on('click', function(){
@@ -1351,23 +1359,62 @@ jQuery(document).ready(function () {
 		  	date_picker.datepicker('hide');
 		  	var date = new Date(date_picker.datepicker('getDate').valueOf());
 		  	var year = date.getFullYear();
-		  	var month = date.getMonth();
+		  	var month = date.getMonth() + 1;
 		  	var day = date.getDate();
+		  	if(day < 10) {
+		  		day = "0"+day;
+		  	}
+		  	if(month < 10) {
+		  		month = "0"+month;
+		  	}
 		  	selected_date = year+'-'+month+'-'+day;
 	});
 
 	jQuery('#add-date-button').on('click',function(){
-		jQuery(this).css('display','none');
+		jQuery('#right-date').css('display','none');
 		jQuery('.datepicker').css('display','block');
 		jQuery('#add-date').css('display','block');
+
+		
 	});
 
-	jQuery('#add-date').on('click',function(){		
+	jQuery('#add-date').on('click',function(){
+		jQuery('.datepicker').datepicker('hide');	
 		if(selected_date == undefined) {
 			jQuery('.datepicker').css({'border-color':'red'});
 			jQuery('.datepicker').datepicker('show');
 			return false;
 		}
+
+		jQuery('.datepicker').css({'border-color':'#f7f7f7'});
+		current_data = {
+			date : selected_date,
+		}
+		var datas = {
+			action: 'date',
+	        data: current_data,
+	        type: 'add'
+		};
+
+		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+			jQuery('.main-container tr').each(function(){
+				jQuery(this).children('td').eq(1).remove();
+				if(jQuery(this).attr('class') == 'dates') {
+					jQuery(this).find('td:eq(0)').after('<td data-relation-id='+response.id+'><input type="checkbox">'+selected_date+'</td>');
+				} else {
+					jQuery(this).find('td:eq(0)').after("<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>");
+				}
+
+				jQuery( ".comment div:first-child" ).hover(function(event) {
+					jQuery( this ).parent().addClass('hovered');
+				},function(event) {
+					jQuery( this ).parent().removeClass('hovered');
+				});
+			});
+	 	}, 'json');
+	 	return false;
+
+
 	});
 
             
