@@ -7,7 +7,7 @@ $ajax->init($_POST);
 
 class Patient_Ajax_Handler{
 	
-	private static $patient_id = 2;
+	private static $patient_id = 1;
 	private static $table;
 	private static $patient_data;
 	private static $action_type;

@@ -13,7 +13,7 @@ if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 
 $patient = new Patient_Db_Manager();
 // echo '<pre>';
-$patient_data = $patient->setPatient(2)
+$patient_data = $patient->setPatient(1)
 						->loadPatientAllData($dates)
 						->getPatientData();
 
@@ -1374,8 +1374,7 @@ jQuery(document).ready(function () {
 		jQuery('#right-date').css('display','none');
 		jQuery('.datepicker').css('display','block');
 		jQuery('#add-date').css('display','block');
-
-		
+		jQuery('.main-container .top_table_block table tr td').css('width','4.78%');
 	});
 
 	jQuery('#add-date').on('click',function(){
@@ -1395,9 +1394,19 @@ jQuery(document).ready(function () {
 	        data: current_data,
 	        type: 'add'
 		};
-
+		
 		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
 			var inc = 0;
+			jQuery('.dates').find('td').each(function(){
+				if(jQuery(this).data('relation-id') == undefined && jQuery(this).index() != 0){
+					inc = jQuery(this).index();
+					return false;
+				}
+			});
+			if (inc != 0) {
+				inc = inc - 1;
+			};
+
 			jQuery('.main-container tr').each(function(){
 				jQuery(this).children('td').eq(inc+1).remove();
 				if(jQuery(this).attr('class') == 'dates') {
