@@ -219,18 +219,20 @@ class Patient_Ajax_Handler{
 			return;
 		}
 
-		self::$patient_data['ref_percent'] = self::$patient_data['ref_hi'] / self::$patient_data['ref_low'];
+		self::$patient_data['ref_percent'] = (self::$patient_data['result'] - self::$patient_data['ref_low']) / (self::$patient_data['ref_hi'] - self::$patient_data['ref_low']);
 		self::$patient_data['remarks'] = "'".self::$patient_data['remarks']."'";
+		
 		$assay_data_str = implode(',', self::$patient_data);
 		$insert_assay_sql = 'INSERT INTO '.self::$table.'
 		 					(assay_id,relation_id,unit_id,result,ref_low,ref_hi,ref_percent,remarks)
 		 					VALUES('.$assay_data_str.') ON DUPLICATE KEY UPDATE
 		 					unit_id = '.self::$patient_data['unit_id'].',
-		 					result = '.self::$patient_data['result'].',
-		 					ref_low = '.self::$patient_data['ref_low'].',
-		 					ref_hi = '.self::$patient_data['ref_hi'].',
+		 					result = '.(float)self::$patient_data['result'].',
+		 					ref_low = '.(float)self::$patient_data['ref_low'].',
+		 					ref_hi = '.(float)self::$patient_data['ref_hi'].',
 		 					ref_percent = '.self::$patient_data['ref_percent'].',
 		 					remarks = '.self::$patient_data['remarks'].'';
+
 		$assay = $wpdb->query( $insert_assay_sql );
 		print_r(json_encode(self::$status_code[$assay]));
 	}

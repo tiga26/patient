@@ -35,6 +35,9 @@ $patient_data = $patient->setPatient(1)
 // var_dump('therapies',$patient_data->therapies);
 // echo '<br>';
 // echo '<br>';
+// var_dump('therapies',$patient_data->lifestyle);
+// echo '<br>';
+// echo '<br>';
 // var_dump('lifestyle',$patient_data->effects);
 // exit;
 
@@ -199,11 +202,11 @@ get_header();
 			 					<?php elseif(empty($assay) && !$check_date): ?>
 			 						<td>-</td>
 				 				<?php else: ?>
-						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>">
+						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>" data-result="<?php echo $assay->result;?>" data-ref-low="<?php echo $assay->ref_low;?>" data-ref-hi="<?php echo $assay->ref_hi;?>" data-ref-percent="<?php echo $assay->ref_percent;?>" data-remarks="<?php echo $assay->remarks;?>">
 						 				<div class="comment">
 						 					<div><?php echo $assay->result;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
-						 														<div>Result<span>*</span>:</div><div class='value'><?php echo $assya->result;?>mg</div>
+						 														<div>Result<span>*</span>:</div><div class='value'><?php echo $assay->result;?>mg</div>
 						 														<div>Reference<span>*</span>:</div><div class='value'><?php echo $assay->ref_low;?>mg - <?php echo $assay->ref_hi;?>mg = <?php echo $assay->ref_percent;?>%</div>
 						 														<div>User Coment</div><br><br><br><?php echo $assay->remarks;?>
 					 														 </div>">
@@ -233,7 +236,7 @@ get_header();
 			 					<?php elseif(empty($diagnos) && !$check_date): ?>
 			 						<td>-</td>
 				 				<?php else: ?>
-						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>">
+						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>" data-doctor-id="<?php echo $diagnos->doctor_id;?>" data-doc-name="<?php echo $diagnos->doc_name;?>" data-comment="<?php echo $diagnos->comment;?>">
 						 				<div class="comment">
 						 					<div><?php echo $diagnos->doc_name;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
@@ -267,7 +270,7 @@ get_header();
 			 					<?php elseif(empty($therapy) && !$check_date): ?>
 			 						<td>-</td>
 				 				<?php else: ?>
-						 			<td data-therapy-result-id="<?php echo $therapy->therapy_result_id;?>">
+						 			<td data-therapy-result-id="<?php echo $therapy->therapy_result_id;?>" data-dosage="<?php echo $therapy->dosage;?>" data-frequency="<?php echo $therapy->frequency;?>" data-doc-name="<?php echo $therapy->doc_name;?>" data-doctor-id="<?php echo $therapy->doctor_id;?>" data-self-prescribed="<?php echo $therapy->self_prescribed;?>" data-effect='<?php echo json_encode($patient_data->effects['therapy'][$therapy->therapy_result_id]); ?>' data-comment="<?php echo $therapy->comment;?>">
 						 				<div class="comment">
 						 					<div><?php echo $therapy->dosage;?>ml/<?php echo $therapy->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
@@ -318,7 +321,7 @@ get_header();
 			 					<?php elseif(empty($lifestyle) && !$check_date): ?>
 			 						<td>-</td>
 				 				<?php else: ?>
-						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>">
+						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>" data-frequency-id="<?php echo $lifestyle->lifestyle_frequency_id;?>" data-comment="<?php echo $lifestyle->comment;?>" data-effect='<?php echo json_encode($patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id]); ?>'>
 						 				<div class="comment">
 						 					<div><?php echo $lifestyle->quantity;?>/<?php echo $lifestyle->frequency;?></div>
 						 					<div class="comment_icon" title="<div class='comment_block'>
@@ -385,7 +388,7 @@ get_header();
 			<input type='text' class="add_item">
 			<div class="add"></div><br>
 			Reference<span>*</span>:
-			<input type="text" id="ref-low"> - <input type="text" id="ref-hi"> = <input type="text"> <br>
+			<input type="text" id="ref-low"> - <input type="text" id="ref-hi"> = <input type="text" id="ref-percent" disabled> <br>
 			<textarea name='comment'></textarea>
 			<span>* Please fill out all required fields</span>
 			<div class="clear"></div>
@@ -738,7 +741,6 @@ get_header();
 	});
 
 	jQuery( ".comment div:first-child" ).live('click',function(event) {
-		console.log('kjjk');
 		event.stopPropagation();
 		jQuery( ".dialog" ).dialog({ 
 			position: { 
@@ -1125,19 +1127,79 @@ get_header();
 		},
 
 		fillAssays: function() {
-			console.log('fillassay');
+			var result = selector_id.closest('td').data('result');
+			var ref_low = selector_id.closest('td').data('ref-low');
+			var ref_hi = selector_id.closest('td').data('ref-hi');
+			var ref_percent = selector_id.closest('td').data('ref-percent');
+			var comment = selector_id.closest('td').data('remarks');
+
+			jQuery('.dialog.assays').find('#first-child').val(result);
+			jQuery('.dialog.assays').find('#ref-low').val(ref_low);
+			jQuery('.dialog.assays').find('#ref-hi').val(ref_hi);
+			jQuery('.dialog.assays').find('#ref-percent').val(ref_percent);
+			jQuery('.dialog.assays').find('textarea').text(comment);
 		},
 
 		fillDiagnoses: function() {
-			console.log('filldiag');
+			var doctor_id = selector_id.closest('td').data('doctor-id');
+			var doc_name = selector_id.closest('td').data('doc-name');
+			var comment = selector_id.closest('td').data('comment');
+
+			jQuery('.dialog.diagnoses').find('.sbSelector').text(doc_name);
+			jQuery('.dialog.diagnoses').find('textarea').text(comment);
 		},
 
 		fillTherapies: function() {
-			console.log('fillther');
+			var dosage = selector_id.closest('td').data('dosage');
+			var frequency = selector_id.closest('td').data('frequency');			
+			var doctor_id = selector_id.closest('td').data('doctor-id');
+			var doc_name = selector_id.closest('td').data('doc-name');			
+			var self_prescribed = selector_id.closest('td').data('self-prescribed');
+			var effects = selector_id.closest('td').data('effect');
+			var comment = selector_id.closest('td').data('comment');
+
+			jQuery('.dialog.therapies').find('#first-child').val(dosage);
+			jQuery('.dialog.therapies').find('#second-child').val(frequency);
+			jQuery('.dialog.therapies').find('.doctor_select').next().find('.sbSelector').text(doc_name);
+			if(self_prescribed == 1) {
+				jQuery('.dialog.therapies').find('#self_prescribed').prop('checked',true);
+			}
+
+			var effect_block = jQuery('.dialog.therapies').find('.effect_main_block .row');
+
+			if(effects != undefined) {
+				effect_block.each(function(index){
+					jQuery(this).find('.sbSelector').text(effects[index].value);
+				});	
+			}
+			
+			jQuery('.dialog.therapies').find('textarea').text(comment);
 		},
 
 		fillLifestyle: function() {
-			console.log('filllife');
+			var frequency_id = selector_id.closest('td').data('frequency-id');
+			var effects = selector_id.closest('td').data('effect');
+			var comment = selector_id.closest('td').data('comment');
+
+			jQuery('.dialog.lifestyle').find('.frequency_main_block').find('input').prop('checked', false);
+
+			var frequency_block = jQuery('.dialog.lifestyle').find('.frequency_main_block .row');
+
+			frequency_block.each(function() {
+				if(jQuery(this).data('lifestyle-frequency-id') == frequency_id) {
+					jQuery(this).find('input').prop('checked',true);
+				}
+			});
+
+			var effect_block = jQuery('.dialog.lifestyle').find('.effect_main_block .row');
+
+			if(effects != undefined) {
+				effect_block.each(function(index){
+					jQuery(this).find('.sbSelector').text(effects[index].value);
+				});
+			}
+
+			jQuery('.dialog.lifestyle').find('textarea').text(comment);
 		},
 
 		fillDialogData: function(type) {
