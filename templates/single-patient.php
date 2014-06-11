@@ -41,6 +41,7 @@ $patient_data = $patient->setPatient(1)
 get_header();
 ?>
 <div class="main-container">
+	<?php $dates_array = array_values($patient_data->dates);?>
 	<div>
 	 	<div class="top_table_block">
 		 	<table class="recovery">
@@ -63,7 +64,7 @@ get_header();
 		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])): //add else statement if empty and there is no date for this?>
 		 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 	 					<?php elseif (empty($recovery) && empty($patient_data->dates[$relation_id])): ?>
-	 						<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+	 						<td>-</td>
 		 				<?php else: ?>
 		 					<td data-recovery-id="<?php echo $recovery->recovery_id;?>" data-comment="<?php echo $recovery->remarks;?>" data-value="<?php echo $recovery->value;?>">
 				 				<div class="comment"><div><?php echo $recovery->value;?>%</div><div class="comment_icon" title="<div class='comment_block'><div>User Coment</div><br><?php echo $recovery->remarks;?></div>"></div></div></div>
@@ -87,8 +88,11 @@ get_header();
 	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
-					 				<?php if(empty($symptom)): ?>
+		 							<?php $check_date = array_key_exists(array_search($symptom_id, array_keys($symptom_array)),$dates_array);?>
+					 				<?php if(empty($symptom)  && $check_date): ?>
 					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+					 				<?php elseif(empty($symptom) && !$check_date):?>
+					 					<td>-</td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -109,8 +113,11 @@ get_header();
 	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
-					 				<?php if(empty($symptom)): ?>
+		 							<?php $check_date = array_key_exists(array_search($symptom_id, array_keys($symptom_array)),$dates_array);?>
+					 				<?php if(empty($symptom) && $check_date): ?>
 					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+				 					<?php elseif(empty($symptom) && !$check_date): ?>
+				 						<td>-</td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -131,8 +138,11 @@ get_header();
 	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
-					 				<?php if(empty($symptom)): ?>
+					 				<?php $check_date = array_key_exists(array_search($symptom_id, array_keys($symptom_array)),$dates_array);?>
+					 				<?php if(empty($symptom) && $check_date): ?>
 					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+				 					<?php elseif(empty($symptom) && !$check_date): ?>
+				 						<td>-</td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -153,8 +163,11 @@ get_header();
 	 						<tr data-symptom-id="<?php echo $symptom_id;?>">
 		 						<td><input type="checkbox"><label><?php echo $symptom_name;?></label></td>
 		 						<?php foreach ($symptom_array as $symptom_id => $symptom):?>
-					 				<?php if(empty($symptom)): ?>
+					 				<?php $check_date = array_key_exists(array_search($symptom_id, array_keys($symptom_array)),$dates_array);?>
+					 				<?php if(empty($symptom) && $check_date): ?>
 					 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+				 					<?php elseif(empty($symptom) && !$check_date): ?>
+				 						<td>-</td>
 					 				<?php else: ?>
 							 			<td data-user-symptom-id="<?php echo $symptom->user_symptom_id;?>" data-value="<?php echo $symptom->value;?>" data-comment="<?php echo $symptom->comment;?>">
 							 				<div class="comment">
@@ -180,8 +193,11 @@ get_header();
  						<tr data-assay-id="<?php echo $assay_id;?>">
 	 						<td><input type="checkbox"><label><?php echo $assay_name;?></label></td>
 	 						<?php foreach ($assay_array as $assay_id => $assay):?>
-				 				<?php if(empty($assay)): ?>
+				 				<?php $check_date = array_key_exists(array_search($assay_id, array_keys($assay_array)),$dates_array);?>
+				 				<?php if(empty($assay) && $check_date): ?>
 				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+			 					<?php elseif(empty($assay) && !$check_date): ?>
+			 						<td>-</td>
 				 				<?php else: ?>
 						 			<td data-assay-result-id="<?php echo $assay->assay_result_id;?>">
 						 				<div class="comment">
@@ -211,8 +227,11 @@ get_header();
  						<tr data-diagnosis-id="<?php echo $diagnosis_id;?>">
 	 						<td><input type="checkbox"><label><?php echo $diagnos_name;?></label></td>
 	 						<?php foreach ($diagnosis_array as $diagnosis_id => $diagnos):?>
-				 				<?php if(empty($diagnos)): ?>
+	 							<?php $check_date = array_key_exists(array_search($diagnosis_id, array_keys($diagnosis_array)),$dates_array);?>
+				 				<?php if(empty($diagnos) && $check_date): ?>
 				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+			 					<?php elseif(empty($diagnos) && !$check_date): ?>
+			 						<td>-</td>
 				 				<?php else: ?>
 						 			<td data-doctor-diagnosis-id="<?php echo $diagnos->doctor_diagnosis_id;?>">
 						 				<div class="comment">
@@ -242,8 +261,11 @@ get_header();
  						<tr data-therapy-id="<?php echo $therapy_id;?>">
 	 						<td><input type="checkbox"><label><?php echo $therapy_name;?></label></td>
 	 						<?php foreach ($therapies_array as $therapy_id => $therapy):?>
-				 				<?php if(empty($therapy)): ?>
+				 				<?php $check_date = array_key_exists(array_search($therapy_id, array_keys($therapies_array)),$dates_array);?>
+				 				<?php if(empty($therapy) && $check_date): ?>
 				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+			 					<?php elseif(empty($therapy) && !$check_date): ?>
+			 						<td>-</td>
 				 				<?php else: ?>
 						 			<td data-therapy-result-id="<?php echo $therapy->therapy_result_id;?>">
 						 				<div class="comment">
@@ -263,7 +285,7 @@ get_header();
 						 													 		<div>
 							 													 		<div class='effect_main_block'>
 								 													 		<?php foreach ($patient_data->effects['therapy'][$therapy->therapy_result_id] as $effect):?>								 													 	
-								 													 			<div class='row'><?php echo $effect->name;?><div class='value'><?php echo $effect->value;?></div></div>								 													 		
+								 													 			<div class='row'><div class='text'><?php echo $effect->name;?></div><div class='value'><?php echo $effect->value;?></div></div>								 													 		
 									 			 										 	<?php endforeach;?>
 							 			 										 		</div>
 							 			 										 	</div>
@@ -290,8 +312,11 @@ get_header();
  						<tr data-lifestyle-id="<?php echo $lifestyle_id;?>">
 	 						<td><input type="checkbox"><label><?php echo $lifestyle_name;?></label></td>
 	 						<?php foreach ($lifestyles_array as $lifestyle_id => $lifestyle):?>
-				 				<?php if(empty($lifestyle)): ?>
+				 				<?php $check_date = array_key_exists(array_search($lifestyle_id, array_keys($lifestyles_array)),$dates_array);?>
+				 				<?php if(empty($lifestyle) && $check_date): ?>
 				 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
+			 					<?php elseif(empty($lifestyle) && !$check_date): ?>
+			 						<td>-</td>
 				 				<?php else: ?>
 						 			<td data-lifestyle-result-id="<?php echo $lifestyle->lifestyle_result_id;?>">
 						 				<div class="comment">
@@ -311,7 +336,7 @@ get_header();
 						 													 		<div>
 							 													 		<div class='effect_main_block'>
 								 													 		<?php foreach ($patient_data->effects['lifestyle'][$lifestyle->lifestyle_result_id] as $effect):?>								 													 	
-								 													 			<div class='row'><?php echo $effect->name;?><div class='value'><?php echo $effect->value;?></div></div>								 													 		
+								 													 			<div class='row'><div class='text'><?php echo $effect->name;?></div><div class='value'><?php echo $effect->value;?></div></div>								 													 		
 									 			 										 	<?php endforeach;?>
 							 			 										 		</div>
 							 			 										 	</div>
@@ -575,7 +600,7 @@ get_header();
 	var index
 	var selector_id;
 	var selected_date;
-
+	
 	jQuery( "#accordion,#accordion1" ).accordion({ 
 		active: 'false', 
 		collapsible: true,
@@ -1187,7 +1212,7 @@ get_header();
 			var effect = '';
 			jQuery.each(symptom_ids, function(key,value){
 				
-				effect = effect + '<div data-symptom-id='+key+' class="row">'+value+'<select><option>1</option><option>2</option></select></div>';
+				effect = effect + '<div data-symptom-id='+key+' class="row"><div class="text">'+value+'</div><select><option>1</option><option>2</option></select></div>';
 			});
 
 			jQuery('.effect_main_block').empty().append(effect);
@@ -1285,47 +1310,67 @@ get_header();
 		},
 
 		addAll: function(type) {
-			
+
+			var dates = jQuery('.dates td');
+			var cnt = 0;
+
+			dates.each(function(){
+				if(jQuery(this).data('relation-id') != undefined) {
+					cnt++;
+				}
+			});
+
 			var datas = {
 				action: type,
 				type: 'getall'
 			};
-
+			
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
-				var add_td = "<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>"
-				switch(type) {
+				var add_td = "<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>";
+				var add_td_empty = "<td>-</td>";
+				var add_td_str = "";
+				
+				for (var i = 0; i < cnt; i++) {
+					add_td_str = add_td_str + add_td;
+				};
+
+				for (var i = 0; i < 6 - cnt; i++) {
+					add_td_str = add_td_str + add_td_empty;
+				};
+				
+				switch(type) {					
 					case 'symptom':					
 						response.mental.forEach(function(mental){
-							jQuery( '#accordion' ).find('[data-category-id=1]').next().append("<tr data-symptom-id="+mental.symptom_id+"><td><input type='checkbox'><label>"+mental.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( '#accordion' ).find('[data-category-id=1]').next().append("<tr data-symptom-id="+mental.symptom_id+"><td><input type='checkbox'><label>"+mental.name+"</label></td>"+add_td_str+"</tr>");
 						});
 						response.sexual.forEach(function(sexual){
-							jQuery( '#accordion' ).find('[data-category-id=2]').next().append("<tr data-symptom-id="+sexual.symptom_id+"><td><input type='checkbox'><label>"+sexual.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( '#accordion' ).find('[data-category-id=2]').next().append("<tr data-symptom-id="+sexual.symptom_id+"><td><input type='checkbox'><label>"+sexual.name+"</label></td>"+add_td_str+"</tr>");
 						});
 						response.physical.forEach(function(physical){
-							jQuery( '#accordion' ).find('[data-category-id=3]').next().append("<tr data-symptom-id="+physical.symptom_id+"><td><input type='checkbox'><label>"+physical.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( '#accordion' ).find('[data-category-id=3]').next().append("<tr data-symptom-id="+physical.symptom_id+"><td><input type='checkbox'><label>"+physical.name+"</label></td>"+add_td_str+"</tr>");
 						});
 						response.hormonal.forEach(function(hormonal){
-							jQuery( '#accordion' ).find('[data-category-id=4]').next().append("<tr data-symptom-id="+hormonal.symptom_id+"><td><input type='checkbox'><label>"+hormonal.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( '#accordion' ).find('[data-category-id=4]').next().append("<tr data-symptom-id="+hormonal.symptom_id+"><td><input type='checkbox'><label>"+hormonal.name+"</label></td>"+add_td_str+"</tr>");
 						});
 					break;
 					case 'assays':
 						response.forEach(function(assay){
-							jQuery( 'table.'+type ).append("<tr data-assay-id="+assay.assay_id+"><td><input type='checkbox'><label>"+assay.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( 'table.'+type ).append("<tr data-assay-id="+assay.assay_id+"><td><input type='checkbox'><label>"+assay.name+"</label></td>"+add_td_str+"</tr>");
 						});
 					break;
 					case 'diagnoses':
 						response.forEach(function(diagnos){
-							jQuery( 'table.'+type ).append("<tr data-diagnosis-id="+diagnos.diagnosis_id+"><td><input type='checkbox'><label>"+diagnos.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( 'table.'+type ).append("<tr data-diagnosis-id="+diagnos.diagnosis_id+"><td><input type='checkbox'><label>"+diagnos.name+"</label></td>"+add_td_str+"</tr>");
 						});
 					break;
 					case 'therapies':
 						response.forEach(function(therapy){
-							jQuery( 'table.'+type ).append("<tr data-therapy-id="+therapy.therapy_id+"><td><input type='checkbox'><label>"+therapy.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( 'table.'+type ).append("<tr data-therapy-id="+therapy.therapy_id+"><td><input type='checkbox'><label>"+therapy.name+"</label></td>"+add_td_str+"</tr>");
 						});
 					break;
 					case 'lifestyle':
 						response.forEach(function(lifestyle){
-							jQuery( 'table.'+type ).append("<tr data-lifestyle-id="+lifestyle.lifestyle_id+"><td><input type='checkbox'><label>"+lifestyle.name+"</label></td>"+add_td+""+add_td+""+add_td+""+add_td+""+add_td+""+add_td+"</tr>");
+							jQuery( 'table.'+type ).append("<tr data-lifestyle-id="+lifestyle.lifestyle_id+"><td><input type='checkbox'><label>"+lifestyle.name+"</label></td>"+add_td_str+"</tr>");
 						});
 					break;
 				}

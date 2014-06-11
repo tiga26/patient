@@ -91,11 +91,11 @@ class Patient_Db_Manager {
 	private function _loadDates() {
 		
 		global $wpdb;
-
+		
 		$date_sql = 'SELECT * FROM  (SELECT * FROM '.self::$_prefix.'relations R				    
 				     WHERE R.user_id ='.$this->current_patient.'
 				     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
-	
+		
 	    $dates = $wpdb->get_results($date_sql);
 	    $dates_array = array();
 	    if(count($dates) < 6) {

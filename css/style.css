@@ -331,10 +331,17 @@
   margin: 0 !important;
   border-bottom: 1px solid #CEE3EA ;
 }
+.effect_main_block .row {
+  width: 300px !important;
+}
+.effect_main_block .text {
+  width: 205px !important;
+  display: inline-block !important;
+  margin-right: 14px !important;
+}
 .comment_block .effect_main_block .row div,
 .comment_block .frequency_main_block .row div {
   float: right;
-  width: auto !important;
 }
 .comment_block .effect_main_block .row .sbHolder,
 .comment_block .frequency_main_block .row .sbHolder {
@@ -356,6 +363,19 @@
 .comment_block .frequency_main_block .left_part {
   float: left;
 }
+.comment_block .effect_main_block .text {
+  width: 200px !important;  
+  display: inline-block !important;
+  margin-right: 14px !important;
+  float:left !important;
+}
+.comment_block .effect_main_block .row {
+  width: 278px !important;
+}
+.comment_block .effect_main_block .row .value{
+  float: right !important;
+}
+
 /*tooltip*/
 .ui-tooltip {
   background-color: transparent !important;
