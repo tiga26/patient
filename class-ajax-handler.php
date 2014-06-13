@@ -73,6 +73,14 @@ class Patient_Ajax_Handler{
 		'get' => array(
 			'doctor' => 'patient_doctors',
 		),
+		'delete' => array(
+			'recovery' => 'patient_recovery_status',
+			'symptom' => 'patient_user_symptoms',
+			'assays' => 'patient_assay_result',
+			'diagnoses' => 'patient_doctor_diagnosis',
+			'therapies' => 'patient_therapy_result',
+			'lifestyle' => 'patient_lifestyle_result',	
+		),
 		
 	);
 
@@ -221,7 +229,7 @@ class Patient_Ajax_Handler{
 
 		self::$patient_data['ref_percent'] = (self::$patient_data['result'] - self::$patient_data['ref_low']) / (self::$patient_data['ref_hi'] - self::$patient_data['ref_low']);
 		self::$patient_data['remarks'] = "'".self::$patient_data['remarks']."'";
-		
+
 		$assay_data_str = implode(',', self::$patient_data);
 		$insert_assay_sql = 'INSERT INTO '.self::$table.'
 		 					(assay_id,relation_id,unit_id,result,ref_low,ref_hi,ref_percent,remarks)
@@ -422,6 +430,62 @@ class Patient_Ajax_Handler{
 			$status = 3;
 		}
 		print_r(json_encode(self::$status_code[$status]));
+	}
+
+	public static function _deleteRecovery() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE recovery_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
+		
+	}
+
+	public static function _deleteSymptom() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE user_symptom_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
+
+	}
+
+	public static function _deleteAssays() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE assay_result_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
+	}
+
+	public static function _deleteDiagnoses() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE doctor_diagnosis_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
+	}
+
+	public static function _deleteTherapies() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE therapy_result_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
+	}
+
+	public static function _deleteLifestyle() {
+		global $wpdb;
+
+		$delete_recovery = 'DELETE FROM '.self::$table.' WHERE lifestyle_result_id ='.self::$patient_data;
+		$status = $wpdb->query($delete_recovery);
+
+		echo $status;
 	}
 
 	public static function _addDoctor() {

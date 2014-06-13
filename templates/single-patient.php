@@ -394,7 +394,7 @@ get_header();
 			<div class="clear"></div>
 			<div class="btn">
 				<a class="delete"></a>
-				<a class="cancel"></a>
+				<!-- <a class="cancel"></a> -->
 				<a class="save"></a>
 			</div>
 		</div>
@@ -763,6 +763,14 @@ get_header();
 			Add.addSymptomEffect();
 			jQuery('.frequency_main_block').css('border-color','#267893');
 		}
+
+		
+		if(jQuery(this).parent().hasClass('no-data')) {			
+			jQuery('.dialog.' + type).find('.delete').css('display','none');
+		} else {
+			jQuery('.dialog.' + type).find('.delete').css('display','block');
+		}
+
 		Diagnos.setDoctorId();
 		Diagnos.filtrDoctorByCountry();
 		selector_id = jQuery(this);
@@ -822,6 +830,11 @@ get_header();
 
 	jQuery(document).ready(function(){
 		Add.addNewType();
+
+		jQuery('.dialog .delete').on('click' , function(){
+			Delete.deleteSingleData();
+		});
+
 	});
 	
 
@@ -1058,7 +1071,6 @@ get_header();
 			});
 
 			if(validate == false) {
-				console.log('asdasdsd');
 				dialog.find('.frequency_main_block').css('border-color','#F31A1A');
 				return false;
 			}
@@ -1118,7 +1130,34 @@ get_header();
 		},
 
 		deleteSingleData: function() {
-			console.log('single');
+
+			type_to_data = {
+				recovery : 'recovery-id',
+				symptom : 'user-symptom-id',
+				assays : 'assay-result-id',
+				diagnoses : 'doctor-diagnosis-id',
+				therapies : 'therapy-result-id',
+				lifestyle : 'lifestyle-result-id',
+			}
+
+			var data_id = eval('type_to_data.' + type);
+			var deleting_id = selector_id.closest('td').data(data_id);
+			var index = selector_id.closest('td').index();
+
+			var datas = {
+				action: type,
+		        data: deleting_id,
+		        type: 'delete'
+			};
+
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				if(response == '1') {
+					console.log(index);
+				}			
+
+		 	}, 'json');
+		 	return false;
+
 		}
 
 	}
@@ -1128,7 +1167,10 @@ get_header();
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
 			if(value == undefined) {
-				value = 0;
+				value = '0%';
+			}
+			if(comment == undefined) {
+				comment = '';
 			}
 
 			jQuery('.dialog.recovery').find('.sbSelector').text(value+'%');
@@ -1138,6 +1180,9 @@ get_header();
 		fillSymptom: function() {
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
+			
+			comment = (comment != undefined) ? comment : '';
+
 			var name;
 
 			var value_obj = {
@@ -1182,6 +1227,8 @@ get_header();
 					name = symptom.name;
 				}
 			});
+			
+			name = (name != undefined) ? name : 'No change';
 
 			jQuery('.dialog.symptom').find('.sbSelector').text(name);
 			jQuery('.dialog.symptom').find('textarea').text(comment);
@@ -1195,6 +1242,12 @@ get_header();
 			var ref_percent = selector_id.closest('td').data('ref-percent');
 			var comment = selector_id.closest('td').data('remarks');
 
+			result = (result != undefined) ? result : '';
+			ref_low = (ref_low != undefined) ? ref_low : '';
+			ref_hi = (ref_hi != undefined) ? ref_hi : '';
+			ref_percent = (ref_percent != undefined) ? ref_percent : '';
+			comment = (comment != undefined) ? comment : ''; 
+
 			jQuery('.dialog.assays').find('#first-child').val(result);
 			jQuery('.dialog.assays').find('#ref-low').val(ref_low);
 			jQuery('.dialog.assays').find('#ref-hi').val(ref_hi);
@@ -1206,6 +1259,9 @@ get_header();
 			var doctor_id = selector_id.closest('td').data('doctor-id');
 			var doc_name = selector_id.closest('td').data('doc-name');
 			var comment = selector_id.closest('td').data('comment');
+
+			doc_name = (doc_name != undefined) ? doc_name : '';
+			comment = (comment != undefined) ? comment : '';
 
 			jQuery('.dialog.diagnoses').find('.sbSelector').text(doc_name);
 			jQuery('.dialog.diagnoses').find('textarea').text(comment);
@@ -1220,9 +1276,13 @@ get_header();
 			var effects = selector_id.closest('td').data('effect');
 			var comment = selector_id.closest('td').data('comment');
 
+			self_prescribed = (self_prescribed != undefined) ? self_prescribed : 0;
+			comment = (comment != undefined) ? comment : '';
+
 			jQuery('.dialog.therapies').find('#first-child').val(dosage);
 			jQuery('.dialog.therapies').find('#second-child').val(frequency);
 			jQuery('.dialog.therapies').find('.doctor_select').next().find('.sbSelector').text(doc_name);
+
 			if(self_prescribed == 1) {
 				jQuery('.dialog.therapies').find('#self_prescribed').prop('checked',true);
 			}
@@ -1242,6 +1302,8 @@ get_header();
 			var frequency_id = selector_id.closest('td').data('frequency-id');
 			var effects = selector_id.closest('td').data('effect');
 			var comment = selector_id.closest('td').data('comment');
+
+			comment = (comment != undefined) ? comment : '';
 
 			jQuery('.dialog.lifestyle').find('.frequency_main_block').find('input').prop('checked', false);
 
