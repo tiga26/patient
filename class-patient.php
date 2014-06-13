@@ -82,6 +82,10 @@ class Patient_Plugin {
 		wp_enqueue_style( 'jquery-selectBox', $css_url.'/jquery.selectBox.css' );
 		wp_enqueue_style( 'bootstrat', $css_url.'/bootstrap.min.css' );
 		wp_enqueue_style( 'datepicker', $css_url.'/datepicker.css' );
+		wp_enqueue_style( 'classic', $css_url.'/classic.css' );
+		wp_enqueue_style( 'classic-min', $css_url.'/classic-min.css' );
+		wp_enqueue_style( 'iThing', $css_url.'/iThing.css' );
+		wp_enqueue_style( 'iThing-min', $css_url.'/iThing-min.css' );
 
 		wp_enqueue_script( 'jquery-ui-custom-min', $js_url.'/jquery-ui-1.10.4.custom.min.js', array('jquery'));
 		wp_enqueue_script( 'jquery-jscrollpane-min', $js_url.'/jquery.jscrollpane.min.js', array('jquery'));
@@ -89,6 +93,9 @@ class Patient_Plugin {
 		wp_enqueue_script( 'jquery-select', $js_url.'/jquery.selectBox-0.2.js', array('jquery'));
 		wp_enqueue_script( 'jquery-bootstrap', $js_url.'/bootstrap.min.js', array('jquery'));
 		wp_enqueue_script( 'jquery-datepicker', $js_url.'/bootstrap-datepicker.js', array('jquery'));
+		wp_enqueue_script( 'jquery-chart', $js_url.'/chart.js', array('jquery'));
+		wp_enqueue_script( 'jquery-daterange', $js_url.'/jQDateRangeSlider-min.js', array('jquery'));
+		wp_enqueue_script( 'jquery-allrange', $js_url.'/jQAllRangeSliders-min.js', array('jquery'));
 
 		// wp_localize_script( 'ajax-test', 'the_ajax_script', array( 'ajaxurl' => plugin_dir_url( __FILE__ ).'class-ajax-handler.php' ) );	
 

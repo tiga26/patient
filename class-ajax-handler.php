@@ -229,10 +229,11 @@ class Patient_Ajax_Handler{
 
 		self::$patient_data['ref_percent'] = (self::$patient_data['result'] - self::$patient_data['ref_low']) / (self::$patient_data['ref_hi'] - self::$patient_data['ref_low']);
 		self::$patient_data['remarks'] = "'".self::$patient_data['remarks']."'";
-
+		
 		$assay_data_str = implode(',', self::$patient_data);
+		
 		$insert_assay_sql = 'INSERT INTO '.self::$table.'
-		 					(assay_id,relation_id,unit_id,result,ref_low,ref_hi,ref_percent,remarks)
+		 					(assay_id,relation_id,unit_id,result,ref_low,ref_hi,remarks,ref_percent)
 		 					VALUES('.$assay_data_str.') ON DUPLICATE KEY UPDATE
 		 					unit_id = '.self::$patient_data['unit_id'].',
 		 					result = '.(float)self::$patient_data['result'].',

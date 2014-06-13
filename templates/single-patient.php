@@ -43,7 +43,37 @@ $patient_data = $patient->setPatient(1)
 
 get_header();
 ?>
+<canvas id="myChart" width="1200px;" height="200"></canvas>
+<div id="slider"></div>
+ 
+<div id="info" style="position:absolute; background:red; z-index:99999; width:60px;">
+	<div id="infoDays">Days 36</div>
+	<div id="infoProcents">45%</div>
+</div>
 <div class="main-container">
+	<div id="fade">
+		<div class="loader"></div>
+		<div class="spinner">
+		  <div class="spinner-container container1">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		  <div class="spinner-container container2">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		  <div class="spinner-container container3">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		</div>
+	</div>
 	<?php $dates_array = array_values($patient_data->dates);?>
 	<div>
 	 	<div class="top_table_block">
@@ -1130,7 +1160,8 @@ get_header();
 		},
 
 		deleteSingleData: function() {
-
+			jQuery('#fade').show();
+			jQuery('.dialog').dialog( "close" );
 			type_to_data = {
 				recovery : 'recovery-id',
 				symptom : 'user-symptom-id',
@@ -1151,8 +1182,22 @@ get_header();
 			};
 
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				jQuery('#fade').hide();
 				if(response == '1') {
-					console.log(index);
+					selector_id.closest('td').remove();
+					index = index - 1;
+					if(type != 'recovery') {
+						jQuery('.'+type+'').find('td:eq('+index+')').after("<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>");
+					} else {
+						jQuery('.'+type+'').find('.rec_status').find('td:eq('+index+')').after("<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>");
+					}
+					
+
+					jQuery( ".comment div:first-child" ).hover(function(event) {
+					jQuery( this ).parent().addClass('hovered');
+					},function(event) {
+						jQuery( this ).parent().removeClass('hovered');
+					});
 				}			
 
 		 	}, 'json');
@@ -1660,6 +1705,99 @@ jQuery(document).ready(function () {
 
             
 });
+
+jQuery( document ).ready(function() {		
+		var options = {
+			//Boolean - If we show the scale above the chart data			
+			scaleOverlay : false,			
+			//Boolean - If we want to override with a hard coded scale
+			scaleOverride : true,			
+			//** Required if scaleOverride is true **
+			//Number - The number of steps in a hard coded scale
+			scaleSteps : 5,
+			//Number - The value jump in the hard coded scale
+			scaleStepWidth : 1,
+			//Number - The scale starting value
+			scaleStartValue : 0,
+			//String - Colour of the scale line	
+			scaleLineColor : "rgba(0,0,0,.1)",			
+			//Number - Pixel width of the scale line	
+			scaleLineWidth : 1,
+			//Boolean - Whether to show labels on the scale	
+			scaleShowLabels : true,			
+			//Interpolated JS string - can access value
+			scaleLabel : "<%=value%>",			
+			//String - Scale label font declaration for the scale label
+			scaleFontFamily : "'Arial'",			
+			//Number - Scale label font size in pixels	
+			scaleFontSize : 12,			
+			//String - Scale label font weight style	
+			scaleFontStyle : "normal",			
+			//String - Scale label font colour	
+			scaleFontColor : "#267893",				
+			///Boolean - Whether grid lines are shown across the chart
+			scaleShowGridLines : true,			
+			//String - Colour of the grid lines
+			scaleGridLineColor : "#e4ecf1",			
+			//Number - Width of the grid lines
+			scaleGridLineWidth : 1,				
+			//Boolean - Whether the line is curved between points
+			bezierCurve : true,			
+			//Boolean - Whether to show a dot for each point
+			pointDot : true,			
+			//Number - Radius of each point dot in pixels
+			pointDotRadius : 3,			
+			//Number - Pixel width of point dot stroke
+			pointDotStrokeWidth : 1,			
+			//Boolean - Whether to show a stroke for datasets
+			datasetStroke : true,			
+			//Number - Pixel width of dataset stroke
+			datasetStrokeWidth : 2,			
+			//Boolean - Whether to fill the dataset with a colour
+			datasetFill : true,			
+			//Boolean - Whether to animate the chart
+			animation : true,
+			//Number - Number of animation steps
+			animationSteps : 60,			
+			//String - Animation easing effect
+			animationEasing : "easeOutQuart",
+			//Function - Fires when the animation is complete
+			onAnimationComplete : null
+			
+		};
+		var data = {
+			labels : ["2003","2004","2005","2006","2007","2008","2009","2004","2005","2006","2007"],
+			datasets : [
+				{
+					fillColor : "transparent",
+					strokeColor : "#3d869e",
+					pointColor : "transparent",
+					pointStrokeColor : "transparent",
+					data : [1,5,3,2,1,2,4]
+				}				
+			]
+		};
+		var ctx = document.getElementById("myChart").getContext("2d");
+		var myNewChart = new Chart(ctx).Line(data,options);
+	    
+	    //Slider
+		jQuery("#slider").dateRangeSlider();
+	    jQuery("#slider").bind("userValuesChanged", function(e, data) {
+	    	jQuery('#infoDays').text('Days '+ (Math.floor(Math.random() * 31) + 1));
+	    	jQuery('#infoProcents').text((Math.floor(Math.random() * 100) + 1)+' %');
+	    	console.log(data);
+	    	//ajax		 	
+		});
+
+	    //Calculate Graph sizes
+	    var paddings = 22;
+		var GraphWidth = jQuery('#myChart').width();
+		var GraphHeight = jQuery('#myChart').height();
+		var GraphPosition = jQuery('#myChart').offset();
+
+		jQuery('#info').height(GraphHeight-paddings);
+		jQuery('#info').css({'top': GraphPosition.top, 'left': GraphWidth/2});
+	});
   </script>
 <?php //get_sidebar(); ?>
 <?php get_footer(); ?>
