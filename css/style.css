@@ -29,6 +29,7 @@
   height: 21px;
   vertical-align: middle;
   width: 22px;
+  cursor: pointer;
 }
 .main-container .button .delete {
   background-image: url('../images/delete_row.png');
@@ -1122,7 +1123,7 @@
   background-color: #000;
 }
 #fade {
-  display:none;
+  display:block;
 }
 .spinner {
   margin: 150px auto;

@@ -16,7 +16,9 @@ $patient = new Patient_Db_Manager();
 $patient_data = $patient->setPatient(1)
 						->loadPatientAllData($dates)
 						->getPatientData();
-
+// var_dump('dates',$patient_data->scheduler);
+// echo '<br>';
+// echo '<br>';
 // var_dump('dates',$patient_data->dates);
 // echo '<br>';
 // echo '<br>';
@@ -43,37 +45,38 @@ $patient_data = $patient->setPatient(1)
 
 get_header();
 ?>
+<div id="fade">
+	<div class="loader"></div>
+	<div class="spinner">
+	  <div class="spinner-container container1">
+	    <div class="circle1"></div>
+	    <div class="circle2"></div>
+	    <div class="circle3"></div>
+	    <div class="circle4"></div>
+	  </div>
+	  <div class="spinner-container container2">
+	    <div class="circle1"></div>
+	    <div class="circle2"></div>
+	    <div class="circle3"></div>
+	    <div class="circle4"></div>
+	  </div>
+	  <div class="spinner-container container3">
+	    <div class="circle1"></div>
+	    <div class="circle2"></div>
+	    <div class="circle3"></div>
+	    <div class="circle4"></div>
+	  </div>
+	</div>
+</div>
 <canvas id="myChart" width="1200px;" height="200"></canvas>
 <div id="slider"></div>
  
-<div id="info" style="position:absolute; background:red; z-index:99999; width:60px;">
+<div id="info" style="position:absolute; background:#267893; z-index:99999; width:60px;opacity:0.8;">
 	<div id="infoDays">Days 36</div>
 	<div id="infoProcents">45%</div>
 </div>
 <div class="main-container">
-	<div id="fade">
-		<div class="loader"></div>
-		<div class="spinner">
-		  <div class="spinner-container container1">
-		    <div class="circle1"></div>
-		    <div class="circle2"></div>
-		    <div class="circle3"></div>
-		    <div class="circle4"></div>
-		  </div>
-		  <div class="spinner-container container2">
-		    <div class="circle1"></div>
-		    <div class="circle2"></div>
-		    <div class="circle3"></div>
-		    <div class="circle4"></div>
-		  </div>
-		  <div class="spinner-container container3">
-		    <div class="circle1"></div>
-		    <div class="circle2"></div>
-		    <div class="circle3"></div>
-		    <div class="circle4"></div>
-		  </div>
-		</div>
-	</div>
+	
 	<?php $dates_array = array_values($patient_data->dates);?>
 	<div>
 	 	<div class="top_table_block">
@@ -871,6 +874,7 @@ get_header();
 	Save = {
 
 		saveRecovery: function() {
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.recovery');
 
 			var recovery = dialog.find('.sbSelector').text();
@@ -905,7 +909,7 @@ get_header();
 		},
 
 		saveSymptom: function() {
-
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.symptom');
 
 			var symptom_val = jQuery("#symptom-select").val();
@@ -939,7 +943,7 @@ get_header();
 		},
 
 		saveAssays: function() {
-
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.assays');
 			var validate = true;
 
@@ -993,7 +997,7 @@ get_header();
 		},
 
 		saveDiagnoses: function() {
-
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.diagnoses');
 
 			var current_data = {
@@ -1024,6 +1028,7 @@ get_header();
 		},
 
 		saveTherapies: function() {
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.therapies');
 			var prescribed = ( dialog.find("#self_prescribed").is(":checked") ) ? 1 : 0;
 			var effect_sel = dialog.find('.row');
@@ -1084,6 +1089,7 @@ get_header();
 		},
 
 		saveLifestyle: function() {
+			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.lifestyle');
 			var effect_sel = dialog.find('.effect_main_block .row');
 			var effect_obj = {};
@@ -1394,6 +1400,7 @@ get_header();
 		},
 
 		filtrDoctorByCountry: function() {
+			
 			var doctor_select = jQuery('.dialog.'+type+' .doctor_select');
 			var country_select = jQuery('.dialog.'+type+' .country_select');
 			country_select.next().find('li').on('click', function(){
@@ -1410,6 +1417,7 @@ get_header();
 				};
 				
 				jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+					
 					doctor_select.find('option').remove();
 					doctor_select.next().find('li').remove();
 					jQuery.each(response,function(insex,doctor){
@@ -1453,7 +1461,9 @@ get_header();
 		},
 
 		addNewType: function(){
+			
 			jQuery('.add-row').find('.add').live('click', function(){
+				jQuery('#fade').show();
 				var closest_tbody = jQuery(this).closest('tbody')
 				var add_type = jQuery(this).closest('table').attr('class');
 				var current_data = {};
@@ -1474,6 +1484,7 @@ get_header();
 						dialog.dialog( "close" );
 						jQuery('#error_data_entry').css('display','block');
 					} else {
+						jQuery('#fade').hide();
 						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
 						closest_tbody.find('.add-row').prev().fadeIn(1500);
 					}
@@ -1541,7 +1552,7 @@ get_header();
 		},
 
 		addAll: function(type) {
-
+			jQuery('#fade').show();
 			var dates = jQuery('.dates td');
 			var cnt = 0;
 
@@ -1557,6 +1568,7 @@ get_header();
 			};
 			
 			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				jQuery('#fade').hide();
 				var add_td = "<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>";
 				var add_td_empty = "<td>-</td>";
 				var add_td_str = "";
@@ -1654,6 +1666,7 @@ jQuery(document).ready(function () {
 	});
 
 	jQuery('#add-date').on('click',function(){
+		jQuery('#fade').show();
 		jQuery('.datepicker').datepicker('hide');	
 		if(selected_date == undefined) {
 			jQuery('.datepicker').css({'border-color':'red'});
@@ -1672,6 +1685,7 @@ jQuery(document).ready(function () {
 		};
 		
 		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+			jQuery('#fade').hide();
 			var inc = 0;
 			jQuery('.dates').find('td').each(function(){
 				if(jQuery(this).data('relation-id') == undefined && jQuery(this).index() != 0){
@@ -1714,9 +1728,9 @@ jQuery( document ).ready(function() {
 			scaleOverride : true,			
 			//** Required if scaleOverride is true **
 			//Number - The number of steps in a hard coded scale
-			scaleSteps : 5,
+			scaleSteps : 10,
 			//Number - The value jump in the hard coded scale
-			scaleStepWidth : 1,
+			scaleStepWidth : 10,
 			//Number - The scale starting value
 			scaleStartValue : 0,
 			//String - Colour of the scale line	
@@ -1765,15 +1779,16 @@ jQuery( document ).ready(function() {
 			onAnimationComplete : null
 			
 		};
+		
 		var data = {
-			labels : ["2003","2004","2005","2006","2007","2008","2009","2004","2005","2006","2007"],
+			labels : [<?php echo '"'.implode('","', $patient_data->scheduler['dates']).'"' ?>],
 			datasets : [
 				{
 					fillColor : "transparent",
 					strokeColor : "#3d869e",
 					pointColor : "transparent",
 					pointStrokeColor : "transparent",
-					data : [1,5,3,2,1,2,4]
+					data : [<?php echo '"'.implode('","', $patient_data->scheduler['recovery']).'"' ?>],
 				}				
 			]
 		};
@@ -1797,7 +1812,12 @@ jQuery( document ).ready(function() {
 
 		jQuery('#info').height(GraphHeight-paddings);
 		jQuery('#info').css({'top': GraphPosition.top, 'left': GraphWidth/2});
+
+		jQuery('#fade').hide();
 	});
+	
+
+	
   </script>
 <?php //get_sidebar(); ?>
 <?php get_footer(); ?>

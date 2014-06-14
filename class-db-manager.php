@@ -71,8 +71,11 @@ class Patient_Db_Manager {
 			foreach (self::$datas as $data) {
 				$this->loadPatientSingleData($data['handler']);			
 			}
+			$this->_loadDataForSchedule();
+
 			$this->patient_data = (object) $this->patient_data;
 			$datas_json = json_encode($this->patient_data);
+			
 			// $redis->set('patient:id:'.$this->current_patient, $datas_json);
 			return $this;
 		// }
@@ -86,6 +89,43 @@ class Patient_Db_Manager {
 		$method_name = '_load'.ucfirst($config['handler']);
 		$this->$method_name();
 		return $this;
+	}
+
+	private function _loadDataForSchedule() {
+
+		global $wpdb;
+
+		$date_sql = 'SELECT * FROM '.self::$_prefix.'relations WHERE user_id ='.$this->current_patient.' ORDER BY date ASC';
+		$dates = $wpdb->get_results($date_sql);
+		
+		$relations_array = array();
+		$dates_array = array();
+		$recovery_array = array();
+		$recovery_tmp_array = array();
+
+		foreach ($dates as $date) {
+			array_push($relations_array, $date->relation_id);
+			$dates_array[$date->relation_id] = $date->date;
+	    }
+
+	    $dates_str = implode(',', $relations_array);	   
+		$recovery_sql = 'SELECT * FROM '.self::$_prefix.'recovery_status WHERE relation_id IN ('.$dates_str.')';
+		$recoverys = $wpdb->get_results($recovery_sql);
+
+		foreach ($recoverys as $recovery) {
+			$recovery_tmp_array[$recovery->relation_id] = $recovery->value;
+		}
+
+		foreach ($dates_array as $relation => $date) {
+			if(array_key_exists($relation, $recovery_tmp_array)) {
+				$recovery_array[$relation] = $recovery_tmp_array[$relation];
+			} else {
+				$recovery_array[$relation] = 0;
+			}
+		}
+
+		$this->patient_data['scheduler']['dates'] = $dates_array;
+		$this->patient_data['scheduler']['recovery'] = $recovery_array;
 	}
 
 	private function _loadDates() {
