@@ -2,8 +2,10 @@
 /*
  * Template Name: Patient Statistics
  */
+
 require_once dirname(__FILE__).'/../class-db-manager.php';
 global $wp;
+global $bp;
 
 if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 	$dates['start'] = $_GET['start_date'];
@@ -16,7 +18,7 @@ $current_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 
 $patient = new Patient_Db_Manager();
 // echo '<pre>';
-$patient_data = $patient->setPatient(1)
+$patient_data = $patient->setPatient(wp_get_current_user()->ID)
 						->loadPatientAllData($dates)
 						->getPatientData();
 // var_dump('dates',$patient_data->scheduler);
@@ -49,32 +51,33 @@ $patient_data = $patient->setPatient(1)
 get_header();
 ?>
 <div id="fade">
-	<div class="loader"></div>
-	<div class="spinner">
-	  <div class="spinner-container container1">
-	    <div class="circle1"></div>
-	    <div class="circle2"></div>
-	    <div class="circle3"></div>
-	    <div class="circle4"></div>
-	  </div>
-	  <div class="spinner-container container2">
-	    <div class="circle1"></div>
-	    <div class="circle2"></div>
-	    <div class="circle3"></div>
-	    <div class="circle4"></div>
-	  </div>
-	  <div class="spinner-container container3">
-	    <div class="circle1"></div>
-	    <div class="circle2"></div>
-	    <div class="circle3"></div>
-	    <div class="circle4"></div>
-	  </div>
+	<div class="loader">
+		<div class="spinner">
+		  <div class="spinner-container container1">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		  <div class="spinner-container container2">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		  <div class="spinner-container container3">
+		    <div class="circle1"></div>
+		    <div class="circle2"></div>
+		    <div class="circle3"></div>
+		    <div class="circle4"></div>
+		  </div>
+		</div>
 	</div>
 </div>
 <canvas id="myChart" width="1200px;" height="200"></canvas>
 <div id="slider"></div>
  
-<div id="info" style="position:absolute; background:#267893; z-index:99999; width:60px;opacity:0.8; display:none;color:#fff">
+<div id="info" style="position:absolute; background:#267893; z-index:9999; width:60px;opacity:0.8; display:none;color:#fff">
 	<div id="infoDays">Days 0</div>
 	<div id="infoProcents">0%</div>
 </div>
@@ -450,7 +453,7 @@ get_header();
 				<option value="-3">Medium worsening -3</option>	
 				<option value="-2">Mild worsening -2</option>
 				<option value="-1">Very mild worsening -1</option>
-				<option value="0">No change 0)</option>
+				<option value="0">No change 0</option>
 				<option value="1">Very mild improvement 1</option>
 				<option value="2">Mild improvement 2</option>
 				<option value="3">Medium improvement 3</option>
@@ -1697,7 +1700,8 @@ jQuery(document).ready(function () {
 		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
 			jQuery('#add-date').hide();
 			jQuery('.datepicker').hide();
-			jQuery('#add-date-button').show();
+			jQuery('#right-date').show();
+			jQuery('.main-container .top_table_block table tr td').css('width','3.75%');
 			jQuery('#fade').hide();
 			jQuery('#info').show();
 			var inc = 0;
@@ -1814,10 +1818,7 @@ jQuery( document ).ready(function() {
 	    
 	    var bound_min = "<?php echo $patient_data->scheduler['min'];?>";
 	    var bound_max = "<?php echo $patient_data->scheduler['max'];?>";
-	    console.log(bound_min);
-	    // if() {
 
-	    // }
 	    var min_array = bound_min.split("-");
 	    var max_array = bound_max.split("-");
 
@@ -1825,6 +1826,11 @@ jQuery( document ).ready(function() {
 		    return (second-first)/(1000*60*60*24);
 		}
 
+		var day_diff = daydiff(new Date(min[0], min[1] - 1, min[2]), new Date(max[0], max[1] - 1, max[2]));
+		var rec_diff = rec_data[rec_data.length - 1];
+		jQuery('#infoDays').text('Days '+day_diff);
+		jQuery('#infoProcents').text(rec_diff + '%');
+		
 	    //Slider
 		jQuery("#slider").dateRangeSlider(
 			{

@@ -2,12 +2,16 @@
 require_once( dirname( dirname( dirname( dirname( __FILE__ ) ) ) ). '/wp-load.php' );
 require_once('class-db-manager.php');
 
+global $current_user;
+get_currentuserinfo();
+$user_id = $current_user->ID;
+
 $ajax = new Patient_Ajax_Handler();
-$ajax->init($_POST);
+$ajax->setUser($user_id)->init($_POST);
 
 class Patient_Ajax_Handler{
 	
-	private static $patient_id = 1;
+	private static $patient_id; 
 	private static $table;
 	private static $patient_data;
 	private static $action_type;
@@ -677,6 +681,11 @@ class Patient_Ajax_Handler{
 		}
 		
 		print_r(json_encode($lifestyles_array));
+	}
+
+	public function setUser($user_id) {
+		self::$patient_id = $user_id;
+		return $this;
 	}
 
 }

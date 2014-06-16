@@ -1113,20 +1113,20 @@
   margin-top: 10px;
 }
 .loader{
-  opacity: 0.3;
+  opacity: 0.4;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1040;
+  z-index: 99999;
   background-color: #000;
 }
 #fade {
   display:block;
 }
 .spinner {
-  margin: 150px auto;
+  margin: 300px auto;
   width: 50px;
   height: 50px;
   position: absolute;
@@ -1137,7 +1137,7 @@
 .container1 > div, .container2 > div, .container3 > div {
   width: 10px;
   height: 10px;
-  background-color: #267893;
+  background-color: #fff;
 
   border-radius: 100%;
   position: absolute;
