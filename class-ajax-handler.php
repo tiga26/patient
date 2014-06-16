@@ -519,7 +519,7 @@ class Patient_Ajax_Handler{
 		}
 		print_r(json_encode(self::$status_code[$status]));
 
-		// $insert_
+		
 	}
 	//can't change relation_id but can change single data id
 	private function checkUserOnDataUpdate() {

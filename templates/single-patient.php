@@ -3,6 +3,7 @@
  * Template Name: Patient Statistics
  */
 require_once dirname(__FILE__).'/../class-db-manager.php';
+global $wp;
 
 if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 	$dates['start'] = $_GET['start_date'];
@@ -10,6 +11,8 @@ if(validDate($_GET['start_date']) && validDate($_GET['end_date'])) {
 } else {
 	$dates = array();
 }
+
+$current_url = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 
 $patient = new Patient_Db_Manager();
 // echo '<pre>';
@@ -71,9 +74,9 @@ get_header();
 <canvas id="myChart" width="1200px;" height="200"></canvas>
 <div id="slider"></div>
  
-<div id="info" style="position:absolute; background:#267893; z-index:99999; width:60px;opacity:0.8;">
-	<div id="infoDays">Days 36</div>
-	<div id="infoProcents">45%</div>
+<div id="info" style="position:absolute; background:#267893; z-index:99999; width:60px;opacity:0.8; display:none;color:#fff">
+	<div id="infoDays">Days 0</div>
+	<div id="infoProcents">0%</div>
 </div>
 <div class="main-container">
 	
@@ -874,6 +877,7 @@ get_header();
 	Save = {
 
 		saveRecovery: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.recovery');
 
@@ -909,6 +913,7 @@ get_header();
 		},
 
 		saveSymptom: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.symptom');
 
@@ -943,6 +948,7 @@ get_header();
 		},
 
 		saveAssays: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.assays');
 			var validate = true;
@@ -997,6 +1003,7 @@ get_header();
 		},
 
 		saveDiagnoses: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.diagnoses');
 
@@ -1028,6 +1035,7 @@ get_header();
 		},
 
 		saveTherapies: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.therapies');
 			var prescribed = ( dialog.find("#self_prescribed").is(":checked") ) ? 1 : 0;
@@ -1089,6 +1097,7 @@ get_header();
 		},
 
 		saveLifestyle: function() {
+			jQuery('#info').hide();
 			jQuery('#fade').show();
 			var dialog = jQuery('.dialog.lifestyle');
 			var effect_sel = dialog.find('.effect_main_block .row');
@@ -1218,7 +1227,7 @@ get_header();
 			var value = selector_id.closest('td').data('value');
 			var comment = selector_id.closest('td').data('comment');
 			if(value == undefined) {
-				value = '0%';
+				value = '0';
 			}
 			if(comment == undefined) {
 				comment = '';
@@ -1666,6 +1675,7 @@ jQuery(document).ready(function () {
 	});
 
 	jQuery('#add-date').on('click',function(){
+		jQuery('#info').hide();
 		jQuery('#fade').show();
 		jQuery('.datepicker').datepicker('hide');	
 		if(selected_date == undefined) {
@@ -1685,7 +1695,11 @@ jQuery(document).ready(function () {
 		};
 		
 		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+			jQuery('#add-date').hide();
+			jQuery('.datepicker').hide();
+			jQuery('#add-date-button').show();
 			jQuery('#fade').hide();
+			jQuery('#info').show();
 			var inc = 0;
 			jQuery('.dates').find('td').each(function(){
 				if(jQuery(this).data('relation-id') == undefined && jQuery(this).index() != 0){
@@ -1779,29 +1793,88 @@ jQuery( document ).ready(function() {
 			onAnimationComplete : null
 			
 		};
-		
+		var all_dates = [<?php echo '"'.implode('","', $patient_data->scheduler['dates']).'"' ?>];
+		var rec_data = [<?php echo '"'.implode('","', $patient_data->scheduler['recovery']).'"' ?>];
 		var data = {
-			labels : [<?php echo '"'.implode('","', $patient_data->scheduler['dates']).'"' ?>],
+			labels : all_dates,
 			datasets : [
 				{
 					fillColor : "transparent",
 					strokeColor : "#3d869e",
 					pointColor : "transparent",
 					pointStrokeColor : "transparent",
-					data : [<?php echo '"'.implode('","', $patient_data->scheduler['recovery']).'"' ?>],
+					data : rec_data,
 				}				
 			]
 		};
 		var ctx = document.getElementById("myChart").getContext("2d");
 		var myNewChart = new Chart(ctx).Line(data,options);
+	    var min = all_dates[0].split("-");
+	    var max = all_dates[all_dates.length - 1].split("-");
 	    
+	    var bound_min = "<?php echo $patient_data->scheduler['min'];?>";
+	    var bound_max = "<?php echo $patient_data->scheduler['max'];?>";
+	    console.log(bound_min);
+	    // if() {
+
+	    // }
+	    var min_array = bound_min.split("-");
+	    var max_array = bound_max.split("-");
+
+	    function daydiff(first, second) {
+		    return (second-first)/(1000*60*60*24);
+		}
+
 	    //Slider
-		jQuery("#slider").dateRangeSlider();
+		jQuery("#slider").dateRangeSlider(
+			{
+				 bounds: {min: new Date(min_array[0], min_array[1] - 2, min_array[2]), max: new Date(max_array[0], max_array[1] , max_array[2])},
+    			 defaultValues: {min: new Date(min[0], min[1] - 1, min[2]), max: new Date(max[0], max[1] - 1, max[2])},
+    
+	  		});
+		
 	    jQuery("#slider").bind("userValuesChanged", function(e, data) {
-	    	jQuery('#infoDays').text('Days '+ (Math.floor(Math.random() * 31) + 1));
+	    	var days = daydiff(data.values.min, data.values.max);
+	    	
+	    	jQuery('#infoDays').text('Days '+ Math.round(days));
 	    	jQuery('#infoProcents').text((Math.floor(Math.random() * 100) + 1)+' %');
-	    	console.log(data);
-	    	//ajax		 	
+	    	var min_date = data.values.min;
+
+	    	var year = min_date.getFullYear();
+		  	var month = min_date.getMonth() + 1;
+		  	var day = min_date.getDate();
+		  	if(day < 10) {
+		  		day = "0"+day;
+		  	}
+		  	if(month < 10) {
+		  		month = "0"+month;
+		  	}
+		  	min_date = year+'-'+month+'-'+day;
+
+	    	var max_date = data.values.max;
+	    	var year = max_date.getFullYear();
+		  	var month = max_date.getMonth() + 1;
+		  	var day = max_date.getDate();
+		  	if(day < 10) {
+		  		day = "0"+day;
+		  	}
+		  	if(month < 10) {
+		  		month = "0"+month;
+		  	}
+		  	max_date = year+'-'+month+'-'+day;
+	    	jQuery('#info').hide();
+	    	jQuery.confirm({
+	    		text: "Are you sure you want to change date range?",
+			    confirm: function(button) {			    	
+			    	jQuery('#fade').show();
+			        window.location.href = "<?php echo $current_url;?>"+"&start_date="+min_date+"&end_date="+max_date;
+			    },
+			    cancel: function(button) {
+			        jQuery('#info').show();
+			    }
+			});
+	    	
+
 		});
 
 	    //Calculate Graph sizes
@@ -1814,6 +1887,7 @@ jQuery( document ).ready(function() {
 		jQuery('#info').css({'top': GraphPosition.top, 'left': GraphWidth/2});
 
 		jQuery('#fade').hide();
+		jQuery('#info').show();
 	});
 	
 

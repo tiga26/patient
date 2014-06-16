@@ -268,6 +268,7 @@ return array(
 			),
 			'primary_key' => 'assay_result_id',
 			'engine' => 'InnoDB',
+			'unique' => '(assay_id,relation_id)',
 		),
 		'assay_links' => array(
 			'fields' => array(
@@ -803,6 +804,7 @@ return array(
 			),
 			'primary_key' => 'doctor_diagnosis_id',
 			'engine' => 'InnoDB',
+			'unique' => '(relation_id,diagnosis_id)',
 		),		
 
 	),

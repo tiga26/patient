@@ -95,24 +95,23 @@ class Patient_Db_Manager {
 
 		global $wpdb;
 
-		$date_sql = 'SELECT * FROM '.self::$_prefix.'relations WHERE user_id ='.$this->current_patient.' ORDER BY date ASC';
-		$dates = $wpdb->get_results($date_sql);
+		$min_sql = 'SELECT * FROM '.self::$_prefix.'relations WHERE user_id ='.$this->current_patient.' ORDER BY date ASC LIMIT 0,1';
+		$min = $wpdb->get_results($min_sql);
 		
+		$max_sql = 'SELECT * FROM '.self::$_prefix.'relations WHERE user_id ='.$this->current_patient.' ORDER BY date DESC LIMIT 0,1';
+		$max = $wpdb->get_results($max_sql);
+
 		$relations_array = array();
 		$dates_array = array();
 		$recovery_array = array();
 		$recovery_tmp_array = array();
 
-		foreach ($dates as $date) {
+		foreach ($this->patient_data['dates'] as $date) {
 			array_push($relations_array, $date->relation_id);
 			$dates_array[$date->relation_id] = $date->date;
 	    }
 
-	    $dates_str = implode(',', $relations_array);	   
-		$recovery_sql = 'SELECT * FROM '.self::$_prefix.'recovery_status WHERE relation_id IN ('.$dates_str.')';
-		$recoverys = $wpdb->get_results($recovery_sql);
-
-		foreach ($recoverys as $recovery) {
+		foreach ($this->patient_data['recovery'] as $recovery) {
 			$recovery_tmp_array[$recovery->relation_id] = $recovery->value;
 		}
 
@@ -123,7 +122,8 @@ class Patient_Db_Manager {
 				$recovery_array[$relation] = 0;
 			}
 		}
-
+		$this->patient_data['scheduler']['min'] = $min[0]->date;
+		$this->patient_data['scheduler']['max'] = $max[0]->date;
 		$this->patient_data['scheduler']['dates'] = $dates_array;
 		$this->patient_data['scheduler']['recovery'] = $recovery_array;
 	}
@@ -165,6 +165,7 @@ class Patient_Db_Manager {
 		global $wpdb;
 		$start = "'".$this->dates['start']."'";
 		$end = "'".$this->dates['end']."'";
+
 		$date_sql = 'SELECT * FROM  (SELECT * FROM '.self::$_prefix.'relations R				    
 				     WHERE R.user_id ='.$this->current_patient.' AND date >= '.$start.' AND date <= '.$end.' 
 				     ORDER BY R.date DESC LIMIT 6) T ORDER BY T.date ASC';
@@ -173,9 +174,18 @@ class Patient_Db_Manager {
 
 	    foreach ($dates as $date) {
 	    	$this->relation_ids[$date->date] = $date->relation_id;
+	    	$dates_array[$date->relation_id] = $date;
 	    }
-	        
-	    $this->patient_data['dates'] = $dates;
+
+	    if(count($dates) < 6) {
+	    	$more_relations_cnt = 6 - count($dates);
+	    	
+	    	for ($i = 1; $i <= $more_relations_cnt; $i++) { 
+	    		$this->relation_ids[] = $max_id + $i * 1000;
+	    	}
+	    }
+
+	    $this->patient_data['dates'] = $dates_array;
 	}
 
 	private function _loadRecovery()  {
@@ -296,19 +306,19 @@ class Patient_Db_Manager {
 		global $wpdb;
 
 		$relation_ids_str = implode(',', $this->relation_ids);
-
-		$assays_sql = 'SELECT R.date,R.user_id,AR.*,A.name as assay_name,A.submit_date,A.comment,A.approved,AC.* FROM '.self::$_prefix.'relations R
+		
+		$assays_sql = 'SELECT R.date,R.user_id,AR.*,A.name as assay_name,A.submit_date,A.comment,A.approved FROM '.self::$_prefix.'relations R
 					   INNER JOIN '.self::$_prefix.'assay_result AR 
 					   ON R.relation_id = AR.relation_id
 					   INNER JOIN '.self::$_prefix.'assays A
 					   ON AR.assay_id = A.assay_id
-					   INNER JOIN '.self::$_prefix.'assay_category AC
-					   ON A.assay_category_id = AC.assay_category_id
 					   WHERE R.relation_id IN ('.$relation_ids_str.')
 					   ORDER BY R.date';
-		   
-	    $assays = $wpdb->get_results($assays_sql);
 
+					   // add when the assay categories are ready INNER JOIN '.self::$_prefix.'assay_category AC ON A.assay_category_id = AC.assay_category_id
+		
+	    $assays = $wpdb->get_results($assays_sql);
+	    
 	    $assay_assoc = array();
 
 	    foreach ($assays as $assay) {
@@ -393,17 +403,17 @@ class Patient_Db_Manager {
 		global $wpdb;
 
 		$relation_ids_str = implode(',', $this->relation_ids);
-		$therapies_sql = 'SELECT R.date,R.user_id,TR.*,T.therapy_category_id,T.name,T.comment as admin_comment,TC.name as therapy_name,D.name as doc_name,D.city,D.country FROM '.self::$_prefix.'relations R
+		$therapies_sql = 'SELECT R.date,R.user_id,TR.*,T.therapy_category_id,T.name,T.comment as admin_comment,D.name as doc_name,D.city,D.country FROM '.self::$_prefix.'relations R
 						  INNER JOIN '.self::$_prefix.'therapy_result TR
 						  ON R.relation_id = TR.relation_id
 						  INNER JOIN '.self::$_prefix.'therapy T
-						  ON TR.therapy_id = T.therapy_id
-						  INNER JOIN '.self::$_prefix.'therapy_category TC
-						  ON T.therapy_category_id = TC.therapy_category_id
+						  ON TR.therapy_id = T.therapy_id						  
 						  INNER JOIN '.self::$_prefix.'doctors D
 						  ON TR.doctor_id = D.doctor_id
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
+
+					   	  // add when categories are ready INNER JOIN '.self::$_prefix.'therapy_category TC ON T.therapy_category_id = TC.therapy_category_id
 
 		$therapies = $wpdb->get_results($therapies_sql);
 
@@ -444,17 +454,17 @@ class Patient_Db_Manager {
 
 		$relation_ids_str = implode(',', $this->relation_ids);
 
-		$lifestyle_sql = 'SELECT R.date,R.user_id,LR.*,L.lifestyle_category_id as category_id,L.submit_date,L.name,L.approved,LF.frequency,LF.quantity,LF.name as frequency_name,LC.name as category_name FROM '.self::$_prefix.'relations R
+		$lifestyle_sql = 'SELECT R.date,R.user_id,LR.*,L.lifestyle_category_id as category_id,L.submit_date,L.name,L.approved,LF.frequency,LF.quantity,LF.name as frequency_name FROM '.self::$_prefix.'relations R
 						  INNER JOIN '.self::$_prefix.'lifestyle_result LR
 						  ON R.relation_id = LR.relation_id
 						  INNER JOIN '.self::$_prefix.'lifestyle L
 						  ON LR.lifestyle_id = L.lifestyle_id
 						  INNER JOIN '.self::$_prefix.'lifestyle_frequency LF
-						  ON LR.lifestyle_frequency_id = LF.lifestyle_frequency_id
-						  INNER JOIN '.self::$_prefix.'lifestyle_category LC
-						  ON L.lifestyle_category_id = LC.lifestyle_category_id
+						  ON LR.lifestyle_frequency_id = LF.lifestyle_frequency_id						  
 						  WHERE R.relation_id IN ('.$relation_ids_str.')
 					   	  ORDER BY R.date';
+
+					   	  // add when lifestyle categories are ready INNER JOIN '.self::$_prefix.'lifestyle_category LC ON L.lifestyle_category_id = LC.lifestyle_category_id
 			   	  
 		$lifestyles = $wpdb->get_results($lifestyle_sql);
 		
