@@ -243,7 +243,7 @@
   border-radius: 5px;
   border: 1px solid #afcbd4;
   display: inline;
-  width: 115px;
+  width: 150px;
   margin-right: 3px;
   padding: 3px 2px !important;
   height: 22px;
@@ -606,7 +606,7 @@
   font-size: 16px;
   padding: 3px 2px;
   width: 50px;
-  margin: 0 5px;
+  margin: 0 4px;
 }
 .dialog.assays input[type='text']#first-child,
 .dialog.therapies input[type='text']#first-child,
@@ -622,7 +622,8 @@
   display: none;
   border-color: #267893;
   width: 100px !important;
-  margin-bottom: 5px;
+  margin-bottom: 5px !important;
+  margin-left: 0px !important;
 }
 .dialog.assays .add,
 .dialog.therapies .add,
@@ -662,7 +663,7 @@
 .dialog.diagnoses .block_opened_select + input[type='text'],
 .dialog.therapies .block_opened_select + input[type='text'],
 .dialog.lifestyle .block_opened_select + input[type='text'] {
-  border-color: #267893;
+  border-color: #267893 !important;
   float: right;
   margin-top: -42px !important;
   width: 172px;
@@ -724,9 +725,9 @@
 .dialog.diagnoses .add_doctor,
 .dialog.therapies .add_doctor,
 .dialog.lifestyle .add_doctor {
-  left: 291px;
+  left: 298px;
   position: absolute;
-  top: 204px;
+  top: 240px;
   color: #cdcdcd;
   font-size: 20px;
   line-height: 26px;
@@ -744,7 +745,7 @@
 }
 .dialog.therapies .add_doctor,
 .dialog.lifestyle .add_doctor {
-  top: 286px;
+  top: 323px;
 }
 .dialog.therapies label,
 .dialog.lifestyle label {

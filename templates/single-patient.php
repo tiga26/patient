@@ -102,7 +102,7 @@ get_header();
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
 		 			<?php foreach ($patient_data->recovery as $relation_id => $recovery) : ?>
-		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])):
+		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])):?>
 		 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 	 					<?php elseif (empty($recovery) && empty($patient_data->dates[$relation_id])): ?>
 	 						<td>-</td>
@@ -738,7 +738,7 @@ get_header();
 		event.stopPropagation();
 		jQuery('.dialog.assays .sbHolder').css('display','none');
 		jQuery('.add_item').css('display','inline-block');
-		jQuery('.add').css('background-position','0px -31px');
+		jQuery('.dialog.assays .add').css('background-position','0px -31px');
 	});
 
 	jQuery( ".dialog" ).dialog({ 
@@ -1493,9 +1493,35 @@ get_header();
 						dialog.dialog( "close" );
 						jQuery('#error_data_entry').css('display','block');
 					} else {
+						var dates = jQuery('.dates td');
+						var cnt = 0;
+						dates.each(function(){
+							if(jQuery(this).data('relation-id') != undefined) {
+								cnt++;
+							}
+						});					
+							
+						var add_td = "<td><div class='comment no-data'><div>-</div><div class='comment_icon'></div></div></td>";
+						var add_td_empty = "<td>-</td>";
+						var add_td_str = "";
+						
+						for (var i = 0; i < cnt; i++) {
+							add_td_str = add_td_str + add_td;
+						};
+
+						for (var i = 0; i < 6 - cnt; i++) {
+							add_td_str = add_td_str + add_td_empty;
+						};
+
 						jQuery('#fade').hide();
-						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>');
+						closest_tbody.find('.add-row').before('<tr data-'+add_type+'-id="'+response.id+'" style="display:none;"><td><input type="checkbox"><label>'+current_data.name+'</label></td>'+add_td_str+'</tr>');
 						closest_tbody.find('.add-row').prev().fadeIn(1500);
+
+						jQuery( ".comment div:first-child" ).hover(function(event) {
+							jQuery( this ).parent().addClass('hovered');
+						},function(event) {
+							jQuery( this ).parent().removeClass('hovered');
+						});
 					}
 			 	}, 'json');
 			 	return false;
@@ -1675,14 +1701,15 @@ jQuery(document).ready(function () {
 	});
 
 	jQuery('#add-date').on('click',function(){
-		jQuery('#info').hide();
-		jQuery('#fade').show();
-		jQuery('.datepicker').datepicker('hide');	
+		
 		if(selected_date == undefined) {
 			jQuery('.datepicker').css({'border-color':'red'});
 			jQuery('.datepicker').datepicker('show');
 			return false;
 		}
+		jQuery('#info').hide();
+		jQuery('#fade').show();
+		jQuery('.datepicker').datepicker('hide');	
 
 		jQuery('.datepicker').css({'border-color':'#f7f7f7'});
 		current_data = {
