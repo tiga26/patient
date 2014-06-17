@@ -153,7 +153,7 @@ class Patient_Plugin {
 	}
 
 	private static function insertStaticData() {
-		$lines = file(dirname(__FILE__).'\static.sql');
+		$lines = file(dirname(__FILE__).'/static.sql');
 		
 		foreach ($lines as $line) {
 		// Skip it if it's a comment

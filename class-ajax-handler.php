@@ -304,9 +304,9 @@ class Patient_Ajax_Handler{
 									VALUES('.$therapy_id.','.$doctor_id.','.$comment.','.$relation_id.','.$dosage.','.$frequency.','.$self_prescribed.')';
 			$status = 1;
 		}
-		// var_dump($insert_therapy_sql);exit;
+		
 		$therapy = $wpdb->query( $insert_therapy_sql );
-
+		
 		if(!isset($efficient)) {
 			$efficient = $wpdb->insert_id;
 		}
@@ -317,7 +317,7 @@ class Patient_Ajax_Handler{
 			$status = 0;
 		}
 
-		if($therapy !== false) {
+		if($therapy !== false && !is_null($effect)) {
 			$type = 'therapie';
 			$effect_type = "'".$type."'";
 			foreach ($effect as $user_symptom_id => $effect_value) {
@@ -366,8 +366,8 @@ class Patient_Ajax_Handler{
 		} elseif($lifestyle == 0) {
 			$status = 0;
 		}
-
-		if($lifestyle !== false) {
+		
+		if($lifestyle !== false && !is_null($effect)) {
 			$type = 'lifestyle';
 			$effect_type = "'".$type."'";
 			foreach ($effect as $user_symptom_id => $effect_value) {

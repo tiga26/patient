@@ -229,7 +229,7 @@ class Patient_Db_Manager {
 			'physical' => array(),
 			'hormonal' => array()
 		);
-		$symptoms_sql = 'SELECT R.relation_id,R.date,US.user_symptom_id,Us.value,US.symptom_id,US.comment,S.name as symptom_name,SC.symptom_category_id FROM '.self::$_prefix.'relations R
+		$symptoms_sql = 'SELECT R.relation_id,R.date,US.user_symptom_id,US.value,US.symptom_id,US.comment,S.name as symptom_name,SC.symptom_category_id FROM '.self::$_prefix.'relations R
 						 INNER JOIN '.self::$_prefix.'user_symptoms US
 						 ON R.relation_id = US.relation_id
 						 INNER JOIN '.self::$_prefix.'symptoms S

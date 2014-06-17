@@ -89,8 +89,14 @@ INSERT INTO `patient_symptoms` VALUES ('88', '4', 'High LDL cholesterol', '2014-
 INSERT INTO `patient_symptoms` VALUES ('89', '4', 'Low or high DHT', '2014-05-21', null, '1');
 INSERT INTO `patient_symptoms` VALUES ('90', '4', 'Abnormal thyroid values, hypothyroidism ', '2014-05-21', null, '1');
 INSERT INTO `patient_symptoms` VALUES ('91', '4', 'Low red or white blood cell counts', '2014-05-21', null, '1');
-
 INSERT INTO `patient_symptoms_category` VALUES ('1', 'Mental Symptoms');
 INSERT INTO `patient_symptoms_category` VALUES ('2', 'Sexual Symptoms');
 INSERT INTO `patient_symptoms_category` VALUES ('3', 'Physical Symptoms');
 INSERT INTO `patient_symptoms_category` VALUES ('4', 'Hormonal Symptoms');
+INSERT INTO `patient_doctors` VALUES ('1', 'Paul', 'Yerevan', 'Armenia', null, null, '0');
+INSERT INTO `patient_doctors` VALUES ('2', 'John', 'Chicago', 'USA', null, null, '0');
+INSERT INTO `patient_doctors` VALUES ('3', 'David', 'London', 'UK', null, null, '0');
+INSERT INTO `patient_doctors` VALUES ('4', 'Bob', 'London', 'UK', null, null, '0');
+INSERT INTO `patient_lifestyle_frequency` VALUES ('1', 'Once a day or more', '1', 'Day');
+INSERT INTO `patient_lifestyle_frequency` VALUES ('2', 'Once a week or more', '2', 'Week');
+INSERT INTO `patient_lifestyle_frequency` VALUES ('3', 'Once a month or more', '3', 'Month');
