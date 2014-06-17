@@ -16,7 +16,7 @@ class Patient_Ajax_Handler{
 	private static $patient_data;
 	private static $action_type;
 	private static $action;
-	// private static $patient;
+	
 	private static $status_code = array(
 		0 => array(
 			'status' => '0',
@@ -512,7 +512,7 @@ class Patient_Ajax_Handler{
 
 		$date_array = array(
 			'date' => self::$patient_data['date'],
-			'user_id' => self::$patient_id, // change to $bp->user_id;
+			'user_id' => self::$patient_id,
 		);
 		
 		$add_date = $wpdb->insert(self::$table, $date_array);
@@ -525,7 +525,7 @@ class Patient_Ajax_Handler{
 
 		
 	}
-	//can't change relation_id but can change single data id
+	
 	private function checkUserOnDataUpdate() {
 		
 		$relations_array = array();
@@ -547,7 +547,7 @@ class Patient_Ajax_Handler{
 	public static function _getallSymptom() {
 		global $wpdb;
 
-		$patient_id = self::$patient_id;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;
 
 		$symptoms_array = array(
 			'mental' => array(),
@@ -589,7 +589,7 @@ class Patient_Ajax_Handler{
 	public static function _getallAssays() {
 		global $wpdb;
 
-		$patient_id = self::$patient_id;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;
 
 		$assays_array = array();
 
@@ -614,7 +614,7 @@ class Patient_Ajax_Handler{
 	public static function _getallDiagnoses() {
 		global $wpdb;
 
-		$patient_id = self::$patient_id;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;
 
 		$diagnosis_array = array();
 
@@ -638,7 +638,7 @@ class Patient_Ajax_Handler{
 	public static function _getallTherapies() {
 		global $wpdb;
 
-		$patient_id = self::$patient_id;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;
 
 		$therapies_array = array();
 
@@ -662,7 +662,7 @@ class Patient_Ajax_Handler{
 	public static function _getallLifestyle() {
 		global $wpdb;
 
-		$patient_id = self::$patient_id;//change to BuddyPress user_id
+		$patient_id = self::$patient_id;
 
 		$lifestyles_array = array();
 

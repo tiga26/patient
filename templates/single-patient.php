@@ -87,8 +87,7 @@ get_header();
 	<div>
 	 	<div class="top_table_block">
 		 	<table class="recovery">
-		 		<tr class="dates">
-		 			<!-- <input class="datepicker" data-date-format="yyyy-dd-mm" style="width:75px; height:25px; position: relative;left: 80px;top: 58px; font-size:12px;display:none;line-height: normal;"><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;position: relative;left: 160px;top: 33px; font-size:12px;display:none;">Add</button><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;position: relative;left: 135px;top: 39px; font-size:12px;">Add Date</button> -->
+		 		<tr class="dates">		 			
 		 			<td id='dates'><span style="line-height:25px;">Dates</span><button type="button" id="add-date" class="btn btn-primary btn-xs" style="width:38px;height:25px;font-size:12px;float:right;margin-right:5px;display:none;">Add</button><input class="datepicker" data-date-format="yyyy-dd-mm" style="width:75px; height:25px;font-size:12px;line-height: normal;float:right;margin-right:5px;display:none;color:#333333"><div id="right-date" style="width:65px;height:25px;float:right"><button type="button" id="add-date-button" class="btn btn-primary btn-xs" style="width:65px;height:25px;font-size:12px;float:right;margin-right:5px;">Add Date</button></div></td>   		        
 		 			<?php foreach ($patient_data->dates as $date) : ?>
 		 				<td data-relation-id="<?php echo $date->relation_id;?>"><input type="checkbox"><?php echo $date->date;?></td>
@@ -103,7 +102,7 @@ get_header();
 		 		<tr class="rec_status">
 		 			<td>Recovery Status</td>
 		 			<?php foreach ($patient_data->recovery as $relation_id => $recovery) : ?>
-		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])): //add else statement if empty and there is no date for this?>
+		 				<?php if(empty($recovery) && !empty($patient_data->dates[$relation_id])):
 		 					<td><div class="comment no-data"><div>-</div><div class="comment_icon"></div></div></td>
 	 					<?php elseif (empty($recovery) && empty($patient_data->dates[$relation_id])): ?>
 	 						<td>-</td>
@@ -863,7 +862,6 @@ get_header();
 		Save.savePatientData(type);
 	});
 
-	//custom javascript;
 	var diagnos_doctor_id;
 	var recovery_val;
 
@@ -1435,8 +1433,7 @@ get_header();
 					jQuery.each(response,function(insex,doctor){
 						doctor_select.append('<option data-doctor-id='+doctor.doctor_id+'>'+doctor.name+'</option>');
 						doctor_select.next().find('.jspPane').append('<li><a href=#'+doctor.name+' rel='+doctor.name+' class="">'+doctor.name+'</a></li>');
-					});
-					// All.restructureSelect();
+					});					
 					Diagnos.setDoctorId();
 
 					// alert(response);
