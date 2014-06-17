@@ -1,9 +1,11 @@
-var ajaxurl = "<?php echo plugins_url().'admin-ajax.php'; ?>";
-jQuery('#edit').live('click',function(){
+jQuery(document).ready(function(){
+	jQuery('#edit').live('click',function(){
 	
-	var datas = '3';
-	jQuery.post(ajaxurl, datas, function(response) {
-		
- 	}, 'json');	
-});;
+		var datas = '3';
+		jQuery.post(admin_ajax_script.ajaxurl, datas, function(response) {
+			
+	 	}, 'json');	
+	});;	
+});
+
 

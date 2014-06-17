@@ -1,4 +1,8 @@
 <?php
+
+$function = 'approve'.ucfirst($_POST['acion']);
+$function($_POST['data']);
+
 function approveSymptoms($data = array()) {
 	$id = $data['id'];
 	$name = $data['name'];
