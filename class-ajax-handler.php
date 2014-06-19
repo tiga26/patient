@@ -498,7 +498,15 @@ class Patient_Ajax_Handler{
 	}
 
 	public static function _addUnit() {
-
+		global $wpdb;
+		
+		$add_unit = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_unit;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
 	}
 
 	public static function _addDate() {

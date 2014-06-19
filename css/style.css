@@ -1113,6 +1113,13 @@
   display: inline-block;
   margin-top: 10px;
 }
+.dialog.diagnoses .block_opened_select .sbHolder.active .error,
+.dialog.therapies .block_opened_select .sbHolder .error{
+  color: red !important;
+}
+.dialog.assays .sbHolder.error{
+  border-color: red !important;
+}
 .loader{
   opacity: 0.4;
   position: fixed;

@@ -36,6 +36,9 @@ class Patient_Db_Manager {
 		'doctors' => array(
 			'handler' => 'doctors'
 			),
+		'units' => array(
+			'handler' => 'units'
+			),
 		);
 
 	public function setPatient($patient) {
@@ -579,6 +582,13 @@ class Patient_Db_Manager {
 		$country_sql = 'SELECT * FROM '.self::$_prefix.'doctors GROUP BY country';
 		$this->patient_data['country'] =  $wpdb->get_results($country_sql);
 
+	}
+
+	private function _loadUnits() {
+		global $wpdb;
+		
+		$units_sql = 'SELECT * FROM '.self::$_prefix.'units ';
+		$this->patient_data['units'] =  $wpdb->get_results($units_sql);		
 	}
 
 	private function customSort(Array $array, Array $orderArray) {
