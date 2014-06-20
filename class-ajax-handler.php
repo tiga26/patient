@@ -32,13 +32,17 @@ class Patient_Ajax_Handler{
 		),
 		3 => array(
 			'status' => '3',
-			'message' => 'Something gone wrong',
+			'message' => 'Something went wrong',
 		),
 		4 => array(
 			'status' => '4',
 			'message' => array(),
 			'fields' => array(),
-		)
+		),
+		5 => array(
+			'status' => '5',
+			'message' => 'The data deleted successfully',
+		),
 	);
 
 	private static $error_message = array(
@@ -83,7 +87,7 @@ class Patient_Ajax_Handler{
 			'assays' => 'patient_assay_result',
 			'diagnoses' => 'patient_doctor_diagnosis',
 			'therapies' => 'patient_therapy_result',
-			'lifestyle' => 'patient_lifestyle_result',	
+			'lifestyle' => 'patient_lifestyle_result',				
 		),
 		
 	);
@@ -493,13 +497,95 @@ class Patient_Ajax_Handler{
 		echo $status;
 	}
 
-	public static function _addDoctor() {
+	public static function _deleteDate() {
+		global $wpdb;
+		$dates_str = implode(',', self::$patient_data);
+		
+		$delete_relation = 'DELETE FROM patient_relations WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_relation);
+
+		$delete_symptom = 'DELETE FROM patient_user_symptoms WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_symptom);
+
+		$delete_assay = 'DELETE FROM patient_assay_result WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_assay);
+
+		$delete_diagnos = 'DELETE FROM patient_doctor_diagnosis WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_diagnos);
+
+		$delete_therapies = 'DELETE FROM patient_therapy_result WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_therapies);
+
+		$delete_lifestyle = 'DELETE FROM patient_lifestyle_result WHERE relation_id IN ('.$dates_str.')';		
+		$status = $wpdb->query($delete_lifestyle);
+
+		echo $status;
+	}
+
+	public static function  _deleteRow() {
+		global $wpdb;
+		$relations_array = array();
+		$relations_sql = 'SELECT * FROM patient_relations WHERE user_id ='.self::$patient_id;
+		$relations = $wpdb->get_results($relations_sql);
+		foreach ($relations as $relation) {
+			array_push($relations_array, $relation->relation_id);
+		}
+		$relations_str = implode(',', $relations_array);
+
+		$tables = array(
+			'symptoms' => array(
+				'table' => 'patient_user_symptoms',
+				'field' => 'symptom_id'
+			),
+			'assays' => array(
+				'table' => 'patient_assay_result',
+				'field' => 'assay_id',
+			),
+			'diagnosis' => array(
+				'table' => 'patient_doctor_diagnosis',
+				'field' => 'diagnosis_id'
+			),
+			'therapies' => array(
+				'table' => 'patient_therapy_result',
+				'field' => 'therapy_id'
+			),
+			'lifestyle' => array(
+				'table' => 'patient_lifestyle_result',
+				'field' => 'lifestyle_id'
+			),
+		);
+		@mysql_query("BEGIN", $wpdb->dbh);
+		
+		foreach (self::$patient_data as $name => $data) {			
+			$delete_str = implode(',', $data);			
+			$delete_sql = 'DELETE FROM '.$tables[$name]['table'].' WHERE relation_id IN ('.$relations_str.') AND '.$tables[$name]['field'].' IN ('.$delete_str.')';			
+			$wpdb->query( $delete_sql );
+		}
+		
+		if ($error) {
+			$status = 3;
+		    @mysql_query("ROLLBACK", $wpdb->dbh);
+		} else {
+		   $status = 5;
+		   @mysql_query("COMMIT", $wpdb->dbh);
+		}
+		print_r(json_encode(self::$status_code[$status]));
 
 	}
 
-	public static function _addUnit() {
+	public static function _addDoctor() {
 		global $wpdb;
-		
+
+		$add_doctor = $wpdb->insert(self::$table, self::$patient_data);
+		$status = $add_doctor;
+		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';
+		if($status === false) {
+			$status = 3;
+		}
+		print_r(json_encode(self::$status_code[$status]));
+	}
+
+	public static function _addUnit() {
 		$add_unit = $wpdb->insert(self::$table, self::$patient_data);
 		$status = $add_unit;
 		self::$status_code[$status]['id'] = ''.mysql_insert_id().'';

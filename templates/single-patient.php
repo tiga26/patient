@@ -46,6 +46,9 @@ $patient_data = $patient->setPatient(wp_get_current_user()->ID)
 // echo '<br>';
 // echo '<br>';
 // var_dump('lifestyle',$patient_data->effects);
+// echo '<br>';	
+// echo '<br>';
+// var_dump('lifestyle',$patient_data->units);
 // exit;
 
 get_header();
@@ -559,7 +562,7 @@ get_header();
 		</div>
 	</div>
 	<div class="button">
-		<a href="" class="delete"></a>
+		<a id="delete-all" class="delete"></a>
 	</div>
 	<div class="clear"></div>
 </div>
@@ -776,6 +779,48 @@ get_header();
 				
 	});
 
+	jQuery('.block_opened_select').next().on('click',function() {
+		jQuery(this).val('');
+	});
+
+	jQuery( ".add_doctor" ).on('click', function(event) {
+		
+		var doctor = jQuery(this).prev().val();
+		var country = jQuery('.dialog.'+type+' .country_select').next().find('.sbSelector').text();
+
+		if(doctor == '' || doctor == 'Type doctor name') {			
+			jQuery(this).prev().val('Type doctor name');
+			return false;
+		}
+
+		var doctor_select = jQuery('.dialog.'+type+' .doctor_select');
+		var country_select = jQuery('.dialog.'+type+' .country_select');
+
+		var current_data = {};				
+		current_data.name = doctor;
+		current_data.country = country;
+
+		console.log(current_data);
+		var datas = {
+			action: 'doctor',
+	        data: current_data,
+	        type: 'add'
+		};
+
+		jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+			if(response.status == 3) {
+				dialog.dialog( "close" );
+				jQuery('#error_data_entry').css('display','block');
+			} else {
+				console.log(doctor_select);
+				doctor_select.prepend('<option data-doctor-id='+response.id+'>'+doctor+'</option>');
+				doctor_select.next().find('.jspPane').prepend('<li><a href=#'+doctor+' rel='+doctor+' class="">'+doctor+'</a></li>');
+			}
+			
+ 		}, 'json');
+				
+	});
+
 	jQuery( ".dialog" ).dialog({ 
 		autoOpen: false,
 		open: function( event, ui ) {
@@ -864,6 +909,11 @@ get_header();
 	});
 
 	jQuery(document).ready(function(){
+		jQuery('#delete-all').on('click',function(){
+			// Delete.deleteDate();
+			Delete.deleteRow();
+		});
+
 		jQuery('.dialog.diagnoses').find('.sbHolder').addClass('active');
 		jQuery.widget("ui.tooltip", jQuery.ui.tooltip, {
 	        options: {
@@ -1060,6 +1110,7 @@ get_header();
 		saveDiagnoses: function() {
 			
 			var dialog = jQuery('.dialog.diagnoses');
+			
 			if(diagnos_doctor_id == undefined) {
 				dialog.find('.doctor_select').next().find('.sbSelector').addClass('error').text('Select Doctor');
 				return false;
@@ -1088,7 +1139,7 @@ get_header();
 				} else {
 
 				}
-				location.reload();
+				// location.reload();
 
 		 	}, 'json');
 		 	return false;
@@ -1236,11 +1287,121 @@ get_header();
 	Delete = {
 
 		deleteDate: function() {
-			console.log('date');
+			var dates_array = [];
+			var dates = jQuery('.dates td');
+			dates.each(function(){
+				if(jQuery(this).find('input').is(':checked') && jQuery(this).data('relation-id') != undefined) {
+					dates_array.push(jQuery(this).data('relation-id'));
+				}
+					
+			});			
+			if (typeof dates_array == 'undefined' || dates_array.length == 0) {
+				return false;
+			}
+			var datas = {
+				action: 'date',
+		        data: dates_array,
+		        type: 'delete'
+			};
+			jQuery('#fade').show();
+
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				jQuery('#fade').hide();
+				
+		 	}, 'json');
+		 	return false;
 		},
 
-		deleteRow: function(type) {
-			console.log(type);
+		deleteRow: function() {
+			var all_data  = {};
+			var symptoms_array = [];
+			var assays_array = [];
+			var diagnosis_array = [];
+			var therapies_array = [];
+			var lifestyle_array = [];
+
+			var symptoms = jQuery('.symptom tr');
+			symptoms.each(function(){
+				if(jQuery(this).find('input').is(':checked')) {					
+					symptoms_array.push(jQuery(this).data('symptom-id'));
+				}					
+			});
+			if (symptoms_array.length > 0) {
+				all_data.symptom = symptoms_array;
+			}
+
+			var assays = jQuery('.assays tr');
+			assays.each(function(){
+				if(jQuery(this).find('input').is(':checked')) {
+					assays_array.push(jQuery(this).data('assay-id'));
+				}					
+			});
+			if (assays_array.length > 0) {
+				all_data.assays = assays_array;
+			}
+
+			var diagnoses = jQuery('.diagnoses tr');
+			diagnoses.each(function(){
+				if(jQuery(this).find('input').is(':checked')) {
+					diagnosis_array.push(jQuery(this).data('diagnosis-id'));
+				}					
+			});
+			if (diagnosis_array.length > 0) {
+				all_data.diagnosis = diagnosis_array;
+			}
+
+			var therapies = jQuery('.therapies tr');
+			therapies.each(function(){
+				if(jQuery(this).find('input').is(':checked')) {
+					therapies_array.push(jQuery(this).data('therapies-id'));
+				}					
+			});
+			if (therapies_array.length > 0) {
+				all_data.therapies = therapies_array;
+			}
+			
+			var lifestyle = jQuery('.lifestyle tr');
+			lifestyle.each(function(){
+				if(jQuery(this).find('input').is(':checked')) {
+					lifestyle_array.push(jQuery(this).data('lifestyle-id'));
+				}					
+			});
+			if (lifestyle_array.length > 0) {
+				all_data.lifestyle = lifestyle_array;
+			}
+
+			if (jQuery.isEmptyObject(all_data)) {
+				return false;
+			}
+
+			var datas = {
+				action: 'row',
+		        data: all_data,
+		        type: 'delete'
+			};
+			jQuery('#fade').show();
+
+			jQuery.post(the_ajax_script.ajaxurl, datas, function(response) {
+				jQuery('#fade').hide();
+				if(response.status == 5) {
+					var data_attr = {
+						symptom : 'data-symptom-id',
+						assays : 'data-assay-id',
+						diagnosis : 'data-diagnosis-id',
+						therapies : 'data-therapies-id',
+						lifestyle : 'data-lifestyle-id',
+					}
+
+					jQuery.each(all_data,function(index, data){
+						var attr = eval('data_attr.' + index);
+						jQuery.each(data, function(ind, dat){												
+							jQuery('.' + index).find('['+attr+'=' + dat + ']').remove();
+						});
+					});
+				}
+				
+		 	}, 'json');
+		 	return false;
 		},
 
 		deleteSingleData: function() {
@@ -1469,19 +1630,19 @@ get_header();
 
 	Diagnos = {
 
-		setDoctorId: function() {
-			
-			jQuery('.dialog.'+type+' .doctor_select').next().find('li').on('click', function(){
+		setDoctorId: function() {			
+			jQuery('.dialog.'+type).find('.doctor_select').next().find('li').live('click', function(){
+				console.log('asdasd');
 				jQuery('.dialog.'+type+' .doctor_select').next().find('.sbSelector').removeClass('error');
 				var index = jQuery(this).index();
-				diagnos_doctor_id = jQuery('.dialog.'+type+' .doctor_select').find('option:eq('+index+')').data('doctor-id');
+				diagnos_doctor_id = jQuery('.dialog.'+type+' .doctor_select').find('option:eq('+index+')').data('doctor-id');				
 				return false;
 			});
 		},
 
 		setUnitId: function() {
 			
-			jQuery('.dialog.assays .unit_select').next().find('li').on('click', function(){
+			jQuery('.dialog.assays .unit_select').next().find('li').live('click', function(){
 				var index = jQuery(this).index();
 				unit_id = jQuery('.dialog.assays .unit_select').find('option:eq('+index+')').data('unit-id');
 				return false;
@@ -1753,7 +1914,7 @@ get_header();
 </script>
 
 <script>
-jQuery(document).ready(function () {
+jQuery(document).ready(function () {	
 
 	var date_picker = jQuery('.datepicker').datepicker({
 		    startDate: '-3d'
